@@ -1,0 +1,281 @@
+@import "tailwindcss";
+
+@layer base {
+  :root {
+    --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    --font-display: 'Space Grotesk', sans-serif;
+    --font-mono: 'JetBrains Mono', monospace;
+  }
+
+  body {
+    font-family: var(--font-sans);
+    background-color: #07090E;
+    color: #F1F5F9;
+    -webkit-tap-highlight-color: transparent;
+    user-select: none;
+  }
+}
+
+.font-display {
+  font-family: 'Space Grotesk', sans-serif;
+}
+
+.font-mono-num {
+  font-family: 'JetBrains Mono', monospace;
+  font-feature-settings: "tnum";
+}
+
+/* Custom scrollbar */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* Glass & Glow utilities */
+.glass-panel {
+  background: rgba(13, 17, 26, 0.85);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.glass-card {
+  background: linear-gradient(135deg, rgba(19, 25, 38, 0.9) 0%, rgba(13, 17, 26, 0.8) 100%);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+}
+
+.glass-card-purple {
+  background: linear-gradient(135deg, rgba(30, 20, 48, 0.7) 0%, rgba(13, 17, 26, 0.85) 100%);
+  border: 1px solid rgba(168, 85, 247, 0.25);
+  box-shadow: 0 4px 24px -1px rgba(147, 51, 234, 0.12);
+}
+
+.safe-area-bottom {
+  padding-bottom: env(safe-area-inset-bottom, 16px);
+}
+
+/* Skeleton Shimmer Effect */
+@keyframes shimmer {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+.animate-shimmer {
+  position: relative;
+  overflow: hidden;
+}
+
+.animate-shimmer::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  transform: translateX(-100%);
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0) 0%,
+    rgba(255, 255, 255, 0.06) 50%,
+    rgba(255, 255, 255, 0) 100%
+  );
+  animation: shimmer 1.6s infinite ease-in-out;
+  pointer-events: none;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(3px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.28s ease-out forwards;
+}
+
+/* ==========================================================================
+   High-Contrast Light Mode (Daylight Accessibility)
+   ========================================================================== */
+html.light {
+  color-scheme: light;
+}
+
+html.light body {
+  background-color: #F8FAFC !important;
+  color: #0F172A !important;
+}
+
+/* Page Background */
+html.light .bg-\[\#07090E\] {
+  background-color: #F8FAFC !important;
+}
+
+/* Surfaces & Containers */
+html.light .bg-\[\#090C14\],
+html.light .bg-\[\#0D101C\],
+html.light .bg-\[\#0D111E\],
+html.light .bg-\[\#0D111E\]\/95,
+html.light .bg-\[\#0F1320\],
+html.light .bg-\[\#101422\],
+html.light .bg-\[\#111624\],
+html.light .bg-\[\#121624\],
+html.light .bg-\[\#13182B\],
+html.light .bg-\[\#1A1F36\] {
+  background-color: #FFFFFF !important;
+}
+
+html.light .bg-\[\#1F2438\],
+html.light .bg-slate-900,
+html.light .bg-slate-900\/80,
+html.light .bg-slate-900\/90,
+html.light .bg-slate-800 {
+  background-color: #F1F5F9 !important;
+}
+
+html.light .bg-slate-950 {
+  background-color: #E2E8F0 !important;
+}
+
+/* High-Contrast Typography */
+html.light .text-white,
+html.light .text-slate-100 {
+  color: #0F172A !important;
+}
+
+html.light .text-slate-200 {
+  color: #1E293B !important;
+}
+
+html.light .text-slate-300 {
+  color: #334155 !important;
+}
+
+html.light .text-slate-400 {
+  color: #475569 !important;
+}
+
+html.light .text-slate-500 {
+  color: #64748B !important;
+}
+
+/* Borders & Dividers */
+html.light .border-white\/\[0\.04\],
+html.light .border-white\/\[0\.06\],
+html.light .border-white\/\[0\.07\],
+html.light .border-white\/\[0\.08\],
+html.light .border-white\/10,
+html.light .border-white\/20,
+html.light .border-white\/30,
+html.light .border-slate-800,
+html.light .border-slate-700 {
+  border-color: #E2E8F0 !important;
+}
+
+/* Interactive States */
+html.light .hover\:bg-white\/\[0\.04\]:hover,
+html.light .hover\:bg-white\/\[0\.03\]:hover,
+html.light .hover\:bg-white\/5:hover,
+html.light .hover\:bg-slate-800:hover,
+html.light .hover\:bg-\[\#13182B\]:hover {
+  background-color: #F1F5F9 !important;
+}
+
+html.light .active\:bg-white\/\[0\.06\]:active,
+html.light .active\:scale-\[0\.99\]:active {
+  background-color: #E2E8F0 !important;
+}
+
+/* Inputs, Textareas, Selects */
+html.light input,
+html.light textarea,
+html.light select {
+  background-color: #FFFFFF !important;
+  color: #0F172A !important;
+  border-color: #CBD5E1 !important;
+}
+
+html.light input:focus,
+html.light textarea:focus,
+html.light select:focus {
+  border-color: #9333EA !important;
+  box-shadow: 0 0 0 2px rgba(147, 51, 234, 0.15) !important;
+}
+
+html.light input::placeholder,
+html.light textarea::placeholder {
+  color: #64748B !important;
+}
+
+html.light .text-white-force {
+  color: #FFFFFF !important;
+}
+
+/* Bottom Navigation */
+html.light #bottom-navigation-bar {
+  background-color: rgba(255, 255, 255, 0.96) !important;
+  border-color: #E2E8F0 !important;
+  box-shadow: 0 -4px 20px -2px rgba(0, 0, 0, 0.05) !important;
+}
+
+html.light #bottom-navigation-bar .text-slate-400 {
+  color: #64748B !important;
+}
+
+html.light #bottom-navigation-bar .text-fuchsia-400 {
+  color: #7E22CE !important;
+}
+
+/* Cards and Panels */
+html.light .glass-panel {
+  background: rgba(255, 255, 255, 0.95) !important;
+  border-color: #E2E8F0 !important;
+  box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.06) !important;
+}
+
+html.light .glass-card {
+  background: #FFFFFF !important;
+  border-color: #E2E8F0 !important;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.04) !important;
+}
+
+html.light .glass-card-purple {
+  background: linear-gradient(135deg, #FAF5FF 0%, #FFFFFF 100%) !important;
+  border-color: #D8B4FE !important;
+  box-shadow: 0 4px 16px rgba(147, 51, 234, 0.08) !important;
+}
+
+/* Portfolio Card */
+html.light #home-portfolio-card {
+  background: linear-gradient(135deg, #FAF5FF 0%, #F5EEFD 50%, #FFFFFF 100%) !important;
+  border-color: #D8B4FE !important;
+  box-shadow: 0 8px 30px rgba(147, 51, 234, 0.08) !important;
+}
+
+/* High-Contrast Skeleton in Light Mode */
+html.light .bg-white\/\[0\.05\],
+html.light .bg-white\/\[0\.07\] {
+  background-color: #E2E8F0 !important;
+}
+
+html.light .animate-shimmer::after {
+  background: linear-gradient(
+    90deg,
+    rgba(0, 0, 0, 0) 0%,
+    rgba(0, 0, 0, 0.05) 50%,
+    rgba(0, 0, 0, 0) 100%
+  ) !important;
+}
+
+

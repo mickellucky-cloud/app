@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="en" class="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, maximum-scale=1.0, user-scalable=no" />
+    <title>OKNexus Mobile Exchange</title>
+    <meta name="description" content="High-fidelity Web3 mobile cryptocurrency exchange with spot trading, live orderbook, market heatmap scanner, 24/7 AI VIP concierge, and dedicated real-time search crypto news intelligence for favorite assets." />
+    <meta property="og:title" content="OKNexus Mobile Exchange" />
+    <meta property="og:description" content="High-fidelity Web3 mobile cryptocurrency exchange with spot trading, live orderbook, market heatmap scanner, 24/7 AI VIP concierge, and dedicated real-time search crypto news intelligence for favorite assets." />
+    <meta property="og:type" content="website" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <link rel="icon" type="image/svg+xml" href="/oknexus-logo.svg" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+  </head>
+  <body class="bg-[#07090E] text-slate-100 antialiased selection:bg-purple-500 selection:text-white overflow-x-hidden font-sans">
+    <script>
+      (function() {
+        try {
+          var t = localStorage.getItem('oknexus_theme');
+          if (t === 'light') {
+            document.documentElement.classList.remove('dark');
+            document.documentElement.classList.add('light');
+            document.documentElement.style.colorScheme = 'light';
+          }
+        } catch (e) {}
+      })();
+    </script>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>
+

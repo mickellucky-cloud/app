@@ -1,0 +1,6 @@
+{
+  "name": "OKNexus Mobile Exchange",
+  "description": "High-fidelity Web3 mobile cryptocurrency exchange with spot trading, live orderbook, market heatmap scanner, 24/7 AI VIP concierge, and dedicated real-time search crypto news intelligence for favorite assets.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
