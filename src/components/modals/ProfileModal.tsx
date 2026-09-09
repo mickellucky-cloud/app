@@ -15,6 +15,7 @@ import {
   Sparkles,
 } from 'lucide-react';
 import { OKNexusLogo } from '../common/OKNexusLogo';
+import { ThemeToggle } from '../common/ThemeToggle';
 import { ThemeMode } from '../../types';
 
 interface ProfileModalProps {
@@ -90,31 +91,26 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
           {/* Appearance / Theme Toggle */}
           <div
             id="profile-theme-toggle-row"
-            onClick={onToggleTheme}
-            className="flex items-center justify-between p-3 rounded-xl bg-[#090C14] border border-white/[0.06] hover:bg-white/[0.03] cursor-pointer transition-colors"
+            className="flex items-center justify-between p-3 rounded-xl bg-[#090C14] border border-white/[0.06] transition-colors"
           >
             <div className="flex items-center gap-3">
-              <div className={`w-7 h-7 rounded-lg flex items-center justify-center ${theme === 'dark' ? 'bg-purple-950/80 text-purple-400' : 'bg-amber-100 text-amber-600'}`}>
+              <div className={`w-8 h-8 rounded-lg flex items-center justify-center ${theme === 'dark' ? 'bg-purple-950/80 text-purple-400' : 'bg-amber-100 text-amber-600'}`}>
                 {theme === 'dark' ? <Moon className="w-4 h-4" /> : <Sun className="w-4 h-4" />}
               </div>
               <div>
-                <span className="font-semibold block text-white">Daylight Mode (High Contrast)</span>
+                <span className="font-semibold block text-white">Display Theme</span>
                 <span className="text-[11px] text-slate-400">
-                  {theme === 'dark' ? 'Dark theme active' : 'Daylight high contrast active'}
+                  {theme === 'dark' ? 'Night mode active' : 'Day mode active'}
                 </span>
               </div>
             </div>
-            <div
-              className={`w-11 h-6 flex items-center rounded-full p-1 transition-colors ${
-                theme === 'light' ? 'bg-purple-600' : 'bg-slate-800'
-              }`}
-            >
-              <div
-                className={`bg-white w-4 h-4 rounded-full shadow-md transform transition-transform ${
-                  theme === 'light' ? 'translate-x-5' : 'translate-x-0'
-                }`}
+            {onToggleTheme && (
+              <ThemeToggle
+                theme={theme}
+                onToggle={onToggleTheme}
+                size="sm"
               />
-            </div>
+            )}
           </div>
 
           {/* Biometric Authentication (Face ID / Fingerprint) */}

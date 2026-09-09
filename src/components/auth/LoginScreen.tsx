@@ -12,6 +12,10 @@ import {
   Mail,
   Phone,
   ShieldCheck,
+  Zap,
+  TrendingUp,
+  Globe2,
+  Shield,
 } from 'lucide-react';
 import { COUNTRY_CODES, DEV_TEST_ACCOUNT, CountryCodeItem } from '../../data/mockData';
 
@@ -124,49 +128,133 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({
   return (
     <div
       id="oknexus-login-screen"
-      className="min-h-screen max-w-md mx-auto px-6 py-8 flex flex-col justify-between text-slate-100 animate-fadeIn relative overflow-hidden"
+      className="min-h-screen w-full flex flex-col justify-between py-6 px-4 sm:px-6 lg:px-8 text-slate-100 animate-fadeIn relative overflow-x-hidden"
     >
       {/* Background ambient accents */}
-      <div className="absolute -top-24 -right-24 w-60 h-60 rounded-full bg-purple-600/15 blur-3xl pointer-events-none" />
-      <div className="absolute top-1/3 -left-20 w-48 h-48 rounded-full bg-cyan-500/10 blur-3xl pointer-events-none" />
+      <div className="absolute -top-24 -right-24 w-96 h-96 rounded-full bg-purple-600/15 blur-3xl pointer-events-none" />
+      <div className="absolute top-1/3 -left-20 w-80 h-80 rounded-full bg-cyan-500/10 blur-3xl pointer-events-none" />
 
-      {/* Top Bar with Theme Toggle */}
-      {onToggleTheme && (
-        <div className="relative z-20 flex justify-end mb-1">
+      {/* Top Header Bar with Brand & Theme Toggle */}
+      <div className="relative z-20 w-full max-w-5xl mx-auto flex items-center justify-between pb-2 mb-2">
+        <div className="flex items-center gap-2.5">
+          <div className="p-1.5 rounded-xl bg-purple-950/60 border border-purple-500/30">
+            <OKNexusLogo size={24} showWordmark={false} />
+          </div>
+          <div>
+            <span className="font-display font-extrabold text-base tracking-tight text-white block leading-none">
+              OKNEXUS
+            </span>
+            <span className="text-[10px] text-purple-400 font-semibold tracking-wider">
+              INSTITUTIONAL DESK
+            </span>
+          </div>
+        </div>
+
+        {onToggleTheme && (
           <ThemeToggle
             theme={theme}
             onToggle={onToggleTheme}
             size="sm"
           />
-        </div>
-      )}
+        )}
+      </div>
 
-      {/* Main Content Area */}
-      <div className="relative z-10">
-        {/* Brand Presence: Prominent OKNexus Logo */}
-        <div className="flex flex-col items-center justify-center pt-2 mb-6 text-center">
-          <div className="p-3.5 rounded-3xl bg-gradient-to-br from-[#1E1433] via-[#121626] to-[#0A0D18] border border-purple-500/30 shadow-[0_12px_32px_rgba(168,85,247,0.25)] mb-3">
-            <OKNexusLogo size={48} showWordmark={false} />
+      {/* Main Responsive Grid Layout (Web & Tablet dual-column, Mobile single-column) */}
+      <div className="relative z-10 w-full max-w-5xl mx-auto my-auto grid grid-cols-1 md:grid-cols-12 gap-6 lg:gap-10 items-stretch py-3">
+        {/* Left Column: Exchange Showcase (Visible on Tablet and Web) */}
+        <div className="hidden md:flex md:col-span-6 lg:col-span-7 flex-col justify-between p-7 lg:p-9 rounded-3xl bg-gradient-to-br from-[#120F24]/90 via-[#0A0D18]/95 to-[#0D1222]/90 border border-purple-500/25 shadow-[0_12px_40px_rgba(0,0,0,0.6)] backdrop-blur-xl">
+          <div>
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-purple-500/15 border border-purple-500/30 text-purple-300 text-xs font-semibold mb-5">
+              <Sparkles className="w-3.5 h-3.5 text-amber-400" />
+              <span>Next-Gen Digital Asset Infrastructure</span>
+            </div>
+
+            <h2 className="text-3xl lg:text-4xl font-extrabold font-display text-white tracking-tight leading-tight mb-3">
+              Trade With Precision.<br />
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 via-fuchsia-400 to-cyan-400">
+                Institutional Speed.
+              </span>
+            </h2>
+
+            <p className="text-xs lg:text-sm text-slate-400 leading-relaxed max-w-md mb-6">
+              Access deep liquidity order books, zero-fee P2P escrow, automated crypto savings, and millisecond trade execution on OKNexus.
+            </p>
+
+            {/* Platform Highlights */}
+            <div className="grid grid-cols-2 gap-3 mb-6">
+              <div className="p-3.5 rounded-2xl bg-white/[0.03] border border-white/[0.06]">
+                <div className="w-7 h-7 rounded-lg bg-purple-500/20 text-purple-400 flex items-center justify-center mb-2">
+                  <Zap className="w-4 h-4" />
+                </div>
+                <div className="text-sm font-bold text-white">100,000 TPS</div>
+                <div className="text-[11px] text-slate-400">Sub-millisecond engine</div>
+              </div>
+
+              <div className="p-3.5 rounded-2xl bg-white/[0.03] border border-white/[0.06]">
+                <div className="w-7 h-7 rounded-lg bg-emerald-500/20 text-emerald-400 flex items-center justify-center mb-2">
+                  <Shield className="w-4 h-4" />
+                </div>
+                <div className="text-sm font-bold text-white">1:1 Reserve Proof</div>
+                <div className="text-[11px] text-slate-400">Verifiable Merkle vault</div>
+              </div>
+
+              <div className="p-3.5 rounded-2xl bg-white/[0.03] border border-white/[0.06]">
+                <div className="w-7 h-7 rounded-lg bg-cyan-500/20 text-cyan-400 flex items-center justify-center mb-2">
+                  <Globe2 className="w-4 h-4" />
+                </div>
+                <div className="text-sm font-bold text-white">Global P2P</div>
+                <div className="text-[11px] text-slate-400">0% Maker fee escrow</div>
+              </div>
+
+              <div className="p-3.5 rounded-2xl bg-white/[0.03] border border-white/[0.06]">
+                <div className="w-7 h-7 rounded-lg bg-amber-500/20 text-amber-400 flex items-center justify-center mb-2">
+                  <TrendingUp className="w-4 h-4" />
+                </div>
+                <div className="text-sm font-bold text-white">High-Yield Earn</div>
+                <div className="text-[11px] text-slate-400">Up to 18.5% Staking APY</div>
+              </div>
+            </div>
           </div>
-          <div className="flex items-center gap-2">
-            <span className="font-display font-extrabold text-xl tracking-tight text-white">
-              OKNEXUS
-            </span>
-            <span className="px-2 py-0.5 rounded-md bg-purple-500/20 text-purple-300 text-[10px] font-bold border border-purple-500/30 tracking-wider">
-              EXCHANGE
-            </span>
+
+          {/* Live Trust Banner */}
+          <div className="pt-4 border-t border-white/[0.08] flex items-center justify-between text-xs text-slate-400">
+            <div className="flex items-center gap-2">
+              <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+              <span>All Systems Operational</span>
+            </div>
+            <div className="flex items-center gap-1.5 text-slate-300">
+              <ShieldCheck className="w-4 h-4 text-emerald-400" />
+              <span>SOC2 Type II Certified</span>
+            </div>
           </div>
         </div>
 
-        {/* Welcome Back & Subtitle */}
-        <div className="mb-5 text-center">
-          <h1 className="text-2xl font-bold font-display tracking-tight text-white mb-1.5">
-            Welcome back
-          </h1>
-          <p className="text-xs text-slate-400">
-            Enter your credentials to access your OKNexus mobile trading desk
-          </p>
-        </div>
+        {/* Right Column: Form Container (Mobile, Tablet, Desktop) */}
+        <div className="w-full md:col-span-6 lg:col-span-5 max-w-md mx-auto p-5 sm:p-7 rounded-3xl bg-[#0A0D18]/95 border border-white/[0.08] shadow-[0_12px_40px_rgba(0,0,0,0.5)] backdrop-blur-xl">
+          {/* Mobile Only Brand Presence */}
+          <div className="flex md:hidden flex-col items-center justify-center mb-5 text-center">
+            <div className="p-3 rounded-2xl bg-gradient-to-br from-[#1E1433] via-[#121626] to-[#0A0D18] border border-purple-500/30 shadow-md mb-2">
+              <OKNexusLogo size={40} showWordmark={false} />
+            </div>
+            <div className="flex items-center gap-1.5">
+              <span className="font-display font-extrabold text-lg tracking-tight text-white">
+                OKNEXUS
+              </span>
+              <span className="px-1.5 py-0.5 rounded bg-purple-500/20 text-purple-300 text-[9px] font-bold border border-purple-500/30 tracking-wider">
+                EXCHANGE
+              </span>
+            </div>
+          </div>
+
+          {/* Welcome Back & Subtitle */}
+          <div className="mb-4 text-center md:text-left">
+            <h1 className="text-xl sm:text-2xl font-bold font-display tracking-tight text-white mb-1">
+              Welcome back
+            </h1>
+            <p className="text-xs text-slate-400">
+              Enter your credentials to access your OKNexus trading desk
+            </p>
+          </div>
 
         {/* Development Test Helper Banner */}
         <div className="mb-5 p-3 rounded-2xl bg-gradient-to-r from-[#1E1435]/70 via-[#101424]/90 to-[#0A1A28]/70 border border-purple-500/30 shadow-sm text-left">
@@ -442,6 +530,7 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({
             <span>{socialError}</span>
           </div>
         )}
+        </div>
       </div>
 
       {/* Footer: Legal Links & Security Assurance */}

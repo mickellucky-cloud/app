@@ -4,7 +4,7 @@
  */
 
 import React, { useState, useEffect } from 'react';
-import { MainTab, MarketPair, P2POrder, EarnProduct, CryptoAsset, PriceAlert, ToastNotificationItem, AppNotification } from './types';
+import { MainTab, MarketPair, P2POrder, EarnProduct, CryptoAsset, PriceAlert, ToastNotificationItem, AppNotification, ThemeMode } from './types';
 import {
   INITIAL_MARKET_PAIRS,
   INITIAL_ASSETS,
@@ -88,6 +88,26 @@ export default function App() {
   });
   const [isBiometricUnlockPending, setIsBiometricUnlockPending] = useState<boolean>(false);
   const [pendingAuthUser, setPendingAuthUser] = useState<string>('');
+
+  // Daylight / High-Contrast Theme State
+  const [theme, setTheme] = useState<ThemeMode>(() => {
+    return (localStorage.getItem('oknexus_theme') as ThemeMode) || 'dark';
+  });
+
+  useEffect(() => {
+    if (theme === 'light') {
+      document.documentElement.classList.add('light');
+      document.documentElement.classList.remove('dark');
+    } else {
+      document.documentElement.classList.remove('light');
+      document.documentElement.classList.add('dark');
+    }
+    localStorage.setItem('oknexus_theme', theme);
+  }, [theme]);
+
+  const handleToggleTheme = () => {
+    setTheme((prev) => (prev === 'dark' ? 'light' : 'dark'));
+  };
 
   // Initial load transition
   useEffect(() => {
@@ -760,6 +780,8 @@ export default function App() {
               setIsTermsModalOpen(true);
             }}
             onSocialSuccess={handleSocialSuccess}
+            theme={theme}
+            onToggleTheme={handleToggleTheme}
           />
         ) : authView === 'signup' ? (
           <CreateAccountScreen
@@ -810,7 +832,7 @@ export default function App() {
   }
 
   return (
-    <div className="min-h-screen bg-[#07090E] text-slate-100 selection:bg-purple-500 selection:text-white flex overflow-hidden">
+    <div className="min-h-screen bg-white dark:bg-[#07090E] text-slate-900 dark:text-slate-100 selection:bg-purple-500 selection:text-white flex overflow-hidden transition-colors">
       {/* Left Navigation Menu (for Web and Tablet) */}
       <LeftNav
         activeTab={activeTab}
@@ -832,10 +854,12 @@ export default function App() {
         userEmail={userEmail}
         isCollapsed={isLeftNavCollapsed}
         onToggleCollapse={() => setIsLeftNavCollapsed(!isLeftNavCollapsed)}
+        theme={theme}
+        onToggleTheme={handleToggleTheme}
       />
 
       {/* Main Content Area */}
-      <div className="flex-1 flex flex-col min-w-0 h-screen overflow-y-auto overflow-x-hidden relative">
+      <div className="flex-1 flex flex-col min-w-0 h-screen overflow-y-auto overflow-x-hidden relative bg-white dark:bg-[#07090E] transition-colors">
         {/* Desktop Top Utility Bar */}
         {activeTab !== 'p2p' && (
           <DesktopTopBar
@@ -843,12 +867,12 @@ export default function App() {
             onOpenDeposit={() => setIsDepositOpen(true)}
             onOpenNotifications={() => setIsNotificationsOpen(true)}
             unreadNotificationsCount={unreadNotificationsCount}
-            onOpenPriceAlerts={() => handleOpenPriceAlerts()}
-            activeAlertsCount={totalActiveAlerts}
             onOpenSupport={() => setIsSupportOpen(true)}
             onOpenProfile={() => setIsProfileOpen(true)}
             userEmail={userEmail}
             selectedPair={selectedPair}
+            theme={theme}
+            onToggleTheme={handleToggleTheme}
           />
         )}
 
@@ -883,6 +907,8 @@ export default function App() {
               onOpenMore={() => setIsMoreOpen(true)}
               onOpenSupport={() => setIsSupportOpen(true)}
               isLoading={isHomeLoading}
+              theme={theme}
+              onToggleTheme={handleToggleTheme}
             />
           )}
 
@@ -892,6 +918,8 @@ export default function App() {
               onSelectPair={handleSelectPairForTrade}
               onToggleFavorite={handleToggleFavorite}
               onOpenPriceAlerts={(pair) => handleOpenPriceAlerts(pair)}
+              theme={theme}
+              onToggleTheme={handleToggleTheme}
             />
           )}
 
@@ -905,6 +933,8 @@ export default function App() {
               onToggleFavorite={handleToggleFavorite}
               onOpenPriceAlerts={(pair) => handleOpenPriceAlerts(pair)}
               activeAlertsCount={activeAlertsForCurrentPair}
+              theme={theme}
+              onToggleTheme={handleToggleTheme}
             />
           )}
 
@@ -938,6 +968,8 @@ export default function App() {
               ads={p2pAds}
               onExitP2P={() => setActiveTab('home')}
               onPlaceP2POrder={handlePlaceP2POrder}
+              theme={theme}
+              onToggleTheme={handleToggleTheme}
             />
           )}
         </div>
@@ -1030,6 +1062,8 @@ export default function App() {
         onChangeBiometricType={handleChangeBiometricType}
         onTestBiometrics={handleTestBiometrics}
         onOpenSupport={() => setIsSupportOpen(true)}
+        theme={theme}
+        onToggleTheme={handleToggleTheme}
       />
 
       {/* Instant Buy / Sell Modal */}

@@ -19,17 +19,17 @@ export const MarketListSkeleton: React.FC = () => {
       {items.map((item, index) => (
         <div
           key={`market-skeleton-${index}`}
-          className="flex items-center justify-between p-2.5 rounded-xl bg-white/[0.02] border border-white/[0.03] animate-shimmer"
+          className="flex items-center justify-between p-2.5 rounded-xl bg-slate-50 dark:bg-white/[0.02] border border-slate-200/80 dark:border-white/[0.03] animate-shimmer"
         >
           {/* Coin icon & symbol/name */}
           <div className="flex items-center gap-2.5">
-            <div className="w-8 h-8 rounded-full bg-slate-800/80 border border-white/[0.05] animate-pulse flex-shrink-0" />
+            <div className="w-8 h-8 rounded-full bg-slate-200 dark:bg-slate-800/80 border border-slate-300/50 dark:border-white/[0.05] animate-pulse flex-shrink-0" />
             <div>
               <div
-                className={`h-3.5 rounded bg-slate-700/60 ${item.symbolWidth} animate-pulse mb-1.5`}
+                className={`h-3.5 rounded bg-slate-200 dark:bg-slate-700/60 ${item.symbolWidth} animate-pulse mb-1.5`}
               />
               <div
-                className={`h-2.5 rounded bg-slate-800/60 ${item.nameWidth} animate-pulse`}
+                className={`h-2.5 rounded bg-slate-200/80 dark:bg-slate-800/60 ${item.nameWidth} animate-pulse`}
               />
             </div>
           </div>
@@ -38,10 +38,10 @@ export const MarketListSkeleton: React.FC = () => {
           <div className="flex items-center gap-3">
             <div className="flex flex-col items-end">
               <div
-                className={`h-3.5 rounded bg-slate-700/60 ${item.priceWidth} animate-pulse`}
+                className={`h-3.5 rounded bg-slate-200 dark:bg-slate-700/60 ${item.priceWidth} animate-pulse`}
               />
             </div>
-            <div className="w-[62px] h-[26px] rounded-md bg-slate-800/70 border border-white/[0.05] animate-pulse flex-shrink-0" />
+            <div className="w-[62px] h-[26px] rounded-md bg-slate-200 dark:bg-slate-800/70 border border-slate-300/50 dark:border-white/[0.05] animate-pulse flex-shrink-0" />
           </div>
         </div>
       ))}

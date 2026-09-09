@@ -167,22 +167,22 @@ export const SpotTradeScreen: React.FC<SpotTradeScreenProps> = ({
   return (
     <div
       id="spot-trade-screen"
-      className="pb-32 md:pb-12 pt-2 px-3 sm:px-6 lg:px-8 max-w-lg md:max-w-4xl lg:max-w-7xl mx-auto min-h-screen text-slate-100 transition-colors"
+      className="pb-32 md:pb-12 pt-2 px-3 sm:px-6 lg:px-8 max-w-lg md:max-w-4xl lg:max-w-7xl mx-auto min-h-screen text-slate-900 dark:text-slate-100 bg-white dark:bg-[#07090E] transition-colors"
     >
       {/* Top Bar Header */}
-      <header className="flex items-center justify-between pb-2.5 border-b border-white/[0.06] mb-2.5">
+      <header className="flex items-center justify-between pb-2.5 border-b border-slate-200 dark:border-white/[0.06] mb-2.5">
         <div className="flex items-center gap-2">
           <OKNexusLogo size={24} />
           <button
             id="pair-selector-trigger"
             type="button"
             onClick={onOpenPairSelector}
-            className="flex items-center gap-1.5 px-2.5 py-1 rounded-xl bg-[#121626] border border-white/10 hover:border-purple-500/50 text-sm font-bold text-white transition-all active:scale-95 shadow-sm"
+            className="flex items-center gap-1.5 px-2.5 py-1 rounded-xl bg-slate-100 dark:bg-[#121626] border border-slate-200 dark:border-white/10 hover:border-purple-500/50 text-sm font-bold text-slate-900 dark:text-white transition-all active:scale-95 shadow-xs"
           >
             <span>{selectedPair.symbol}</span>
-            <ChevronDown className="w-3.5 h-3.5 text-slate-400" />
+            <ChevronDown className="w-3.5 h-3.5 text-slate-500 dark:text-slate-400" />
           </button>
-          <span className="text-[10px] font-mono-num font-extrabold px-2 py-0.5 rounded-full bg-purple-500/20 text-purple-300 border border-purple-500/30 tracking-wider">
+          <span className="text-[10px] font-mono-num font-extrabold px-2 py-0.5 rounded-full bg-purple-500/15 text-purple-700 dark:text-purple-300 border border-purple-500/30 tracking-wider">
             SPOT
           </span>
         </div>
@@ -194,7 +194,7 @@ export const SpotTradeScreen: React.FC<SpotTradeScreenProps> = ({
               id="trade-price-alert-btn"
               type="button"
               onClick={() => onOpenPriceAlerts(updatedPair)}
-              className="relative p-2 rounded-xl bg-slate-900/80 border border-white/10 hover:border-purple-500/40 transition-colors text-slate-300 hover:text-purple-300 active:scale-95"
+              className="relative p-2 rounded-xl bg-slate-100 dark:bg-slate-900/80 border border-slate-200 dark:border-white/10 hover:border-purple-500/40 transition-colors text-slate-600 hover:text-purple-600 dark:text-slate-300 dark:hover:text-purple-300 active:scale-95"
               title="Set Price Alert"
               aria-label="Set Price Alert"
             >
@@ -211,14 +211,14 @@ export const SpotTradeScreen: React.FC<SpotTradeScreenProps> = ({
           <button
             type="button"
             onClick={() => onToggleFavorite(selectedPair.symbol)}
-            className="p-2 rounded-xl bg-slate-900/80 border border-white/10 hover:border-white/20 transition-colors active:scale-95"
+            className="p-2 rounded-xl bg-slate-100 dark:bg-slate-900/80 border border-slate-200 dark:border-white/10 hover:border-slate-300 dark:hover:border-white/20 transition-colors active:scale-95"
             aria-label="Favorite pair"
           >
             <Star
               className={`w-4 h-4 ${
                 selectedPair.isFavorite
                   ? 'text-amber-400 fill-amber-400 drop-shadow-[0_0_6px_rgba(251,191,36,0.6)]'
-                  : 'text-slate-400'
+                  : 'text-slate-400 hover:text-slate-600 dark:hover:text-slate-300'
               }`}
             />
           </button>
@@ -237,7 +237,7 @@ export const SpotTradeScreen: React.FC<SpotTradeScreenProps> = ({
       {/* 24h Real-Time Ticker & Market Depth Strip */}
       <section
         id="trade-market-strip"
-        className="rounded-2xl bg-[#090C14] border border-white/[0.08] p-3 shadow-lg mb-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3 backdrop-blur-md"
+        className="rounded-2xl bg-slate-50 dark:bg-[#090C14] border border-slate-200 dark:border-white/[0.08] p-3 shadow-xs dark:shadow-lg mb-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3 backdrop-blur-md"
       >
         <div className="flex items-baseline sm:items-center gap-3">
           {/* Main Price with live tick animation */}
@@ -245,12 +245,12 @@ export const SpotTradeScreen: React.FC<SpotTradeScreenProps> = ({
             <span
               className={`font-mono-num text-2xl lg:text-3xl font-extrabold tracking-tight transition-colors duration-300 ${
                 lastTickDirection === 'up'
-                  ? 'text-emerald-300 scale-[1.02]'
+                  ? 'text-emerald-600 dark:text-emerald-300 scale-[1.02]'
                   : lastTickDirection === 'down'
-                  ? 'text-rose-300 scale-[1.02]'
+                  ? 'text-rose-600 dark:text-rose-300 scale-[1.02]'
                   : selectedPair.change24h >= 0
-                  ? 'text-emerald-400'
-                  : 'text-rose-400'
+                  ? 'text-emerald-600 dark:text-emerald-400'
+                  : 'text-rose-600 dark:text-rose-400'
               }`}
             >
               {livePrice >= 1
@@ -261,8 +261,8 @@ export const SpotTradeScreen: React.FC<SpotTradeScreenProps> = ({
             <span
               className={`font-mono-num text-xs font-bold px-1.5 py-0.5 rounded-lg flex items-center gap-0.5 ${
                 selectedPair.change24h >= 0
-                  ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/30'
-                  : 'bg-rose-500/20 text-rose-300 border border-rose-500/30'
+                  ? 'bg-emerald-50 text-emerald-700 border border-emerald-200 dark:bg-emerald-500/20 dark:text-emerald-300 dark:border-emerald-500/30'
+                  : 'bg-rose-50 text-rose-700 border border-rose-200 dark:bg-rose-500/20 dark:text-rose-300 dark:border-rose-500/30'
               }`}
             >
               {selectedPair.change24h >= 0 ? (
@@ -274,13 +274,13 @@ export const SpotTradeScreen: React.FC<SpotTradeScreenProps> = ({
             </span>
           </div>
 
-          <div className="flex items-center gap-2 text-[11px] font-mono-num text-slate-400">
+          <div className="flex items-center gap-2 text-[11px] font-mono-num text-slate-500 dark:text-slate-400">
             <span>≈ ${livePrice.toFixed(2)} USD</span>
             {onOpenPriceAlerts && (
               <button
                 type="button"
                 onClick={() => onOpenPriceAlerts(updatedPair)}
-                className="inline-flex items-center gap-1 text-[10px] text-purple-300 font-sans font-semibold bg-purple-500/15 hover:bg-purple-500/25 px-1.5 py-0.5 rounded-md border border-purple-500/30 transition-colors"
+                className="inline-flex items-center gap-1 text-[10px] text-purple-700 dark:text-purple-300 font-sans font-semibold bg-purple-100 hover:bg-purple-200 dark:bg-purple-500/15 dark:hover:bg-purple-500/25 px-1.5 py-0.5 rounded-md border border-purple-200 dark:border-purple-500/30 transition-colors"
               >
                 <Bell className="w-2.5 h-2.5" />
                 <span>+ Alert</span>
@@ -293,19 +293,19 @@ export const SpotTradeScreen: React.FC<SpotTradeScreenProps> = ({
         <div className="grid grid-cols-4 sm:flex sm:items-center gap-x-4 gap-y-1 text-[11px] text-right">
           <div>
             <div className="text-slate-500 text-[10px]">24h High</div>
-            <div className="font-mono-num text-slate-200 font-semibold">{selectedPair.high24h.toLocaleString()}</div>
+            <div className="font-mono-num text-slate-800 dark:text-slate-200 font-semibold">{selectedPair.high24h.toLocaleString()}</div>
           </div>
           <div>
             <div className="text-slate-500 text-[10px]">24h Low</div>
-            <div className="font-mono-num text-slate-200 font-semibold">{selectedPair.low24h.toLocaleString()}</div>
+            <div className="font-mono-num text-slate-800 dark:text-slate-200 font-semibold">{selectedPair.low24h.toLocaleString()}</div>
           </div>
           <div>
             <div className="text-slate-500 text-[10px]">24h Vol</div>
-            <div className="font-mono-num text-slate-200 font-semibold">{selectedPair.volume24h}</div>
+            <div className="font-mono-num text-slate-800 dark:text-slate-200 font-semibold">{selectedPair.volume24h}</div>
           </div>
           <div>
             <div className="text-slate-500 text-[10px]">24h Turnover</div>
-            <div className="font-mono-num text-slate-200 font-semibold">
+            <div className="font-mono-num text-slate-800 dark:text-slate-200 font-semibold">
               ${(selectedPair.volumeQuote / 1000000).toFixed(1)}M
             </div>
           </div>

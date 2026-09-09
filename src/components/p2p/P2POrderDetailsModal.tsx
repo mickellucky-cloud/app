@@ -21,6 +21,7 @@ import {
   Lock,
 } from 'lucide-react';
 import { P2POrder, P2PChatMessage, P2PDisputeInfo } from '../../types';
+import { formatFiat, getCurrencySymbol } from './p2pHelpers';
 
 interface P2POrderDetailsModalProps {
   isOpen: boolean;
@@ -227,6 +228,76 @@ export const P2POrderDetailsModal: React.FC<P2POrderDetailsModalProps> = ({
     onShowToast?.('Order Cancelled', 'The order has been cancelled and escrow unlocked.', 'info');
   };
 
+  const handleSimulateSellerRelease = () => {
+    const updatedOrder: P2POrder = {
+      ...order,
+      status: 'completed',
+      timeline: [
+        ...(order.timeline || []),
+        {
+          id: `t-${Date.now()}`,
+          status: 'completed',
+          title: 'Escrow Released by Seller',
+          description: `${order.merchantName} verified fiat deposit and unlocked ${order.cryptoAmount} ${order.cryptoSymbol} to your funding wallet.`,
+          timestamp: 'Just now',
+          actor: 'seller',
+        },
+      ],
+      chatMessages: [
+        ...messages,
+        {
+          id: `sys-${Date.now()}`,
+          sender: 'system',
+          senderName: 'OKNexus Escrow Protocol',
+          text: `Payment verified by ${order.merchantName}. ${order.cryptoAmount} ${order.cryptoSymbol} has been released to your Funding Wallet.`,
+          timestamp: 'Just now',
+        },
+      ],
+    };
+    setMessages(updatedOrder.chatMessages || []);
+    onUpdateOrder(updatedOrder);
+    onShowToast?.(
+      'Order Completed!',
+      `${order.cryptoAmount} ${order.cryptoSymbol} has been credited to your Funding Wallet.`,
+      'success'
+    );
+  };
+
+  const handleSimulateBuyerPaid = () => {
+    const updatedOrder: P2POrder = {
+      ...order,
+      status: 'payment_submitted',
+      timeline: [
+        ...(order.timeline || []),
+        {
+          id: `t-${Date.now()}`,
+          status: 'payment_submitted',
+          title: 'Buyer Transferred Fiat',
+          description: `Buyer confirmed sending ${formatFiat(order.fiatAmount, order.fiatCurrency)} to your account.`,
+          timestamp: 'Just now',
+          actor: 'buyer',
+        },
+      ],
+      chatMessages: [
+        ...messages,
+        {
+          id: `sys-${Date.now()}`,
+          sender: 'system',
+          senderName: 'OKNexus Escrow Protocol',
+          text: 'Buyer marked payment as sent. Please verify cleared funds in your banking app before releasing crypto.',
+          timestamp: 'Just now',
+        },
+      ],
+    };
+    setMessages(updatedOrder.chatMessages || []);
+    onUpdateOrder(updatedOrder);
+    onShowToast?.(
+      'Buyer Marked as Paid',
+      'Please check your banking app to verify funds before releasing crypto.',
+      'info'
+    );
+  };
+
   // Mock seller payment details (or user's payment details if selling)
   const paymentDetails = order.paymentDetails || {
     bankName: 'Kuda Microfinance Bank',
@@ -277,9 +348,20 @@ export const P2POrderDetailsModal: React.FC<P2POrderDetailsModalProps> = ({
                   </span>
                 )}
               </div>
-              <p className="text-xs text-slate-400">
-                Created {order.createdAt} • Counterparty: <strong className="text-white">{order.merchantName}</strong>
-              </p>
+              <div className="flex items-center gap-1.5 text-xs text-slate-400 flex-wrap mt-0.5">
+                <span>Created {order.createdAt}</span>
+                <span className="text-white/20">•</span>
+                <span className="flex items-center gap-1">
+                  Counterparty: <strong className="text-white">{order.merchantName}</strong>
+                  <span
+                    className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-full bg-cyan-500/15 border border-cyan-400/40 text-cyan-300 text-[9.5px] font-bold"
+                    title="Verified OKNexus Merchant"
+                  >
+                    <CheckCircle2 className="w-2.5 h-2.5 text-cyan-400" />
+                    <span>Verified</span>
+                  </span>
+                </span>
+              </div>
             </div>
           </div>
 
@@ -340,22 +422,28 @@ export const P2POrderDetailsModal: React.FC<P2POrderDetailsModalProps> = ({
             {/* Amount Summary Card */}
             <div className="p-4 rounded-2xl bg-gradient-to-br from-[#121628] via-[#0E1220] to-[#0A0D18] border border-purple-500/20 shadow-lg space-y-3">
               <div className="flex items-center justify-between">
-                <span className="text-xs text-slate-400 font-medium">Total Amount to Pay</span>
+                <span className="text-xs text-slate-400 font-medium">
+                  {order.type === 'buy' ? 'Total Amount to Pay' : 'Total Fiat Receiving'}
+                </span>
                 <span className="text-xl font-extrabold text-white font-mono-num">
-                  ₦{order.fiatAmount.toLocaleString()} {order.fiatCurrency}
+                  {formatFiat(order.fiatAmount, order.fiatCurrency)}
                 </span>
               </div>
 
               <div className="grid grid-cols-3 gap-2 pt-3 border-t border-white/[0.08] text-xs font-mono-num">
                 <div className="p-2 rounded-xl bg-black/40">
-                  <span className="text-[10px] text-slate-400 block">Crypto Receiving</span>
+                  <span className="text-[10px] text-slate-400 block">
+                    {order.type === 'buy' ? 'Crypto Receiving' : 'Crypto Selling'}
+                  </span>
                   <span className="font-bold text-emerald-400">
                     {order.cryptoAmount} {order.cryptoSymbol}
                   </span>
                 </div>
                 <div className="p-2 rounded-xl bg-black/40">
                   <span className="text-[10px] text-slate-400 block">Unit Price</span>
-                  <span className="font-bold text-slate-200">₦{order.unitPrice.toLocaleString()}</span>
+                  <span className="font-bold text-slate-200">
+                    {formatFiat(order.unitPrice, order.fiatCurrency)}
+                  </span>
                 </div>
                 <div className="p-2 rounded-xl bg-black/40">
                   <span className="text-[10px] text-slate-400 block">Trading Fee</span>
@@ -369,7 +457,9 @@ export const P2POrderDetailsModal: React.FC<P2POrderDetailsModalProps> = ({
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
                   <Building className="w-4 h-4 text-purple-400" />
-                  <h4 className="font-bold text-sm text-white">Seller Bank Details</h4>
+                  <h4 className="font-bold text-sm text-white">
+                    {order.type === 'buy' ? 'Seller Payment Details' : 'Your Registered Payout Account'}
+                  </h4>
                 </div>
                 <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-purple-500/20 text-purple-300 border border-purple-500/30">
                   {order.paymentMethod}
@@ -377,10 +467,10 @@ export const P2POrderDetailsModal: React.FC<P2POrderDetailsModalProps> = ({
               </div>
 
               <div className="space-y-2 text-xs">
-                {/* Bank Name */}
+                {/* Bank / Provider Name */}
                 <div className="p-2.5 rounded-xl bg-[#080A14] border border-white/[0.06] flex items-center justify-between">
                   <div>
-                    <span className="text-[10px] text-slate-400 block">Bank Name</span>
+                    <span className="text-[10px] text-slate-400 block">Institution / Provider</span>
                     <span className="font-bold text-white">{paymentDetails.bankName}</span>
                   </div>
                   <button
@@ -391,10 +481,10 @@ export const P2POrderDetailsModal: React.FC<P2POrderDetailsModalProps> = ({
                   </button>
                 </div>
 
-                {/* Account Number */}
+                {/* Account Number / Mobile Number */}
                 <div className="p-2.5 rounded-xl bg-[#080A14] border border-white/[0.06] flex items-center justify-between">
                   <div>
-                    <span className="text-[10px] text-slate-400 block">Account Number</span>
+                    <span className="text-[10px] text-slate-400 block">Account / Mobile Number</span>
                     <span className="font-bold text-base text-purple-300 font-mono-num">{paymentDetails.accountNumber}</span>
                   </div>
                   <button
@@ -439,54 +529,162 @@ export const P2POrderDetailsModal: React.FC<P2POrderDetailsModalProps> = ({
               <div className="p-3 rounded-xl bg-rose-500/10 border border-rose-500/20 text-xs text-rose-300 leading-relaxed flex items-start gap-2">
                 <AlertCircle className="w-4 h-4 text-rose-400 flex-shrink-0 mt-0.5" />
                 <span>
-                  <strong>Strict Security Warning:</strong> Do <em>NOT</em> include words like "Crypto", "USDT", "BTC", or "OKNexus" in your bank transfer narration, to prevent automated bank account freezes.
+                  <strong>Strict Security Warning:</strong> Do <em>NOT</em> include words like "Crypto", "USDT", "BTC", or "OKNexus" in your payment memo/narration to ensure smooth bank clearance.
                 </span>
               </div>
             </div>
 
-            {/* Action Buttons Row */}
-            <div className="flex flex-wrap items-center gap-3 pt-2">
-              {/* Buyer: I Have Paid button */}
+            {/* Action Buttons Row with Comprehensive Buy, Sell & Dispute Flow Options */}
+            <div className="space-y-2.5 pt-1">
+              {/* Buyer: Pending Payment state */}
               {order.type === 'buy' && order.status === 'pending' && (
-                <button
-                  onClick={() => setShowPaidConfirmModal(true)}
-                  className="flex-1 py-3 px-4 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-extrabold text-sm shadow-lg shadow-emerald-500/20 active:scale-98 transition-all flex items-center justify-center gap-2"
-                >
-                  <CheckCircle2 className="w-4 h-4" />
-                  <span>I Have Paid (Transferred ₦{order.fiatAmount.toLocaleString()})</span>
-                </button>
+                <div className="flex flex-wrap items-center gap-2.5">
+                  <button
+                    onClick={() => setShowPaidConfirmModal(true)}
+                    className="flex-1 py-3 px-4 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-extrabold text-sm shadow-lg shadow-emerald-500/20 active:scale-98 transition-all flex items-center justify-center gap-2"
+                  >
+                    <CheckCircle2 className="w-4 h-4" />
+                    <span>I Have Paid ({formatFiat(order.fiatAmount, order.fiatCurrency)})</span>
+                  </button>
+                  <button
+                    onClick={() => setShowCancelModal(true)}
+                    className="py-3 px-4 rounded-xl bg-white/[0.06] hover:bg-white/10 text-slate-300 hover:text-white font-semibold text-xs transition-colors"
+                  >
+                    Cancel Order
+                  </button>
+                </div>
               )}
 
-              {/* Seller: Release Crypto button */}
-              {order.type === 'sell' && (order.status === 'pending' || order.status === 'payment_submitted') && (
-                <button
-                  onClick={() => setShowReleaseModal(true)}
-                  className="flex-1 py-3 px-4 rounded-xl bg-purple-600 hover:bg-purple-500 text-white font-extrabold text-sm shadow-lg shadow-purple-600/30 active:scale-98 transition-all flex items-center justify-center gap-2"
-                >
-                  <Lock className="w-4 h-4" />
-                  <span>Payment Received & Release Crypto</span>
-                </button>
+              {/* Buyer: Payment Submitted state -> Waiting for seller release */}
+              {order.type === 'buy' && order.status === 'payment_submitted' && (
+                <div className="space-y-2">
+                  <div className="p-3 rounded-xl bg-purple-500/15 border border-purple-500/30 text-xs flex items-center justify-between">
+                    <div className="flex items-center gap-2 text-purple-300 font-medium">
+                      <Clock className="w-4 h-4 text-purple-400 animate-spin" />
+                      <span>Payment Submitted! Waiting for {order.merchantName} to release crypto.</span>
+                    </div>
+                    <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-purple-500/20 text-purple-300 border border-purple-500/30">
+                      Escrow Locked
+                    </span>
+                  </div>
+                  <div className="flex flex-wrap items-center gap-2">
+                    <button
+                      onClick={handleSimulateSellerRelease}
+                      className="flex-1 py-2.5 px-3 rounded-xl bg-emerald-500/20 hover:bg-emerald-500/30 border border-emerald-500/40 text-emerald-300 text-xs font-bold transition-all flex items-center justify-center gap-1.5"
+                      title="Simulate seller verifying your transfer and releasing crypto"
+                    >
+                      <CheckCircle2 className="w-4 h-4 text-emerald-400" />
+                      <span>Simulate Merchant Release (Test Flow)</span>
+                    </button>
+                    <button
+                      onClick={() => onOpenDispute(order)}
+                      className="py-2.5 px-3 rounded-xl bg-rose-500/15 hover:bg-rose-500/25 text-rose-300 border border-rose-500/30 text-xs font-bold transition-colors flex items-center gap-1.5"
+                    >
+                      <ShieldAlert className="w-3.5 h-3.5 text-rose-400" />
+                      <span>Appeal / Open Dispute</span>
+                    </button>
+                  </div>
+                </div>
               )}
 
-              {/* Cancel Order (if pending) */}
-              {order.status === 'pending' && (
-                <button
-                  onClick={() => setShowCancelModal(true)}
-                  className="py-3 px-4 rounded-xl bg-white/[0.06] hover:bg-white/10 text-slate-300 hover:text-white font-semibold text-xs transition-colors"
-                >
-                  Cancel Order
-                </button>
+              {/* Seller: Pending Payment state -> Waiting for buyer to send fiat */}
+              {order.type === 'sell' && order.status === 'pending' && (
+                <div className="space-y-2">
+                  <div className="p-3 rounded-xl bg-amber-500/15 border border-amber-500/30 text-xs flex items-center justify-between">
+                    <div className="flex items-center gap-2 text-amber-300 font-medium">
+                      <Clock className="w-4 h-4 text-amber-400 animate-pulse" />
+                      <span>Waiting for buyer to transfer {formatFiat(order.fiatAmount, order.fiatCurrency)}...</span>
+                    </div>
+                    <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-amber-500/20 text-amber-300 border border-amber-500/30">
+                      15m Window
+                    </span>
+                  </div>
+                  <div className="flex flex-wrap items-center gap-2">
+                    <button
+                      onClick={handleSimulateBuyerPaid}
+                      className="flex-1 py-2.5 px-3 rounded-xl bg-purple-600/20 hover:bg-purple-600/30 border border-purple-500/40 text-purple-300 text-xs font-bold transition-all flex items-center justify-center gap-1.5"
+                    >
+                      <CheckCircle2 className="w-4 h-4 text-purple-400" />
+                      <span>Simulate Buyer Paid (Test Flow)</span>
+                    </button>
+                    <button
+                      onClick={() => setShowCancelModal(true)}
+                      className="py-2.5 px-3 rounded-xl bg-white/[0.06] hover:bg-white/10 text-slate-300 text-xs font-semibold"
+                    >
+                      Cancel Order
+                    </button>
+                  </div>
+                </div>
               )}
 
-              {/* Open Dispute Button */}
-              {order.status !== 'cancelled' && order.status !== 'completed' && (
-                <button
-                  onClick={() => onOpenDispute(order)}
-                  className="py-3 px-4 rounded-xl bg-rose-500/10 hover:bg-rose-500/20 text-rose-300 border border-rose-500/30 font-bold text-xs transition-colors flex items-center gap-1.5"
-                >
-                  <ShieldAlert className="w-4 h-4" />
-                  <span>{order.status === 'disputed' ? 'View Active Dispute' : 'Open Dispute'}</span>
-                </button>
+              {/* Seller: Payment Submitted state -> Buyer claims paid, Seller verifies & releases */}
+              {order.type === 'sell' && order.status === 'payment_submitted' && (
+                <div className="space-y-2">
+                  <div className="p-3 rounded-xl bg-emerald-500/15 border border-emerald-500/30 text-xs flex items-center justify-between">
+                    <div className="flex items-center gap-2 text-emerald-300 font-medium">
+                      <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
+                      <span>Buyer marked as paid! Check your bank app to confirm cleared funds.</span>
+                    </div>
+                  </div>
+                  <div className="flex flex-wrap items-center gap-2">
+                    <button
+                      onClick={() => setShowReleaseModal(true)}
+                      className="flex-1 py-3 px-4 rounded-xl bg-purple-600 hover:bg-purple-500 text-white font-extrabold text-sm shadow-lg shadow-purple-600/30 active:scale-98 transition-all flex items-center justify-center gap-2"
+                    >
+                      <Lock className="w-4 h-4" />
+                      <span>Payment Verified: Release Crypto</span>
+                    </button>
+                    <button
+                      onClick={() => onOpenDispute(order)}
+                      className="py-3 px-3.5 rounded-xl bg-rose-500/15 hover:bg-rose-500/25 text-rose-300 border border-rose-500/30 font-bold text-xs transition-colors flex items-center gap-1.5"
+                    >
+                      <ShieldAlert className="w-3.5 h-3.5 text-rose-400" />
+                      <span>Funds Not In Account? Dispute</span>
+                    </button>
+                  </div>
+                </div>
+              )}
+
+              {/* Completed State Banner */}
+              {order.status === 'completed' && (
+                <div className="p-4 rounded-2xl bg-emerald-500/15 border border-emerald-500/30 text-emerald-300 text-xs flex items-center justify-between">
+                  <div className="flex items-center gap-2.5">
+                    <CheckCircle2 className="w-5 h-5 text-emerald-400 shrink-0" />
+                    <div>
+                      <div className="font-extrabold text-sm text-white">Order Completed Successfully</div>
+                      <div className="text-[11px] text-emerald-300/80 mt-0.5">
+                        {order.cryptoAmount} {order.cryptoSymbol} has been unlocked from escrow to Funding Wallet.
+                      </div>
+                    </div>
+                  </div>
+                  <span className="text-[10px] font-mono-num px-2.5 py-1 rounded-lg bg-emerald-500/20 text-emerald-300 font-extrabold border border-emerald-500/30">
+                    RELEASED
+                  </span>
+                </div>
+              )}
+
+              {/* Disputed State Banner */}
+              {order.status === 'disputed' && (
+                <div className="p-4 rounded-2xl bg-rose-500/15 border border-rose-500/30 text-xs flex items-center justify-between">
+                  <div className="flex items-center gap-2.5">
+                    <ShieldAlert className="w-5 h-5 text-rose-400 shrink-0" />
+                    <div>
+                      <div className="font-extrabold text-sm text-white">
+                        Dispute Active ({order.dispute?.id || 'DISP-ACTIVE'})
+                      </div>
+                      <div className="text-[11px] text-rose-300/80 mt-0.5">
+                        Escrow is frozen under Senior Arbiter mediation.
+                      </div>
+                    </div>
+                  </div>
+                  <button
+                    onClick={() => onOpenDispute(order)}
+                    className="px-3 py-1.5 rounded-xl bg-rose-500 hover:bg-rose-400 text-white font-bold text-xs shadow-md transition-all flex items-center gap-1.5"
+                  >
+                    <span>Arbitration Center</span>
+                    <ArrowRight className="w-3 h-3" />
+                  </button>
+                </div>
               )}
             </div>
           </div>

@@ -36,6 +36,8 @@ export const P2PDisputeModal: React.FC<P2PDisputeModalProps> = ({
   onUpdateOrderDispute,
   onShowToast,
 }) => {
+  const role: 'buyer' | 'seller' = userRole === 'seller' ? 'seller' : 'buyer';
+
   // Dispute status flow: 'opened' | 'evidence_collection' | 'under_review' | 'decision_made' | 'resolved'
   const [disputeStatus, setDisputeStatus] = useState<
     'opened' | 'evidence_collection' | 'under_review' | 'decision_made' | 'resolved'
@@ -43,7 +45,7 @@ export const P2PDisputeModal: React.FC<P2PDisputeModalProps> = ({
 
   // Form states for creating a new dispute
   const [selectedReason, setSelectedReason] = useState(
-    order.dispute?.reason || (userRole === 'buyer'
+    order.dispute?.reason || (role === 'buyer'
       ? 'Payment sent but seller has not released crypto'
       : 'Buyer claimed payment sent but funds not received in bank account')
   );
@@ -117,8 +119,8 @@ export const P2PDisputeModal: React.FC<P2PDisputeModalProps> = ({
 
     const newMsg: P2PChatMessage = {
       id: `d-msg-${Date.now()}`,
-      sender: userRole,
-      senderName: userRole === 'buyer' ? 'You (Buyer)' : 'You (Seller)',
+      sender: role,
+      senderName: role === 'buyer' ? 'You (Buyer)' : 'You (Seller)',
       text: chatInput.trim(),
       timestamp: 'Just now',
     };
@@ -153,9 +155,9 @@ export const P2PDisputeModal: React.FC<P2PDisputeModalProps> = ({
         id: 't-1',
         status: 'dispute_opened',
         title: 'Dispute Case Opened',
-        description: `${userRole === 'buyer' ? 'Buyer' : 'Seller'} submitted complaint: "${selectedReason}"`,
+        description: `${role === 'buyer' ? 'Buyer' : 'Seller'} submitted complaint: "${selectedReason}"`,
         timestamp: 'Just now',
-        actor: userRole,
+        actor: role,
       },
       {
         id: 't-2',
@@ -163,7 +165,7 @@ export const P2PDisputeModal: React.FC<P2PDisputeModalProps> = ({
         title: 'Evidence Collected',
         description: `${evidenceFiles.length} documentation files encrypted into dispute storage.`,
         timestamp: 'Just now',
-        actor: userRole,
+        actor: role,
       },
       {
         id: 't-3',
@@ -178,13 +180,13 @@ export const P2PDisputeModal: React.FC<P2PDisputeModalProps> = ({
     const updatedDispute: P2PDisputeInfo = {
       id: order.dispute?.id || `DISP-${Math.floor(100000 + Math.random() * 900000)}`,
       orderId: order.id,
-      openedBy: userRole,
+      openedBy: role,
       reason: selectedReason,
       description: disputeDescription,
       status: 'under_review',
       createdAt: new Date().toLocaleTimeString(),
-      evidenceBuyer: userRole === 'buyer' ? evidenceFiles : order.dispute?.evidenceBuyer || [],
-      evidenceSeller: userRole === 'seller' ? evidenceFiles : order.dispute?.evidenceSeller || [],
+      evidenceBuyer: role === 'buyer' ? evidenceFiles : order.dispute?.evidenceBuyer || [],
+      evidenceSeller: role === 'seller' ? evidenceFiles : order.dispute?.evidenceSeller || [],
       timeline: newTimeline,
     };
 
@@ -211,7 +213,7 @@ export const P2PDisputeModal: React.FC<P2PDisputeModalProps> = ({
     const updatedDispute: P2PDisputeInfo = {
       id: order.dispute?.id || `DISP-${Math.floor(100000 + Math.random() * 900000)}`,
       orderId: order.id,
-      openedBy: userRole,
+      openedBy: role,
       reason: selectedReason,
       description: disputeDescription,
       status: 'resolved',

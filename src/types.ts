@@ -81,6 +81,45 @@ export interface P2PMerchant {
   minLimit: number;
   maxLimit: number;
   paymentMethods: string[];
+  tradeVolume?: number; // 30-day trade volume in USDT
+  feedbackScore?: number; // Positive feedback score percentage (e.g. 99.2%)
+  trustScore?: number; // Dynamic Trust Score (0-100)
+}
+
+export interface P2PTrustScoreData {
+  totalScore: number; // 0 - 100
+  tier: 'Exceptional' | 'High Trust' | 'Moderate Trust' | 'Low Trust';
+  tierColor: string;
+  badgeLabel: string;
+  tradeHistoryScore: {
+    total: number; // Max 40
+    completionRateScore: number; // Max 18
+    volumeScore: number; // Max 14
+    ordersCountScore: number; // Max 8
+    ordersCount: number;
+    completionRate: number;
+    volume: number;
+  };
+  identityScore: {
+    total: number; // Max 35
+    govIdScore: number; // Max 18
+    bankScore: number; // Max 9
+    twoFactorScore: number; // Max 5
+    addressScore: number; // Max 3
+    isGovIdVerified: boolean;
+    isBankVerified: boolean;
+    is2faEnabled: boolean;
+    isAddressVerified: boolean;
+  };
+  feedbackScore: {
+    total: number; // Max 25
+    positiveRateScore: number; // Max 15
+    disputeFreeScore: number; // Max 6
+    speedScore: number; // Max 4
+    positivePercent: number;
+    disputeCount: number;
+    avgReleaseMin: number;
+  };
 }
 
 export type P2POrderStatus =
@@ -97,9 +136,10 @@ export interface P2PPaymentDetails {
   bankName: string;
   accountNumber: string;
   accountName: string;
-  referenceCode: string;
-  paymentWindowMinutes: number;
-  paymentDeadline: string;
+  referenceCode?: string;
+  referenceMemo?: string;
+  paymentWindowMinutes?: number;
+  paymentDeadline?: string;
 }
 
 export interface P2PChatMessage {
@@ -111,6 +151,15 @@ export interface P2PChatMessage {
   attachmentUrl?: string;
   attachmentName?: string;
   isEvidence?: boolean;
+}
+
+export interface P2POrderTimelineItem {
+  id: string;
+  status: string;
+  title: string;
+  description: string;
+  timestamp: string;
+  actor: 'buyer' | 'seller' | 'system' | 'arbiter';
 }
 
 export interface P2PDisputeTimelineItem {
@@ -161,6 +210,7 @@ export interface P2POrder {
   createdAt: string;
   paymentDetails?: P2PPaymentDetails;
   chatMessages?: P2PChatMessage[];
+  timeline?: P2POrderTimelineItem[];
   paymentProofUrl?: string;
   paidAt?: string;
   releasedAt?: string;
