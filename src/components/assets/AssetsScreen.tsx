@@ -2,15 +2,15 @@ import React, { useState } from 'react';
 import { OKNexusBadge3D } from '../common/OKNexusLogo';
 import { CoinIcon } from '../common/CoinIcon';
 import { Sparkline } from '../common/Sparkline';
-import { CryptoAsset } from '../../types';
+import { CryptoAsset, ThemeMode } from '../../types';
 import {
   Bell,
   Eye,
   EyeOff,
-  PlusSquare,
+  ArrowDownLeft,
   ArrowUpRight,
-  Send,
-  RefreshCw,
+  SendHorizontal,
+  Repeat,
   Shield,
   MapPin,
   Sparkles,
@@ -41,6 +41,8 @@ interface AssetsScreenProps {
   onOpenConvert: () => void;
   onOpenNotifications: () => void;
   onSelectAssetForTrade?: (symbol: string) => void;
+  theme?: ThemeMode;
+  onToggleTheme?: () => void;
 }
 
 export const AssetsScreen: React.FC<AssetsScreenProps> = ({
@@ -54,6 +56,8 @@ export const AssetsScreen: React.FC<AssetsScreenProps> = ({
   onOpenConvert,
   onOpenNotifications,
   onSelectAssetForTrade,
+  theme = 'dark',
+  onToggleTheme,
 }) => {
   const [activeCategory, setActiveCategory] = useState<'all' | 'spot' | 'funding' | 'earn'>('all');
   const [searchQuery, setSearchQuery] = useState('');
@@ -69,27 +73,32 @@ export const AssetsScreen: React.FC<AssetsScreenProps> = ({
       {/* Top Header */}
       <header className="flex items-center justify-between py-2 mb-4">
         <div className="flex items-center gap-2.5">
-          <h1 className="text-xl sm:text-2xl font-bold font-display text-slate-900 dark:text-white tracking-tight">Assets Overview</h1>
-          <button
-            onClick={onToggleShowBalances}
-            className="p-1 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 transition-colors"
-            aria-label="Toggle balances"
-          >
-            {showBalances ? <Eye className="w-4 h-4" /> : <EyeOff className="w-4 h-4" />}
-          </button>
+          <div>
+            <div className="flex items-center gap-2">
+              <h1 className="text-xl sm:text-2xl font-bold font-display text-slate-900 dark:text-white tracking-tight">Wallet & Portfolio</h1>
+              <button
+                onClick={onToggleShowBalances}
+                className="p-1 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 transition-colors"
+                aria-label="Toggle balances"
+              >
+                {showBalances ? <Eye className="w-4 h-4" /> : <EyeOff className="w-4 h-4" />}
+              </button>
+            </div>
+            <p className="text-[11px] text-slate-500 dark:text-slate-400">Crypto, Fiat Cash & DeFi Web3 Balances</p>
+          </div>
         </div>
 
         <div className="flex items-center gap-2">
           <div className="hidden sm:flex items-center gap-2">
             <button
               onClick={onOpenDeposit}
-              className="px-3 py-1.5 rounded-xl text-xs font-semibold bg-gradient-to-r from-purple-600 to-fuchsia-600 text-white hover:brightness-110 transition-all shadow-xs"
+              className="px-3.5 py-1.5 rounded-xl text-xs font-semibold bg-gradient-to-r from-purple-600 to-fuchsia-600 text-white hover:brightness-110 transition-all shadow-xs"
             >
-              Deposit Crypto
+              Deposit Funds
             </button>
             <button
               onClick={onOpenWithdraw}
-              className="px-3 py-1.5 rounded-xl text-xs font-semibold bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-white/10 hover:border-purple-500/40 text-slate-700 dark:text-slate-200 hover:text-slate-900 dark:hover:text-white transition-all"
+              className="px-3.5 py-1.5 rounded-xl text-xs font-semibold bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-white/10 hover:border-purple-500/40 text-slate-700 dark:text-slate-200 hover:text-slate-900 dark:hover:text-white transition-all"
             >
               Withdraw
             </button>
@@ -135,42 +144,50 @@ export const AssetsScreen: React.FC<AssetsScreenProps> = ({
             <OKNexusBadge3D size={64} />
           </div>
 
-          {/* Quick Action Buttons */}
-          <div id="assets-quick-actions" className="grid grid-cols-4 gap-2 pt-3 border-t border-slate-200 dark:border-white/[0.08]">
+          {/* Quick Action Buttons (Deposit, Withdraw, Send, Convert) - Never Truncated */}
+          <div id="assets-quick-actions" className="grid grid-cols-4 gap-2 pt-3.5 border-t border-slate-200 dark:border-white/[0.08]">
             <button
               id="assets-btn-deposit"
               onClick={onOpenDeposit}
-              className="flex items-center justify-center gap-2 p-2.5 rounded-xl bg-slate-100/80 hover:bg-purple-50 border border-slate-200 hover:border-purple-300 dark:bg-white/[0.04] dark:hover:bg-purple-600/20 dark:border-white/[0.07] dark:hover:border-purple-500/40 active:scale-95 transition-all group"
+              className="flex flex-col sm:flex-row items-center justify-center gap-1 sm:gap-2 py-2.5 px-1 rounded-xl bg-slate-100/90 hover:bg-[#8B5CF6]/10 border border-slate-200 hover:border-[#8B5CF6]/40 dark:bg-white/[0.04] dark:hover:bg-[#8B5CF6]/15 dark:border-white/[0.08] dark:hover:border-[#8B5CF6]/40 active:scale-95 transition-all group"
             >
-              <PlusSquare className="w-4 h-4 text-purple-600 dark:text-purple-400 group-hover:text-purple-700 dark:group-hover:text-purple-300" />
-              <span className="text-xs font-semibold text-slate-800 dark:text-slate-200">Deposit</span>
+              <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-lg bg-[#8B5CF6]/10 text-[#8B5CF6] dark:bg-[#8B5CF6]/20 dark:text-[#8B5CF6] flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
+                <ArrowDownLeft className="w-4 h-4" />
+              </div>
+              <span className="text-[11px] sm:text-xs font-bold text-slate-800 dark:text-slate-200 whitespace-nowrap">Deposit</span>
             </button>
 
             <button
               id="assets-btn-withdraw"
               onClick={onOpenWithdraw}
-              className="flex items-center justify-center gap-2 p-2.5 rounded-xl bg-slate-100/80 hover:bg-purple-50 border border-slate-200 hover:border-purple-300 dark:bg-white/[0.04] dark:hover:bg-purple-600/20 dark:border-white/[0.07] dark:hover:border-purple-500/40 active:scale-95 transition-all group"
+              className="flex flex-col sm:flex-row items-center justify-center gap-1 sm:gap-2 py-2.5 px-1 rounded-xl bg-slate-100/90 hover:bg-[#8B5CF6]/10 border border-slate-200 hover:border-[#8B5CF6]/40 dark:bg-white/[0.04] dark:hover:bg-[#8B5CF6]/15 dark:border-white/[0.08] dark:hover:border-[#8B5CF6]/40 active:scale-95 transition-all group"
             >
-              <ArrowUpRight className="w-4 h-4 text-purple-600 dark:text-purple-400 group-hover:text-purple-700 dark:group-hover:text-purple-300" />
-              <span className="text-xs font-semibold text-slate-800 dark:text-slate-200">Withdraw</span>
+              <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-lg bg-[#8B5CF6]/10 text-[#8B5CF6] dark:bg-[#8B5CF6]/20 dark:text-[#8B5CF6] flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
+                <ArrowUpRight className="w-4 h-4" />
+              </div>
+              <span className="text-[11px] sm:text-xs font-bold text-slate-800 dark:text-slate-200 whitespace-nowrap">Withdraw</span>
             </button>
 
             <button
               id="assets-btn-send"
               onClick={onOpenSend}
-              className="flex items-center justify-center gap-2 p-2.5 rounded-xl bg-slate-100/80 hover:bg-purple-50 border border-slate-200 hover:border-purple-300 dark:bg-white/[0.04] dark:hover:bg-purple-600/20 dark:border-white/[0.07] dark:hover:border-purple-500/40 active:scale-95 transition-all group"
+              className="flex flex-col sm:flex-row items-center justify-center gap-1 sm:gap-2 py-2.5 px-1 rounded-xl bg-slate-100/90 hover:bg-[#8B5CF6]/10 border border-slate-200 hover:border-[#8B5CF6]/40 dark:bg-white/[0.04] dark:hover:bg-[#8B5CF6]/15 dark:border-white/[0.08] dark:hover:border-[#8B5CF6]/40 active:scale-95 transition-all group"
             >
-              <Send className="w-4 h-4 text-purple-600 dark:text-purple-400 group-hover:text-purple-700 dark:group-hover:text-purple-300" />
-              <span className="text-xs font-semibold text-slate-800 dark:text-slate-200">Send</span>
+              <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-lg bg-[#8B5CF6]/10 text-[#8B5CF6] dark:bg-[#8B5CF6]/20 dark:text-[#8B5CF6] flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
+                <SendHorizontal className="w-4 h-4" />
+              </div>
+              <span className="text-[11px] sm:text-xs font-bold text-slate-800 dark:text-slate-200 whitespace-nowrap">Send</span>
             </button>
 
             <button
               id="assets-btn-convert"
               onClick={onOpenConvert}
-              className="flex items-center justify-center gap-2 p-2.5 rounded-xl bg-slate-100/80 hover:bg-purple-50 border border-slate-200 hover:border-purple-300 dark:bg-white/[0.04] dark:hover:bg-purple-600/20 dark:border-white/[0.07] dark:hover:border-purple-500/40 active:scale-95 transition-all group"
+              className="flex flex-col sm:flex-row items-center justify-center gap-1 sm:gap-2 py-2.5 px-1 rounded-xl bg-slate-100/90 hover:bg-[#8B5CF6]/10 border border-slate-200 hover:border-[#8B5CF6]/40 dark:bg-white/[0.04] dark:hover:bg-[#8B5CF6]/15 dark:border-white/[0.08] dark:hover:border-[#8B5CF6]/40 active:scale-95 transition-all group"
             >
-              <RefreshCw className="w-4 h-4 text-purple-600 dark:text-purple-400 group-hover:text-purple-700 dark:group-hover:text-purple-300" />
-              <span className="text-xs font-semibold text-slate-800 dark:text-slate-200">Convert</span>
+              <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-lg bg-[#8B5CF6]/10 text-[#8B5CF6] dark:bg-[#8B5CF6]/20 dark:text-[#8B5CF6] flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
+                <Repeat className="w-4 h-4" />
+              </div>
+              <span className="text-[11px] sm:text-xs font-bold text-slate-800 dark:text-slate-200 whitespace-nowrap">Convert</span>
             </button>
           </div>
         </section>
@@ -280,15 +297,15 @@ export const AssetsScreen: React.FC<AssetsScreenProps> = ({
                 <Compass className="w-5 h-5" />
               </div>
               <div>
-                <div className="text-xs font-bold text-slate-800 dark:text-slate-300">Futures Account</div>
-                <div className="text-[11px] text-slate-500">Derivative margin</div>
+                <div className="text-xs font-bold text-slate-900 dark:text-white">Futures Account</div>
+                <div className="text-[11px] text-slate-500 dark:text-slate-400">Derivative margin</div>
               </div>
             </div>
             <div className="text-right">
-              <div className="font-mono-num text-xs sm:text-sm font-bold text-slate-800 dark:text-slate-300">
+              <div className="font-mono-num text-xs sm:text-sm font-bold text-slate-900 dark:text-white">
                 {showBalances ? `$${balances.futuresUsd.toFixed(2)}` : '••••••'}
               </div>
-              <div className="font-mono-num text-[10px] text-slate-500">
+              <div className="font-mono-num text-[10px] text-slate-500 dark:text-slate-400">
                 {showBalances ? `≈ ${balances.futuresUsdtEquiv.toFixed(2)} USDT` : '•••'}
               </div>
             </div>
@@ -344,7 +361,7 @@ export const AssetsScreen: React.FC<AssetsScreenProps> = ({
                   <div className="font-mono-num text-xs sm:text-sm font-bold text-slate-900 dark:text-white">
                     {showBalances ? asset.balance.toLocaleString('en-US', { maximumFractionDigits: 4 }) : '••••'}
                   </div>
-                  <div className="font-mono-num text-[10px] text-slate-500 sm:hidden">
+                  <div className="font-mono-num text-[10px] text-slate-500 dark:text-slate-400 sm:hidden">
                     {showBalances ? `$${asset.usdValue.toLocaleString('en-US', { minimumFractionDigits: 2 })}` : '••••'}
                   </div>
                 </div>

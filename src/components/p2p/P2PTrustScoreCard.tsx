@@ -153,23 +153,6 @@ export const P2PTrustScoreCard: React.FC<P2PTrustScoreCardProps> = ({
     tierDescription = 'Trusted counterparty with verified ID and high order fulfillment rate.';
   }
 
-  // Semicircular Speedometer Gauge Math
-  // Center: (130, 115), Radius: 85
-  // Arc spans from 180 degrees (left) to 0 degrees (right)
-  const radius = 85;
-  const cx = 130;
-  const cy = 115;
-  // Circumference of semicircle = PI * radius = ~267.03
-  const arcLength = Math.PI * radius;
-  // Progress offset
-  const progressPercent = Math.min(100, Math.max(0, integerScore));
-  const strokeDashoffset = arcLength * (1 - progressPercent / 100);
-
-  // Indicator Needle/Dot Coordinates at current score
-  const angleRad = Math.PI * (1 - progressPercent / 100);
-  const needleX = cx + radius * Math.cos(angleRad);
-  const needleY = cy - radius * Math.sin(angleRad);
-
   return (
     <div
       id="p2p-trust-score-card"
@@ -181,11 +164,11 @@ export const P2PTrustScoreCard: React.FC<P2PTrustScoreCardProps> = ({
         style={{ backgroundColor: tierColor }}
       />
 
-      {/* Header Bar */}
-      <div className="flex items-center justify-between flex-wrap gap-2 relative z-10">
+      {/* Header Bar with Score & Actions */}
+      <div className="flex items-center justify-between flex-wrap gap-2.5 relative z-10">
         <div className="flex items-center gap-2.5">
           <div
-            className="w-9 h-9 rounded-xl flex items-center justify-center border shadow-xs transition-colors duration-500"
+            className="w-9 h-9 rounded-xl flex items-center justify-center border shadow-xs transition-colors duration-500 shrink-0"
             style={{
               backgroundColor: `${tierColor}15`,
               borderColor: `${tierColor}40`,
@@ -195,13 +178,28 @@ export const P2PTrustScoreCard: React.FC<P2PTrustScoreCardProps> = ({
             <ShieldCheck className="w-5 h-5" />
           </div>
           <div>
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2 flex-wrap">
               <h4 className="text-sm font-bold text-slate-900 dark:text-white tracking-tight">
                 P2P Trust & Reputation Score
               </h4>
               <span className="px-1.5 py-0.5 rounded bg-slate-100 dark:bg-white/[0.06] text-[9.5px] font-mono-num text-slate-600 dark:text-slate-300 font-medium">
                 Live Algorithm
               </span>
+              <div className="flex items-center gap-1.5 ml-0.5">
+                <span
+                  className="text-base font-extrabold font-mono-num tracking-tight"
+                  style={{ color: tierColor }}
+                >
+                  {integerScore}
+                  <span className="text-xs text-slate-400 dark:text-slate-500 font-normal">/100</span>
+                </span>
+                <span
+                  className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-extrabold tracking-wide border shadow-xs ${tierBg}`}
+                >
+                  <Sparkles className="w-2.5 h-2.5 fill-current" />
+                  <span>{tier.toUpperCase()}</span>
+                </span>
+              </div>
             </div>
             <p className="text-[11px] text-slate-500 dark:text-slate-400">
               Multi-factor trust rating derived from trade history, identity, & feedback
@@ -240,191 +238,6 @@ export const P2PTrustScoreCard: React.FC<P2PTrustScoreCardProps> = ({
               <ChevronDown className="w-4 h-4 text-slate-500 dark:text-slate-400" />
             )}
           </button>
-        </div>
-      </div>
-
-      {/* MAIN COLOR-CODED GAUGE DISPLAY */}
-      <div className="p-4 rounded-xl bg-slate-50 dark:bg-gradient-to-b dark:from-white/[0.03] dark:to-white/[0.01] border border-slate-200 dark:border-white/[0.06] flex flex-col items-center justify-center relative">
-        {/* SVG Speedometer Gauge */}
-        <div className="relative w-full max-w-[280px] h-[145px] flex items-center justify-center">
-          <svg
-            viewBox="0 0 260 145"
-            className="w-full h-full overflow-visible"
-            aria-label={`P2P Trust Score Gauge: ${integerScore} out of 100`}
-          >
-            <defs>
-              {/* Dynamic Glow Filter */}
-              <filter id="gauge-glow" x="-20%" y="-20%" width="140%" height="140%">
-                <feGaussianBlur stdDeviation="3.5" result="blur" />
-                <feComposite in="SourceGraphic" in2="blur" operator="over" />
-              </filter>
-
-              {/* Multi-Zone Color Gradient for Track */}
-              <linearGradient id="gauge-gradient" x1="0%" y1="0%" x2="100%" y2="0%">
-                <stop offset="0%" stopColor="#F43F5E" />
-                <stop offset="45%" stopColor="#F59E0B" />
-                <stop offset="75%" stopColor="#10B981" />
-                <stop offset="100%" stopColor="#06B6D4" />
-              </linearGradient>
-            </defs>
-
-            {/* Background Semicircle Track with Color-Coded Zones */}
-            <path
-              d={`M ${cx - radius} ${cy} A ${radius} ${radius} 0 0 1 ${cx + radius} ${cy}`}
-              fill="none"
-              stroke="currentColor"
-              className="text-slate-200 dark:text-[#1F293D]"
-              strokeWidth="12"
-              strokeLinecap="round"
-            />
-
-            {/* Subtle Zone Dividers (0-49, 50-74, 75-89, 90-100) */}
-            <path
-              d={`M ${cx - radius} ${cy} A ${radius} ${radius} 0 0 1 ${cx + radius} ${cy}`}
-              fill="none"
-              stroke="url(#gauge-gradient)"
-              strokeWidth="12"
-              strokeLinecap="round"
-              opacity="0.22"
-            />
-
-            {/* Active Foreground Progress Stroke (Color-Coded) */}
-            <path
-              d={`M ${cx - radius} ${cy} A ${radius} ${radius} 0 0 1 ${cx + radius} ${cy}`}
-              fill="none"
-              stroke={tierColor}
-              strokeWidth="13"
-              strokeDasharray={arcLength}
-              strokeDashoffset={strokeDashoffset}
-              strokeLinecap="round"
-              filter="url(#gauge-glow)"
-              style={{
-                transition: 'stroke-dashoffset 0.8s cubic-bezier(0.4, 0, 0.2, 1), stroke 0.6s ease',
-              }}
-            />
-
-            {/* Indicator Marker at current progress */}
-            {integerScore > 0 && (
-              <g
-                style={{
-                  transition: 'all 0.8s cubic-bezier(0.4, 0, 0.2, 1)',
-                }}
-              >
-                {/* Glow ring */}
-                <circle
-                  cx={needleX}
-                  cy={needleY}
-                  r="7"
-                  fill={tierColor}
-                  opacity="0.3"
-                  filter="url(#gauge-glow)"
-                />
-                {/* Inner pin */}
-                <circle
-                  cx={needleX}
-                  cy={needleY}
-                  r="4.5"
-                  fill="#FFFFFF"
-                  stroke={tierColor}
-                  strokeWidth="2.5"
-                />
-              </g>
-            )}
-
-            {/* Baseline Scale Labels */}
-            <text
-              x={cx - radius - 2}
-              y={cy + 18}
-              fill="#94A3B8"
-              fontSize="9"
-              fontWeight="bold"
-              fontFamily="monospace"
-              textAnchor="middle"
-            >
-              0
-            </text>
-            <text
-              x={cx - radius / 2}
-              y={cy + 18}
-              fill="#F59E0B"
-              fontSize="9"
-              fontWeight="bold"
-              fontFamily="monospace"
-              textAnchor="middle"
-            >
-              50
-            </text>
-            <text
-              x={cx + radius / 2}
-              y={cy + 18}
-              fill="#10B981"
-              fontSize="9"
-              fontWeight="bold"
-              fontFamily="monospace"
-              textAnchor="middle"
-            >
-              75
-            </text>
-            <text
-              x={cx + radius + 2}
-              y={cy + 18}
-              fill="#06B6D4"
-              fontSize="9"
-              fontWeight="bold"
-              fontFamily="monospace"
-              textAnchor="middle"
-            >
-              100
-            </text>
-          </svg>
-
-          {/* Center Digital Scoreboard */}
-          <div className="absolute top-[38px] flex flex-col items-center justify-center text-center select-none pointer-events-none">
-            <div className="flex items-baseline gap-1">
-              <span
-                className="text-4xl sm:text-5xl font-extrabold font-mono-num tracking-tight"
-                style={{ color: tierColor }}
-              >
-                {integerScore}
-              </span>
-              <span className="text-xs font-bold text-slate-400 dark:text-slate-500 font-mono-num">
-                / 100
-              </span>
-            </div>
-
-            {/* Current Tier Pill */}
-            <span
-              className={`inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-extrabold tracking-wide border shadow-xs mt-1 transition-colors duration-500 ${tierBg}`}
-            >
-              <Sparkles className="w-2.5 h-2.5 fill-current" />
-              <span>{tier.toUpperCase()}</span>
-            </span>
-          </div>
-        </div>
-
-        {/* Dynamic Tier Description Banner */}
-        <p className="text-xs text-slate-600 dark:text-slate-300 text-center max-w-md mt-2 leading-relaxed">
-          {tierDescription}
-        </p>
-
-        {/* Color-Coded Zone Legend Indicator */}
-        <div className="flex items-center justify-center gap-3 sm:gap-4 mt-3 pt-2.5 border-t border-slate-200 dark:border-white/[0.05] w-full text-[10px] font-mono-num text-slate-500 dark:text-slate-400 flex-wrap">
-          <div className="flex items-center gap-1">
-            <span className="w-2 h-2 rounded-full bg-rose-500" />
-            <span>0-49: Low</span>
-          </div>
-          <div className="flex items-center gap-1">
-            <span className="w-2 h-2 rounded-full bg-amber-500" />
-            <span>50-74: Moderate</span>
-          </div>
-          <div className="flex items-center gap-1">
-            <span className="w-2 h-2 rounded-full bg-emerald-500" />
-            <span>75-89: High</span>
-          </div>
-          <div className="flex items-center gap-1">
-            <span className="w-2 h-2 rounded-full bg-cyan-400" />
-            <span>90-100: Elite</span>
-          </div>
         </div>
       </div>
 

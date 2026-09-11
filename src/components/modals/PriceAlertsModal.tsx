@@ -99,9 +99,10 @@ export const PriceAlertsModal: React.FC<PriceAlertsModalProps> = ({
 
   // Success Feedback
   const [formSuccessMsg, setFormSuccessMsg] = useState<string | null>(null);
+  const [formErrorMsg, setFormErrorMsg] = useState<string | null>(null);
 
   // Current market pair object
-  const currentPair = useMemo(() => {
+  const currentPair: MarketPair = useMemo(() => {
     return (
       marketPairs.find((p) => p.symbol === selectedPairSymbol) ||
       marketPairs[0] || {
@@ -113,6 +114,11 @@ export const PriceAlertsModal: React.FC<PriceAlertsModalProps> = ({
         change24h: 2.14,
         high24h: 67890,
         low24h: 65420,
+        volume24h: '32,450 BTC',
+        volumeQuote: 2180000000,
+        sparkline: [66000, 66500, 67000, 67214.5],
+        isFavorite: false,
+        category: 'hot',
       }
     );
   }, [marketPairs, selectedPairSymbol]);
@@ -172,9 +178,10 @@ export const PriceAlertsModal: React.FC<PriceAlertsModalProps> = ({
     e.preventDefault();
     const numPrice = parseFloat(targetPriceInput);
     if (isNaN(numPrice) || numPrice <= 0) {
-      alert('Please enter a valid target price.');
+      setFormErrorMsg('Please enter a valid target price.');
       return;
     }
+    setFormErrorMsg(null);
 
     const created = onCreateAlert({
       symbol: currentPair.symbol,
@@ -212,7 +219,6 @@ export const PriceAlertsModal: React.FC<PriceAlertsModalProps> = ({
   const handleSaveEdit = (id: string) => {
     const num = parseFloat(editPriceInput);
     if (isNaN(num) || num <= 0) {
-      alert('Invalid price.');
       return;
     }
     onEditAlert(id, num, editNotesInput.trim() || undefined);
@@ -562,6 +568,13 @@ export const PriceAlertsModal: React.FC<PriceAlertsModalProps> = ({
                     )}
                   </div>
                 </div>
+
+                {/* Error feedback */}
+                {formErrorMsg && (
+                  <div className="p-2.5 rounded-xl bg-rose-500/10 border border-rose-500/30 text-rose-400 text-xs font-semibold">
+                    {formErrorMsg}
+                  </div>
+                )}
 
                 {/* Submit button */}
                 <button

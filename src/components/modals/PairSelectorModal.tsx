@@ -27,11 +27,11 @@ export const PairSelectorModal: React.FC<PairSelectorModalProps> = ({
   );
 
   return (
-    <div className="fixed inset-0 z-50 bg-black/75 backdrop-blur-sm flex items-end justify-center p-0 sm:p-4">
-      <div className="w-full max-w-md bg-[#0F1320] border-t sm:border border-white/10 rounded-t-3xl sm:rounded-3xl p-5 safe-area-bottom max-h-[80vh] flex flex-col animate-slideUp">
-        <div className="flex items-center justify-between pb-3 border-b border-white/[0.06] mb-3">
-          <h3 className="font-bold text-base text-white">Select Trading Pair</h3>
-          <button onClick={onClose} className="p-1 text-slate-400 hover:text-white">
+    <div className="fixed inset-0 z-50 bg-black/70 dark:bg-black/80 backdrop-blur-sm flex items-end sm:items-center justify-center p-0 sm:p-4">
+      <div className="w-full max-w-md bg-white dark:bg-[#0E141B] border-t sm:border border-[#D7E0EB] dark:border-[#242E3B] rounded-t-3xl sm:rounded-3xl p-5 safe-area-bottom max-h-[80vh] flex flex-col animate-slideUp text-[#0F172A] dark:text-[#EDF1F5] shadow-2xl">
+        <div className="flex items-center justify-between pb-3 border-b border-[#D7E0EB] dark:border-[#242E3B] mb-3">
+          <h3 className="font-bold text-base text-[#0F172A] dark:text-white">Select Trading Pair</h3>
+          <button onClick={onClose} className="p-1 text-[#64748B] hover:text-[#0F172A] dark:text-[#8E98A6] dark:hover:text-white">
             <X className="w-5 h-5" />
           </button>
         </div>
@@ -43,9 +43,9 @@ export const PairSelectorModal: React.FC<PairSelectorModalProps> = ({
             placeholder="Search coin or pair..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="w-full h-9 pl-9 pr-3 text-xs rounded-xl bg-[#090C14] border border-white/10 text-white placeholder-slate-400 focus:outline-none focus:border-purple-500/50"
+            className="w-full h-9 pl-9 pr-3 text-xs rounded-xl bg-[#F8FAFC] dark:bg-[#141B24] border border-[#D7E0EB] dark:border-[#242E3B] text-[#0F172A] dark:text-white placeholder-[#64748B] dark:placeholder-[#8E98A6] focus:outline-none focus:border-[#8B5CF6]"
           />
-          <Search className="absolute left-3 top-2.5 w-4 h-4 text-slate-400 pointer-events-none" />
+          <Search className="absolute left-3 top-2.5 w-4 h-4 text-[#64748B] dark:text-[#8E98A6] pointer-events-none" />
         </div>
 
         {/* Pair List */}
@@ -57,23 +57,23 @@ export const PairSelectorModal: React.FC<PairSelectorModalProps> = ({
                 onSelectPair(pair);
                 onClose();
               }}
-              className="flex items-center justify-between p-2.5 rounded-xl hover:bg-white/[0.04] active:bg-white/[0.08] cursor-pointer transition-colors"
+              className="flex items-center justify-between p-2.5 rounded-xl hover:bg-[#F8FAFC] dark:hover:bg-[#141B24] active:bg-[#F1F5F9] dark:active:bg-[#1A222F] cursor-pointer transition-colors"
             >
               <div className="flex items-center gap-2.5">
                 <CoinIcon symbol={pair.base} size={30} />
                 <div>
-                  <div className="font-bold text-xs text-white">{pair.symbol}</div>
-                  <div className="text-[10px] text-slate-400">{pair.name}</div>
+                  <div className="font-bold text-xs text-[#0F172A] dark:text-white">{pair.symbol}</div>
+                  <div className="text-[10px] text-[#64748B] dark:text-[#8E98A6]">{pair.name}</div>
                 </div>
               </div>
 
               <div className="text-right">
-                <div className="font-mono-num text-xs font-bold text-white">
+                <div className="font-mono-num text-xs font-bold text-[#0F172A] dark:text-white">
                   ${pair.price.toLocaleString()}
                 </div>
                 <div
                   className={`text-[10px] font-mono-num font-semibold ${
-                    pair.change24h >= 0 ? 'text-emerald-400' : 'text-rose-400'
+                    pair.change24h >= 0 ? 'text-[#10B981]' : 'text-[#EF4444]'
                   }`}
                 >
                   {pair.change24h >= 0 ? `+${pair.change24h}%` : `${pair.change24h}%`}

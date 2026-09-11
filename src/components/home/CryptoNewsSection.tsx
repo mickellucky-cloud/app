@@ -51,6 +51,10 @@ export const CryptoNewsSection: React.FC<CryptoNewsSectionProps> = ({
     return list.length > 0 ? list : ['BTC', 'ETH', 'SOL', 'OKN'];
   }, [favoritePairs]);
 
+  const favoriteSymbolsKey = React.useMemo(() => {
+    return favoriteSymbols.slice().sort().join(',');
+  }, [favoriteSymbols]);
+
   // Fetch news headlines from backend using real-time search
   const fetchNews = async (filterSymbol?: string, isManualRefresh = false) => {
     if (isManualRefresh) {
@@ -98,7 +102,7 @@ export const CryptoNewsSection: React.FC<CryptoNewsSectionProps> = ({
   // Initial load when favorite symbols change
   useEffect(() => {
     fetchNews(selectedFilterSymbol === 'ALL' ? undefined : selectedFilterSymbol);
-  }, [favoriteSymbols, selectedFilterSymbol]);
+  }, [favoriteSymbolsKey, selectedFilterSymbol]);
 
   // Handle filter chip click
   const handleFilterClick = (symbol: string) => {

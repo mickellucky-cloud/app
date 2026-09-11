@@ -1,12 +1,12 @@
 import React from 'react';
 import { MarketPair, ThemeMode } from '../../types';
-import { ThemeToggle } from '../common/ThemeToggle';
 import {
   Search,
   Bell,
   Headphones,
   Plus,
   ShieldCheck,
+  Settings,
 } from 'lucide-react';
 
 interface DesktopTopBarProps {
@@ -17,8 +17,10 @@ interface DesktopTopBarProps {
   onOpenPriceAlerts?: () => void;
   activeAlertsCount?: number;
   onOpenSupport: () => void;
-  onOpenProfile: () => void;
+  onOpenProfile: (tab?: 'profile' | 'system_settings') => void;
   userEmail: string;
+  username?: string;
+  userAvatar?: string;
   selectedPair?: MarketPair;
   theme?: ThemeMode;
   onToggleTheme?: () => void;
@@ -32,6 +34,8 @@ export const DesktopTopBar: React.FC<DesktopTopBarProps> = ({
   onOpenSupport,
   onOpenProfile,
   userEmail,
+  username = 'Mickel_Lucky',
+  userAvatar = '',
   selectedPair,
   theme = 'dark',
   onToggleTheme,
@@ -58,7 +62,7 @@ export const DesktopTopBar: React.FC<DesktopTopBarProps> = ({
 
         {selectedPair && (
           <div className="hidden lg:flex items-center gap-2 px-3 py-1.5 rounded-xl bg-slate-100 border border-slate-200 dark:bg-slate-900/50 dark:border-white/[0.05] text-xs">
-            <span className="font-bold text-slate-900 dark:text-white">{selectedPair.baseSymbol}/{selectedPair.quoteSymbol}</span>
+            <span className="font-bold text-slate-900 dark:text-white">{selectedPair.base}/{selectedPair.quote}</span>
             <span className="font-mono-num font-semibold text-slate-900 dark:text-white">
               ${selectedPair.price >= 1000 ? selectedPair.price.toLocaleString('en-US', { minimumFractionDigits: 2 }) : selectedPair.price.toFixed(4)}
             </span>
@@ -69,22 +73,13 @@ export const DesktopTopBar: React.FC<DesktopTopBarProps> = ({
         )}
       </div>
 
-      {/* Right: Network Status, Theme Toggle, Deposit, Single Notifications Icon, AI Concierge, Profile */}
+      {/* Right: Network Status, Deposit, Single Notifications Icon, AI Concierge, Profile */}
       <div className="flex items-center gap-2.5 sm:gap-3">
         {/* Network Status Badge */}
         <div className="hidden xl:flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-emerald-100 border border-emerald-200 text-[11px] font-medium text-emerald-700 dark:bg-emerald-500/10 dark:border-emerald-500/20 dark:text-emerald-300">
           <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 dark:bg-emerald-400 animate-pulse" />
           <span>99.99% Uptime</span>
         </div>
-
-        {/* Daylight / Night Theme Toggle Switch */}
-        {onToggleTheme && (
-          <ThemeToggle
-            theme={theme}
-            onToggle={onToggleTheme}
-            size="md"
-          />
-        )}
 
         {/* Deposit Button */}
         <button
@@ -120,16 +115,38 @@ export const DesktopTopBar: React.FC<DesktopTopBarProps> = ({
           <Headphones className="w-4 h-4 text-purple-600 dark:text-purple-400" />
         </button>
 
-        {/* User Avatar */}
+        {/* System Settings & Preferences */}
         <button
-          onClick={onOpenProfile}
-          className="flex items-center gap-2 pl-2 pr-1 py-1 rounded-xl bg-slate-100 hover:bg-slate-200/80 border border-slate-200 dark:bg-[#0D111A] dark:hover:bg-[#121724] dark:border-white/[0.07] transition-all ml-1"
-          title="Profile & Settings"
+          id="desktop-settings-trigger-btn"
+          onClick={() => onOpenProfile('system_settings')}
+          className="p-2 rounded-xl bg-slate-100 hover:bg-slate-200/80 border border-slate-200 text-slate-600 hover:text-slate-900 dark:bg-[#0D111A] dark:hover:bg-[#121724] dark:border-white/[0.07] dark:text-slate-300 dark:hover:text-white transition-all"
+          title="System Settings & Theme"
+          aria-label="System Settings & Theme"
         >
-          <div className="w-7 h-7 rounded-full bg-gradient-to-tr from-purple-600 to-indigo-500 flex items-center justify-center text-white font-bold text-xs shadow-sm">
-            {userEmail.charAt(0).toUpperCase()}
+          <Settings className="w-4 h-4 text-slate-600 dark:text-slate-300" />
+        </button>
+
+        {/* User Avatar & Identity */}
+        <button
+          onClick={() => onOpenProfile('profile')}
+          className="flex items-center gap-2 pl-1.5 pr-2 py-1 rounded-xl bg-slate-100 hover:bg-slate-200/80 border border-slate-200 dark:bg-[#0D111A] dark:hover:bg-[#121724] dark:border-white/[0.07] transition-all ml-1"
+          title={`@${username} • Profile & Settings`}
+        >
+          <div className="w-7 h-7 rounded-full overflow-hidden bg-gradient-to-tr from-purple-600 to-amber-400 p-[1.5px] shadow-sm flex-shrink-0">
+            <div className="w-full h-full rounded-full bg-white dark:bg-slate-950 flex items-center justify-center overflow-hidden">
+              {userAvatar ? (
+                <img src={userAvatar} alt={username} className="w-full h-full object-cover" referrerPolicy="no-referrer" />
+              ) : (
+                <span className="text-white text-xs font-bold">
+                  {username.charAt(0).toUpperCase()}
+                </span>
+              )}
+            </div>
           </div>
-          <ShieldCheck className="w-3.5 h-3.5 text-amber-500 dark:text-amber-400" />
+          <span className="hidden xl:inline text-xs font-bold text-slate-800 dark:text-slate-200 max-w-[100px] truncate">
+            @{username}
+          </span>
+          <ShieldCheck className="w-3.5 h-3.5 text-amber-500 dark:text-amber-400 shrink-0" />
         </button>
       </div>
     </header>

@@ -1,4 +1,4 @@
-export type MainTab = 'home' | 'market' | 'trade' | 'earn' | 'assets';
+export type MainTab = 'home' | 'market' | 'trade' | 'earn' | 'assets' | 'analytics' | 'explore';
 export type P2PTab = 'p2p_market' | 'p2p_orders' | 'p2p_ads' | 'p2p_profile';
 
 export interface CryptoAsset {
@@ -274,7 +274,7 @@ export interface P2PAd {
   minLimit: number;
   maxLimit: number;
   paymentMethods: string[];
-  status: 'active' | 'paused';
+  status: 'active' | 'paused' | 'online' | 'offline';
 }
 
 export interface Announcement {
@@ -327,7 +327,7 @@ export interface RecentActivityItem {
   amount: string;
   time: string;
   type: 'buy' | 'sell' | 'deposit' | 'withdraw' | 'transfer';
-  status: 'completed' | 'pending';
+  status?: 'completed' | 'pending';
 }
 
 export type ThemeMode = 'dark' | 'light';

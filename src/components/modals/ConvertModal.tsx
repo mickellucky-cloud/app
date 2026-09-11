@@ -21,6 +21,7 @@ export const ConvertModal: React.FC<ConvertModalProps> = ({
   const [toCoin, setToCoin] = useState('BTC');
   const [amount, setAmount] = useState('');
   const [isSuccess, setIsSuccess] = useState(false);
+  const [errorMsg, setErrorMsg] = useState<string | null>(null);
 
   if (!isOpen) return null;
 
@@ -33,6 +34,7 @@ export const ConvertModal: React.FC<ConvertModalProps> = ({
       : numAmount * btcPrice;
 
   const handleSwapCoins = () => {
+    setErrorMsg(null);
     setFromCoin(toCoin);
     setToCoin(fromCoin);
     setAmount('');
@@ -40,11 +42,15 @@ export const ConvertModal: React.FC<ConvertModalProps> = ({
 
   const handleConvert = (e: React.FormEvent) => {
     e.preventDefault();
-    if (numAmount <= 0) return;
+    setErrorMsg(null);
+    if (numAmount <= 0) {
+      setErrorMsg('Please enter a valid conversion amount.');
+      return;
+    }
 
     const max = fromCoin === 'USDT' ? availableUsdt : availableBtc;
     if (numAmount > max) {
-      alert(`Insufficient ${fromCoin} balance.`);
+      setErrorMsg(`Insufficient ${fromCoin} balance.`);
       return;
     }
 
@@ -57,31 +63,31 @@ export const ConvertModal: React.FC<ConvertModalProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 bg-black/75 backdrop-blur-sm flex items-end justify-center p-0 sm:p-4">
-      <div className="w-full max-w-md bg-[#0F1320] border-t sm:border border-white/10 rounded-t-3xl sm:rounded-3xl p-5 safe-area-bottom animate-slideUp">
-        <div className="flex items-center justify-between pb-3 border-b border-white/[0.06] mb-4">
+    <div className="fixed inset-0 z-50 bg-black/70 dark:bg-black/80 backdrop-blur-sm flex items-end sm:items-center justify-center p-0 sm:p-4">
+      <div className="w-full max-w-md bg-white dark:bg-[#0E141B] border-t sm:border border-[#D7E0EB] dark:border-[#242E3B] rounded-t-3xl sm:rounded-3xl p-5 safe-area-bottom animate-slideUp text-[#0F172A] dark:text-[#EDF1F5] shadow-2xl">
+        <div className="flex items-center justify-between pb-3 border-b border-[#D7E0EB] dark:border-[#242E3B] mb-4">
           <div className="flex items-center gap-2">
-            <RefreshCw className="w-4 h-4 text-purple-400" />
-            <h3 className="font-bold text-base text-white">Convert (0 Fee)</h3>
+            <RefreshCw className="w-4 h-4 text-[#8B5CF6]" />
+            <h3 className="font-bold text-base text-[#0F172A] dark:text-white">Convert (0 Fee)</h3>
           </div>
-          <button onClick={onClose} className="p-1 text-slate-400 hover:text-white">
+          <button onClick={onClose} className="p-1 text-[#64748B] hover:text-[#0F172A] dark:text-[#8E98A6] dark:hover:text-white">
             <X className="w-5 h-5" />
           </button>
         </div>
 
         {isSuccess ? (
           <div className="py-8 text-center space-y-2">
-            <CheckCircle2 className="w-12 h-12 text-emerald-400 mx-auto animate-bounce" />
-            <h4 className="font-bold text-white text-base">Conversion Completed!</h4>
-            <p className="text-xs text-slate-400">
+            <CheckCircle2 className="w-12 h-12 text-[#10B981] mx-auto animate-bounce" />
+            <h4 className="font-bold text-[#0F172A] dark:text-white text-base">Conversion Completed!</h4>
+            <p className="text-xs text-[#64748B] dark:text-[#8E98A6]">
               Successfully converted {numAmount} {fromCoin} to {calculatedTo.toFixed(5)} {toCoin}.
             </p>
           </div>
         ) : (
           <form onSubmit={handleConvert} className="space-y-3">
             {/* From Box */}
-            <div className="p-3 rounded-2xl bg-[#090C14] border border-white/10">
-              <div className="flex justify-between items-center text-xs text-slate-400 mb-1.5">
+            <div className="p-3 rounded-2xl bg-[#F8FAFC] dark:bg-[#141B24] border border-[#D7E0EB] dark:border-[#242E3B]">
+              <div className="flex justify-between items-center text-xs text-[#64748B] dark:text-[#8E98A6] mb-1.5">
                 <span>From</span>
                 <span>
                   Available: {fromCoin === 'USDT' ? availableUsdt.toFixed(2) : availableBtc.toFixed(4)} {fromCoin}
@@ -94,11 +100,11 @@ export const ConvertModal: React.FC<ConvertModalProps> = ({
                   placeholder="0.00"
                   value={amount}
                   onChange={(e) => setAmount(e.target.value)}
-                  className="bg-transparent text-white font-mono-num text-lg font-bold focus:outline-none w-full"
+                  className="bg-transparent text-[#0F172A] dark:text-white font-mono-num text-lg font-bold focus:outline-none w-full"
                 />
-                <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-xl bg-[#141A29] border border-white/10 flex-shrink-0">
+                <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-xl bg-white dark:bg-[#0E141B] border border-[#D7E0EB] dark:border-[#242E3B] flex-shrink-0">
                   <CoinIcon symbol={fromCoin} size={20} />
-                  <span className="text-xs font-bold text-white">{fromCoin}</span>
+                  <span className="text-xs font-bold text-[#0F172A] dark:text-white">{fromCoin}</span>
                 </div>
               </div>
             </div>
@@ -108,44 +114,50 @@ export const ConvertModal: React.FC<ConvertModalProps> = ({
               <button
                 type="button"
                 onClick={handleSwapCoins}
-                className="w-9 h-9 rounded-full bg-[#1A142E] border border-purple-500/40 flex items-center justify-center text-purple-300 hover:text-white shadow-md active:scale-95 transition-all"
+                className="w-9 h-9 rounded-full bg-white dark:bg-[#141B24] border border-[#8B5CF6]/40 flex items-center justify-center text-[#8B5CF6] hover:bg-[#8B5CF6]/10 shadow-md active:scale-95 transition-all"
               >
                 <ArrowDown className="w-4 h-4" />
               </button>
             </div>
 
             {/* To Box */}
-            <div className="p-3 rounded-2xl bg-[#090C14] border border-white/10">
-              <div className="flex justify-between items-center text-xs text-slate-400 mb-1.5">
+            <div className="p-3 rounded-2xl bg-[#F8FAFC] dark:bg-[#141B24] border border-[#D7E0EB] dark:border-[#242E3B]">
+              <div className="flex justify-between items-center text-xs text-[#64748B] dark:text-[#8E98A6] mb-1.5">
                 <span>To (Estimated)</span>
-                <span className="text-emerald-400 font-bold">Guaranteed Rate</span>
+                <span className="text-[#10B981] font-bold">Guaranteed Rate</span>
               </div>
               <div className="flex items-center justify-between gap-3">
-                <div className="text-white font-mono-num text-lg font-bold">
+                <div className="text-[#0F172A] dark:text-white font-mono-num text-lg font-bold">
                   {calculatedTo > 0 ? (calculatedTo < 1 ? calculatedTo.toFixed(6) : calculatedTo.toFixed(2)) : '0.00'}
                 </div>
-                <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-xl bg-[#141A29] border border-white/10 flex-shrink-0">
+                <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-xl bg-white dark:bg-[#0E141B] border border-[#D7E0EB] dark:border-[#242E3B] flex-shrink-0">
                   <CoinIcon symbol={toCoin} size={20} />
-                  <span className="text-xs font-bold text-white">{toCoin}</span>
+                  <span className="text-xs font-bold text-[#0F172A] dark:text-white">{toCoin}</span>
                 </div>
               </div>
             </div>
 
             {/* Rate details */}
-            <div className="p-3 rounded-xl bg-[#090C14] border border-white/[0.06] space-y-1 text-xs font-mono-num">
-              <div className="flex justify-between text-slate-400">
+            <div className="p-3 rounded-xl bg-[#F8FAFC] dark:bg-[#141B24] border border-[#D7E0EB] dark:border-[#242E3B] space-y-1 text-xs font-mono-num">
+              <div className="flex justify-between text-[#64748B] dark:text-[#8E98A6]">
                 <span>1 BTC</span>
-                <span>≈ {btcPrice.toLocaleString()} USDT</span>
+                <span className="text-[#0F172A] dark:text-white font-bold">≈ {btcPrice.toLocaleString()} USDT</span>
               </div>
-              <div className="flex justify-between text-slate-400">
+              <div className="flex justify-between text-[#64748B] dark:text-[#8E98A6]">
                 <span>Fee</span>
-                <span className="text-emerald-400 font-bold">0 Fee</span>
+                <span className="text-[#10B981] font-bold">0 Fee</span>
               </div>
             </div>
 
+            {errorMsg && (
+              <div className="p-2.5 rounded-xl bg-rose-500/10 border border-rose-500/30 text-rose-500 text-xs font-semibold">
+                {errorMsg}
+              </div>
+            )}
+
             <button
               type="submit"
-              className="w-full py-3 rounded-xl bg-gradient-to-r from-purple-600 to-fuchsia-600 text-white font-display font-bold text-sm shadow-md active:scale-98 transition-all"
+              className="w-full py-3 rounded-xl bg-gradient-to-r from-[#8B5CF6] to-[#EC4899] text-white font-bold text-sm shadow-md active:scale-98 transition-all"
             >
               Convert Now
             </button>

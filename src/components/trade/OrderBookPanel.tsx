@@ -61,35 +61,35 @@ export const OrderBookPanel: React.FC<OrderBookPanelProps> = ({
   return (
     <div
       id="order-book-panel"
-      className={`rounded-2xl bg-[#090C14] border border-white/[0.08] p-3 shadow-xl backdrop-blur-md ${className}`}
+      className={`rounded-2xl bg-slate-50 dark:bg-[#090C14] border border-slate-200 dark:border-white/[0.08] p-3 shadow-xs dark:shadow-xl transition-all ${className}`}
     >
       {/* Tab Switcher: Order Book vs Recent Trades */}
-      <div className="flex items-center justify-between border-b border-white/[0.06] pb-2 mb-2">
+      <div className="flex items-center justify-between border-b border-slate-200 dark:border-white/[0.06] pb-2 mb-2">
         <div className="flex items-center gap-3 text-xs font-semibold">
           <button
             type="button"
             onClick={() => setActiveTab('book')}
             className={`flex items-center gap-1.5 pb-1 relative transition-colors ${
-              activeTab === 'book' ? 'text-white' : 'text-slate-400 hover:text-slate-200'
+              activeTab === 'book' ? 'text-slate-900 dark:text-white font-bold' : 'text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200'
             }`}
           >
-            <Layers className="w-3.5 h-3.5 text-purple-400" />
+            <Layers className="w-3.5 h-3.5 text-purple-600 dark:text-purple-400" />
             <span>Order Book</span>
             {activeTab === 'book' && (
-              <span className="absolute -bottom-2 left-0 right-0 h-[2px] bg-purple-500 rounded-full shadow-[0_0_8px_#a855f7]" />
+              <span className="absolute -bottom-2 left-0 right-0 h-[2px] bg-purple-600 dark:bg-purple-500 rounded-full" />
             )}
           </button>
           <button
             type="button"
             onClick={() => setActiveTab('trades')}
             className={`flex items-center gap-1.5 pb-1 relative transition-colors ${
-              activeTab === 'trades' ? 'text-white' : 'text-slate-400 hover:text-slate-200'
+              activeTab === 'trades' ? 'text-slate-900 dark:text-white font-bold' : 'text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200'
             }`}
           >
-            <Clock className="w-3.5 h-3.5 text-cyan-400" />
+            <Clock className="w-3.5 h-3.5 text-cyan-600 dark:text-cyan-400" />
             <span>Trades</span>
             {activeTab === 'trades' && (
-              <span className="absolute -bottom-2 left-0 right-0 h-[2px] bg-cyan-400 rounded-full shadow-[0_0_8px_#22d3ee]" />
+              <span className="absolute -bottom-2 left-0 right-0 h-[2px] bg-cyan-600 dark:bg-cyan-400 rounded-full" />
             )}
           </button>
         </div>
@@ -97,15 +97,15 @@ export const OrderBookPanel: React.FC<OrderBookPanelProps> = ({
         {/* Display Controls (Precision Selector) */}
         {activeTab === 'book' && (
           <div className="flex items-center gap-1">
-            <span className="text-[10px] text-slate-500 font-mono-num">Prec:</span>
+            <span className="text-[10px] text-slate-500 dark:text-slate-400 font-mono-num">Prec:</span>
             {(['0.01', '0.1', '1'] as const).map((p) => (
               <button
                 key={p}
                 onClick={() => setPrecision(p)}
                 className={`px-1.5 py-0.5 rounded text-[10px] font-mono-num font-bold transition-all ${
                   precision === p
-                    ? 'bg-purple-600/40 text-purple-200 border border-purple-500/40'
-                    : 'text-slate-400 hover:text-white bg-white/[0.04]'
+                    ? 'bg-purple-100 text-purple-700 border border-purple-300 dark:bg-purple-600/40 dark:text-purple-200 dark:border-purple-500/40'
+                    : 'text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white bg-slate-100 dark:bg-white/[0.04]'
                 }`}
               >
                 {p}
@@ -120,10 +120,10 @@ export const OrderBookPanel: React.FC<OrderBookPanelProps> = ({
           {/* Market Sentiment Depth Ratio */}
           <div className="mb-2">
             <div className="flex justify-between text-[10px] font-mono-num font-bold mb-1">
-              <span className="text-emerald-400">Bids {bidRatio}%</span>
-              <span className="text-rose-400">Asks {askRatio}%</span>
+              <span className="text-emerald-600 dark:text-emerald-400">Bids {bidRatio}%</span>
+              <span className="text-rose-600 dark:text-rose-400">Asks {askRatio}%</span>
             </div>
-            <div className="h-1.5 w-full rounded-full bg-slate-800 flex overflow-hidden">
+            <div className="h-1.5 w-full rounded-full bg-slate-200 dark:bg-slate-800 flex overflow-hidden">
               <div
                 className="h-full bg-gradient-to-r from-emerald-500 to-teal-400 transition-all duration-500"
                 style={{ width: `${bidRatio}%` }}
@@ -136,7 +136,7 @@ export const OrderBookPanel: React.FC<OrderBookPanelProps> = ({
           </div>
 
           {/* Table Header */}
-          <div className="grid grid-cols-3 text-[10px] text-slate-400 font-medium pb-1 mb-1 border-b border-white/[0.04]">
+          <div className="grid grid-cols-3 text-[10px] text-slate-500 dark:text-slate-400 font-medium pb-1 mb-1 border-b border-slate-200 dark:border-white/[0.04]">
             <span>Price (USDT)</span>
             <span className="text-right">Size ({pair.base})</span>
             <span className="text-right">Total</span>
@@ -150,7 +150,7 @@ export const OrderBookPanel: React.FC<OrderBookPanelProps> = ({
                 type="button"
                 onClick={() => handleRowClick(ask.price)}
                 className={`w-full grid grid-cols-3 text-[11px] font-mono-num py-0.5 px-1 rounded relative text-left transition-all active:scale-[0.99] ${
-                  clickedPrice === ask.price ? 'bg-purple-500/30' : 'hover:bg-white/[0.04]'
+                  clickedPrice === ask.price ? 'bg-purple-100 dark:bg-purple-500/30' : 'hover:bg-slate-100 dark:hover:bg-white/[0.04]'
                 }`}
                 title="Click to fill price in order terminal"
               >
@@ -159,11 +159,11 @@ export const OrderBookPanel: React.FC<OrderBookPanelProps> = ({
                   className="absolute inset-y-0 right-0 bg-rose-500/10 pointer-events-none rounded-r transition-all"
                   style={{ width: `${ask.depthPct}%` }}
                 />
-                <span className="text-rose-400 font-semibold relative z-10">
+                <span className="text-rose-600 dark:text-rose-400 font-semibold relative z-10">
                   {ask.price.toFixed(precision === '1' ? 0 : precision === '0.1' ? 1 : 2)}
                 </span>
-                <span className="text-slate-300 text-right relative z-10">{ask.amount.toFixed(3)}</span>
-                <span className="text-slate-400 text-right relative z-10">
+                <span className="text-slate-700 dark:text-slate-300 text-right relative z-10">{ask.amount.toFixed(3)}</span>
+                <span className="text-slate-500 dark:text-slate-400 text-right relative z-10">
                   {ask.total >= 1000 ? `${(ask.total / 1000).toFixed(1)}k` : ask.total.toFixed(0)}
                 </span>
               </button>
@@ -171,24 +171,24 @@ export const OrderBookPanel: React.FC<OrderBookPanelProps> = ({
           </div>
 
           {/* Center Spread & Last Price Strip */}
-          <div className="my-2 py-1.5 px-2 rounded-xl bg-[#111624] border border-white/[0.06] flex items-center justify-between">
+          <div className="my-2 py-1.5 px-2 rounded-xl bg-slate-100 dark:bg-[#111624] border border-slate-200 dark:border-white/[0.06] flex items-center justify-between">
             <div className="flex items-center gap-2">
               <span
                 className={`font-mono-num font-extrabold text-sm ${
-                  pair.change24h >= 0 ? 'text-emerald-400' : 'text-rose-400'
+                  pair.change24h >= 0 ? 'text-emerald-600 dark:text-emerald-400' : 'text-rose-600 dark:text-rose-400'
                 }`}
               >
                 {pair.price.toFixed(2)}
               </span>
               {pair.change24h >= 0 ? (
-                <ArrowUpRight className="w-3.5 h-3.5 text-emerald-400" />
+                <ArrowUpRight className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" />
               ) : (
-                <ArrowDownRight className="w-3.5 h-3.5 text-rose-400" />
+                <ArrowDownRight className="w-3.5 h-3.5 text-rose-600 dark:text-rose-400" />
               )}
             </div>
-            <div className="flex items-center gap-1.5 text-[10px] font-mono-num text-slate-400">
+            <div className="flex items-center gap-1.5 text-[10px] font-mono-num text-slate-500 dark:text-slate-400">
               <span>Spread:</span>
-              <span className="text-slate-200 font-semibold">{(pUnit * 2).toFixed(2)} (0.01%)</span>
+              <span className="text-slate-800 dark:text-slate-200 font-semibold">{(pUnit * 2).toFixed(2)} (0.01%)</span>
             </div>
           </div>
 
@@ -200,7 +200,7 @@ export const OrderBookPanel: React.FC<OrderBookPanelProps> = ({
                 type="button"
                 onClick={() => handleRowClick(bid.price)}
                 className={`w-full grid grid-cols-3 text-[11px] font-mono-num py-0.5 px-1 rounded relative text-left transition-all active:scale-[0.99] ${
-                  clickedPrice === bid.price ? 'bg-purple-500/30' : 'hover:bg-white/[0.04]'
+                  clickedPrice === bid.price ? 'bg-purple-100 dark:bg-purple-500/30' : 'hover:bg-slate-100 dark:hover:bg-white/[0.04]'
                 }`}
                 title="Click to fill price in order terminal"
               >
@@ -209,11 +209,11 @@ export const OrderBookPanel: React.FC<OrderBookPanelProps> = ({
                   className="absolute inset-y-0 right-0 bg-emerald-500/10 pointer-events-none rounded-r transition-all"
                   style={{ width: `${bid.depthPct}%` }}
                 />
-                <span className="text-emerald-400 font-semibold relative z-10">
+                <span className="text-emerald-600 dark:text-emerald-400 font-semibold relative z-10">
                   {bid.price.toFixed(precision === '1' ? 0 : precision === '0.1' ? 1 : 2)}
                 </span>
-                <span className="text-slate-300 text-right relative z-10">{bid.amount.toFixed(3)}</span>
-                <span className="text-slate-400 text-right relative z-10">
+                <span className="text-slate-700 dark:text-slate-300 text-right relative z-10">{bid.amount.toFixed(3)}</span>
+                <span className="text-slate-500 dark:text-slate-400 text-right relative z-10">
                   {bid.total >= 1000 ? `${(bid.total / 1000).toFixed(1)}k` : bid.total.toFixed(0)}
                 </span>
               </button>
@@ -223,7 +223,7 @@ export const OrderBookPanel: React.FC<OrderBookPanelProps> = ({
       ) : (
         /* Real-Time Trades Stream */
         <div className="space-y-1 font-mono-num">
-          <div className="grid grid-cols-4 text-[10px] text-slate-400 font-medium pb-1 mb-1 border-b border-white/[0.04]">
+          <div className="grid grid-cols-4 text-[10px] text-slate-500 dark:text-slate-400 font-medium pb-1 mb-1 border-b border-slate-200 dark:border-white/[0.04]">
             <span>Time</span>
             <span>Side</span>
             <span className="text-right">Price</span>
@@ -234,18 +234,18 @@ export const OrderBookPanel: React.FC<OrderBookPanelProps> = ({
               key={t.id}
               type="button"
               onClick={() => handleRowClick(t.price)}
-              className="w-full grid grid-cols-4 text-[11px] py-1 px-1 rounded hover:bg-white/[0.04] text-left transition-colors"
+              className="w-full grid grid-cols-4 text-[11px] py-1 px-1 rounded hover:bg-slate-100 dark:hover:bg-white/[0.04] text-left transition-colors"
             >
-              <span className="text-slate-400 text-[10px]">{t.time}</span>
+              <span className="text-slate-500 dark:text-slate-400 text-[10px]">{t.time}</span>
               <span
                 className={`font-bold text-[10px] ${
-                  t.type === 'buy' ? 'text-emerald-400' : 'text-rose-400'
+                  t.type === 'buy' ? 'text-emerald-600 dark:text-emerald-400' : 'text-rose-600 dark:text-rose-400'
                 }`}
               >
                 {t.type.toUpperCase()}
               </span>
-              <span className="text-right text-slate-100 font-semibold">{t.price.toFixed(2)}</span>
-              <span className="text-right text-slate-300">{t.amount.toFixed(3)}</span>
+              <span className="text-right text-slate-900 dark:text-slate-100 font-semibold">{t.price.toFixed(2)}</span>
+              <span className="text-right text-slate-600 dark:text-slate-300">{t.amount.toFixed(3)}</span>
             </button>
           ))}
         </div>

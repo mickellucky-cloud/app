@@ -2,7 +2,6 @@ import React, { useState, useMemo } from 'react';
 import { MarketPair, ThemeMode } from '../../types';
 import { CoinIcon } from '../common/CoinIcon';
 import { Sparkline } from '../common/Sparkline';
-import { ThemeToggle } from '../common/ThemeToggle';
 import { MarketHeatmap } from './MarketHeatmap';
 import { Search, Star, ArrowUpDown, Bell, List, LayoutGrid, ArrowRight, Flame } from 'lucide-react';
 
@@ -142,14 +141,6 @@ export const MarketsScreen: React.FC<MarketsScreenProps> = ({
             >
               <Bell className="w-4 h-4" />
             </button>
-          )}
-
-          {onToggleTheme && (
-            <ThemeToggle
-              theme={theme}
-              onToggle={onToggleTheme}
-              size="sm"
-            />
           )}
         </div>
       </div>
@@ -374,7 +365,7 @@ export const MarketsScreen: React.FC<MarketsScreenProps> = ({
 
                     {/* 24h Volume (Desktop) */}
                     <div className="hidden lg:block text-right w-24 font-mono-num text-xs text-slate-500 dark:text-slate-400">
-                      ${(pair.volume24h / 1_000_000).toFixed(1)}M
+                      ${(pair.volumeQuote / 1_000_000).toFixed(1)}M
                     </div>
 
                     {/* Sparkline (Tablet & Desktop) */}

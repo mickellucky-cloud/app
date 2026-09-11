@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { MainTab, ThemeMode } from '../../types';
 import { OKNexusLogo } from '../common/OKNexusLogo';
-import { ThemeToggle } from '../common/ThemeToggle';
 import {
   Home,
   BarChart2,
@@ -24,6 +23,9 @@ import {
   Zap,
   Sun,
   Moon,
+  Compass,
+  LineChart,
+  ScanLine,
 } from 'lucide-react';
 
 export interface LeftNavProps {
@@ -36,6 +38,7 @@ export interface LeftNavProps {
   showBalances: boolean;
   onToggleShowBalances: () => void;
   onOpenDeposit: () => void;
+  onOpenScanToPay?: () => void;
   onOpenSearch: () => void;
   onOpenNotifications: () => void;
   unreadNotificationsCount?: number;
@@ -45,8 +48,10 @@ export interface LeftNavProps {
   onOpenPolymarket: () => void;
   onOpenRewards: () => void;
   onOpenSupport: () => void;
-  onOpenProfile: () => void;
+  onOpenProfile: (tab?: 'profile' | 'system_settings') => void;
   userEmail: string;
+  username?: string;
+  userAvatar?: string;
   isCollapsed: boolean;
   onToggleCollapse: () => void;
   theme?: ThemeMode;
@@ -60,6 +65,7 @@ export const LeftNav: React.FC<LeftNavProps> = ({
   showBalances,
   onToggleShowBalances,
   onOpenDeposit,
+  onOpenScanToPay,
   onOpenPriceAlerts,
   activeAlertsCount = 0,
   onOpenAiTrader,
@@ -68,6 +74,8 @@ export const LeftNav: React.FC<LeftNavProps> = ({
   onOpenSupport,
   onOpenProfile,
   userEmail,
+  username = 'Mickel_Lucky',
+  userAvatar = '',
   isCollapsed,
   onToggleCollapse,
   theme = 'dark',
@@ -77,12 +85,26 @@ export const LeftNav: React.FC<LeftNavProps> = ({
     { id: 'home', label: 'Home', icon: Home },
     { id: 'market', label: 'Markets', icon: BarChart2 },
     { id: 'trade', label: 'Spot Trade', icon: ArrowLeftRight },
-    { id: 'earn', label: 'Earn & Yield', icon: Percent, badge: '12.5%' },
+    { id: 'earn', label: 'Earn & Yield', icon: Percent, badge: '18%' },
     { id: 'assets', label: 'Assets', icon: Wallet },
     { id: 'p2p', label: 'P2P Express', icon: Users2, badge: '0% Fee' },
   ];
 
   const toolsNavItems = [
+    {
+      id: 'explore',
+      label: 'Explore Web3',
+      icon: Compass,
+      badge: 'Discover',
+      onClick: () => onSelectTab('explore'),
+    },
+    {
+      id: 'analytics',
+      label: 'Portfolio Analytics',
+      icon: LineChart,
+      badge: 'P&L',
+      onClick: () => onSelectTab('analytics'),
+    },
     {
       id: 'ai_trader',
       label: 'AI Trading Bot',
@@ -116,6 +138,13 @@ export const LeftNav: React.FC<LeftNavProps> = ({
       icon: Headphones,
       badge: '24/7',
       onClick: onOpenSupport,
+    },
+    {
+      id: 'scan_pay',
+      label: 'Scan to Pay',
+      icon: ScanLine,
+      badge: 'QR',
+      onClick: onOpenScanToPay,
     },
   ];
 
@@ -297,6 +326,29 @@ export const LeftNav: React.FC<LeftNavProps> = ({
           </button>
         )}
 
+        {/* Quick Action: Scan to Pay */}
+        {onOpenScanToPay && (
+          !isCollapsed ? (
+            <button
+              id="left-nav-scan-pay-btn"
+              onClick={onOpenScanToPay}
+              className="w-full py-2 px-3 rounded-xl bg-purple-500/10 hover:bg-purple-500/20 active:scale-98 text-purple-700 dark:text-purple-300 text-xs font-bold border border-purple-500/30 transition-all flex items-center justify-center gap-2"
+            >
+              <ScanLine className="w-3.5 h-3.5 text-purple-600 dark:text-purple-400" />
+              <span>Scan to Pay</span>
+            </button>
+          ) : (
+            <button
+              id="left-nav-scan-pay-btn"
+              onClick={onOpenScanToPay}
+              title="Scan to Pay"
+              className="w-full py-2 rounded-xl bg-purple-500/20 hover:bg-purple-500/30 text-purple-300 flex items-center justify-center border border-purple-500/30 transition-colors"
+            >
+              <ScanLine className="w-4 h-4" />
+            </button>
+          )
+        )}
+
         {/* Portfolio Balance Card (Expanded) */}
         {!isCollapsed && (
           <div className="p-2.5 rounded-xl bg-white dark:bg-slate-900/60 border border-slate-200 dark:border-white/[0.05] shadow-2xs">
@@ -326,39 +378,47 @@ export const LeftNav: React.FC<LeftNavProps> = ({
           </div>
         )}
 
-        {/* Theme Toggle Button */}
-        {onToggleTheme && (
-          <div className={`w-full flex items-center py-1 ${isCollapsed ? 'justify-center' : 'justify-start'}`}>
-            <ThemeToggle
-              theme={theme}
-              onToggle={onToggleTheme}
-              size="md"
-              isCollapsed={isCollapsed}
-            />
-          </div>
-        )}
-
-        {/* User Profile Trigger */}
+        {/* User Profile & Settings Trigger */}
         <div
-          onClick={onOpenProfile}
+          onClick={() => onOpenProfile('profile')}
           className={`flex items-center gap-2.5 p-2 rounded-xl hover:bg-slate-100 dark:hover:bg-white/[0.04] cursor-pointer transition-colors border border-transparent hover:border-slate-200 dark:hover:border-white/5 ${
             isCollapsed ? 'justify-center' : ''
           }`}
-          title={isCollapsed ? userEmail : undefined}
+          title={isCollapsed ? `@${username} • Settings` : undefined}
         >
-          <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-purple-600 to-indigo-500 border border-purple-400/40 flex items-center justify-center font-bold text-xs text-white shadow-sm flex-shrink-0">
-            {userEmail.charAt(0).toUpperCase()}
+          <div className="w-8 h-8 rounded-full overflow-hidden bg-gradient-to-tr from-purple-600 to-amber-400 p-[1.5px] shadow-sm flex-shrink-0">
+            <div className="w-full h-full rounded-full bg-white dark:bg-slate-950 flex items-center justify-center overflow-hidden">
+              {userAvatar ? (
+                <img src={userAvatar} alt={username} className="w-full h-full object-cover" referrerPolicy="no-referrer" />
+              ) : (
+                <span className="text-white text-xs font-bold">
+                  {username.charAt(0).toUpperCase()}
+                </span>
+              )}
+            </div>
           </div>
           {!isCollapsed && (
             <div className="flex-1 min-w-0">
-              <div className="text-xs font-bold text-slate-900 dark:text-white truncate">{userEmail}</div>
+              <div className="text-xs font-bold text-slate-900 dark:text-white truncate">@{username}</div>
               <div className="flex items-center gap-1 text-[10px] text-emerald-600 dark:text-emerald-400">
                 <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 dark:bg-emerald-400 animate-pulse" />
                 <span>Verified • Tier 2</span>
               </div>
             </div>
           )}
-          {!isCollapsed && <Settings className="w-3.5 h-3.5 text-slate-400 dark:text-slate-400" />}
+          {!isCollapsed && (
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                onOpenProfile('system_settings');
+              }}
+              title="System Settings"
+              aria-label="System Settings"
+              className="p-1 rounded-lg hover:bg-slate-200 dark:hover:bg-white/10 text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors"
+            >
+              <Settings className="w-3.5 h-3.5" />
+            </button>
+          )}
         </div>
       </div>
     </aside>

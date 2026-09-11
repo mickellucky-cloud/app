@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { MarketPair, OpenOrder, ThemeMode } from '../../types';
 import { OKNexusLogo } from '../common/OKNexusLogo';
-import { ThemeToggle } from '../common/ThemeToggle';
 import { TradeChart, ChartTimeframe } from './TradeChart';
 import { OrderBookPanel } from './OrderBookPanel';
 import { OrderEntryForm } from './OrderEntryForm';
@@ -222,15 +221,6 @@ export const SpotTradeScreen: React.FC<SpotTradeScreenProps> = ({
               }`}
             />
           </button>
-
-          {/* Theme Toggle */}
-          {onToggleTheme && (
-            <ThemeToggle
-              theme={theme}
-              onToggle={onToggleTheme}
-              size="sm"
-            />
-          )}
         </div>
       </header>
 

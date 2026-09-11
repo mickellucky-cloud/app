@@ -299,10 +299,10 @@ export const TradeChart: React.FC<TradeChartProps> = ({
   return (
     <div
       id="trade-chart-container"
-      className={`rounded-2xl bg-[#090C14] border border-white/[0.08] p-3 shadow-xl backdrop-blur-md transition-all ${className}`}
+      className={`rounded-2xl bg-slate-50 dark:bg-[#090C14] border border-slate-200 dark:border-white/[0.08] p-3 shadow-xs dark:shadow-xl transition-all ${className}`}
     >
       {/* Top Controls: Timeframe bar & Chart Mode Bar */}
-      <div className="flex items-center justify-between gap-2 pb-2.5 border-b border-white/[0.06] mb-2 text-xs">
+      <div className="flex items-center justify-between gap-2 pb-2.5 border-b border-slate-200 dark:border-white/[0.06] mb-2 text-xs">
         {/* Timeframe pills */}
         <div className="flex items-center gap-1 overflow-x-auto no-scrollbar">
           {(['1m', '5m', '15m', '1H', '4H', '1D', '1W'] as ChartTimeframe[]).map((tf) => (
@@ -312,8 +312,8 @@ export const TradeChart: React.FC<TradeChartProps> = ({
               onClick={() => onTimeframeChange(tf)}
               className={`px-2 py-0.5 rounded-lg font-mono-num text-[11px] font-semibold transition-all ${
                 timeframe === tf
-                  ? 'bg-purple-600/35 text-purple-200 border border-purple-500/40 shadow-[0_0_10px_rgba(168,85,247,0.3)]'
-                  : 'text-slate-400 hover:text-white hover:bg-white/[0.04]'
+                  ? 'bg-purple-600/25 text-purple-700 dark:text-purple-200 border border-purple-500/40 shadow-xs'
+                  : 'text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-200/60 dark:hover:bg-white/[0.04]'
               }`}
             >
               {tf}
@@ -328,8 +328,8 @@ export const TradeChart: React.FC<TradeChartProps> = ({
             onClick={() => setChartStyle('candles')}
             className={`p-1.5 rounded-lg text-xs transition-colors ${
               chartStyle === 'candles'
-                ? 'bg-purple-600/30 text-purple-300 border border-purple-500/40'
-                : 'text-slate-400 hover:text-white'
+                ? 'bg-purple-600/25 text-purple-700 dark:text-purple-300 border border-purple-500/40'
+                : 'text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
             }`}
             title="Candlestick Chart"
           >
@@ -340,8 +340,8 @@ export const TradeChart: React.FC<TradeChartProps> = ({
             onClick={() => setChartStyle('line')}
             className={`p-1.5 rounded-lg text-xs transition-colors ${
               chartStyle === 'line'
-                ? 'bg-purple-600/30 text-purple-300 border border-purple-500/40'
-                : 'text-slate-400 hover:text-white'
+                ? 'bg-purple-600/25 text-purple-700 dark:text-purple-300 border border-purple-500/40'
+                : 'text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
             }`}
             title="Line Area Chart"
           >
@@ -352,8 +352,8 @@ export const TradeChart: React.FC<TradeChartProps> = ({
             onClick={() => setChartStyle('depth')}
             className={`p-1.5 rounded-lg text-xs transition-colors ${
               chartStyle === 'depth'
-                ? 'bg-purple-600/30 text-purple-300 border border-purple-500/40'
-                : 'text-slate-400 hover:text-white'
+                ? 'bg-purple-600/25 text-purple-700 dark:text-purple-300 border border-purple-500/40'
+                : 'text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
             }`}
             title="Market Depth View"
           >
@@ -373,8 +373,8 @@ export const TradeChart: React.FC<TradeChartProps> = ({
             }}
             className={`p-1.5 rounded-lg text-xs transition-colors ${
               crosshairEnabled
-                ? 'bg-purple-600/35 text-purple-200 border border-purple-500/40 shadow-[0_0_8px_rgba(168,85,247,0.3)]'
-                : 'text-slate-400 hover:text-white'
+                ? 'bg-purple-600/25 text-purple-700 dark:text-purple-200 border border-purple-500/40 shadow-xs'
+                : 'text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
             }`}
             title={crosshairEnabled ? 'Crosshair Tool Active (Touch/Drag to inspect)' : 'Enable Crosshair Tool'}
           >
@@ -384,7 +384,7 @@ export const TradeChart: React.FC<TradeChartProps> = ({
           <button
             type="button"
             onClick={() => setIsExpanded(!isExpanded)}
-            className="p-1.5 rounded-lg text-slate-400 hover:text-white transition-colors"
+            className="p-1.5 rounded-lg text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors"
             title={isExpanded ? 'Collapse Chart' : 'Expand Chart'}
           >
             {isExpanded ? <Minimize2 className="w-3.5 h-3.5" /> : <Maximize2 className="w-3.5 h-3.5" />}
@@ -393,49 +393,49 @@ export const TradeChart: React.FC<TradeChartProps> = ({
       </div>
 
       {/* Pro HUD Metric Bar */}
-      <div className="flex items-center justify-between text-[10px] font-mono-num py-1 px-1 text-slate-400 border-b border-white/[0.04] mb-2 overflow-x-auto no-scrollbar">
+      <div className="flex items-center justify-between text-[10px] font-mono-num py-1 px-1 text-slate-500 dark:text-slate-400 border-b border-slate-200 dark:border-white/[0.04] mb-2 overflow-x-auto no-scrollbar">
         {activeCandle && (
           <div className="flex items-center gap-2 flex-nowrap whitespace-nowrap">
             {crosshair ? (
-              <span className="flex items-center gap-1 font-mono-num font-bold text-purple-300 bg-purple-500/20 border border-purple-500/40 px-1.5 py-0.5 rounded text-[9px] shadow-[0_0_8px_rgba(168,85,247,0.25)] animate-pulse">
+              <span className="flex items-center gap-1 font-mono-num font-bold text-purple-700 dark:text-purple-300 bg-purple-100 dark:bg-purple-500/20 border border-purple-300 dark:border-purple-500/40 px-1.5 py-0.5 rounded text-[9px]">
                 <Crosshair className="w-2.5 h-2.5" />
                 {crosshair.time}
               </span>
             ) : (
-              <span className="text-slate-500 font-mono-num text-[9px]">{activeCandle.time}</span>
+              <span className="text-slate-500 dark:text-slate-400 font-mono-num text-[9px]">{activeCandle.time}</span>
             )}
             <span>
-              O: <strong className="text-slate-200 font-semibold">{formatPrice(activeCandle.open)}</strong>
+              O: <strong className="text-slate-800 dark:text-slate-200 font-semibold">{formatPrice(activeCandle.open)}</strong>
             </span>
             <span>
-              H: <strong className="text-emerald-400 font-semibold">{formatPrice(activeCandle.high)}</strong>
+              H: <strong className="text-emerald-600 dark:text-emerald-400 font-semibold">{formatPrice(activeCandle.high)}</strong>
             </span>
             <span>
-              L: <strong className="text-rose-400 font-semibold">{formatPrice(activeCandle.low)}</strong>
+              L: <strong className="text-rose-600 dark:text-rose-400 font-semibold">{formatPrice(activeCandle.low)}</strong>
             </span>
             <span>
               C:{' '}
               <strong
-                className={`font-bold ${activeCandle.isUp ? 'text-emerald-400' : 'text-rose-400'}`}
+                className={`font-bold ${activeCandle.isUp ? 'text-emerald-600 dark:text-emerald-400' : 'text-rose-600 dark:text-rose-400'}`}
               >
                 {formatPrice(activeCandle.close)}
               </strong>
             </span>
             <span
               className={`font-semibold px-1 rounded ${
-                activeChange >= 0 ? 'bg-emerald-500/20 text-emerald-300' : 'bg-rose-500/20 text-rose-300'
+                activeChange >= 0 ? 'bg-emerald-50 text-emerald-700 border border-emerald-200 dark:bg-emerald-500/20 dark:text-emerald-300 dark:border-transparent' : 'bg-rose-50 text-rose-700 border border-rose-200 dark:bg-rose-500/20 dark:text-rose-300 dark:border-transparent'
               }`}
             >
               {activeChange >= 0 ? `+${activeChange.toFixed(2)}%` : `${activeChange.toFixed(2)}%`}
             </span>
-            <span className="text-slate-500">
+            <span className="text-slate-500 dark:text-slate-400">
               V: {formatVolume(activeCandle.volume)}
             </span>
             {crosshair && (
               <button
                 type="button"
                 onClick={handleClearCrosshair}
-                className="p-0.5 text-slate-400 hover:text-white rounded hover:bg-white/10 ml-1 transition-colors"
+                className="p-0.5 text-slate-400 hover:text-slate-900 dark:hover:text-white rounded hover:bg-slate-200 dark:hover:bg-white/10 ml-1 transition-colors"
                 title="Dismiss Crosshair"
               >
                 <X className="w-3 h-3" />
@@ -450,7 +450,7 @@ export const TradeChart: React.FC<TradeChartProps> = ({
             <button
               onClick={() => setShowMA7(!showMA7)}
               className={`px-1.5 py-0.2 rounded text-[9px] font-bold transition-all ${
-                showMA7 ? 'bg-amber-500/20 text-amber-300 border border-amber-500/40' : 'text-slate-500'
+                showMA7 ? 'bg-amber-100 text-amber-800 border border-amber-300 dark:bg-amber-500/20 dark:text-amber-300 dark:border-amber-500/40' : 'text-slate-500 dark:text-slate-400'
               }`}
             >
               MA7
@@ -458,7 +458,7 @@ export const TradeChart: React.FC<TradeChartProps> = ({
             <button
               onClick={() => setShowMA25(!showMA25)}
               className={`px-1.5 py-0.2 rounded text-[9px] font-bold transition-all ${
-                showMA25 ? 'bg-cyan-500/20 text-cyan-300 border border-cyan-500/40' : 'text-slate-500'
+                showMA25 ? 'bg-cyan-100 text-cyan-800 border border-cyan-300 dark:bg-cyan-500/20 dark:text-cyan-300 dark:border-cyan-500/40' : 'text-slate-500 dark:text-slate-400'
               }`}
             >
               MA25
@@ -483,32 +483,32 @@ export const TradeChart: React.FC<TradeChartProps> = ({
         {/* Floating Detail Tooltip Overlay on Touch/Hover (Smart-flips so finger never occludes) */}
         {crosshair && (
           <div
-            className={`absolute top-1.5 z-20 pointer-events-none px-2.5 py-1.5 rounded-xl bg-[#090C16]/95 border border-purple-500/40 shadow-2xl backdrop-blur-md transition-all text-[10px] font-mono-num ${
+            className={`absolute top-1.5 z-20 pointer-events-none px-2.5 py-1.5 rounded-xl bg-white/95 dark:bg-[#090C16]/95 border border-purple-500/40 shadow-xl backdrop-blur-md transition-all text-[10px] font-mono-num text-slate-900 dark:text-white ${
               crosshair.x < chartWidth / 2 ? 'right-2' : 'left-2'
             }`}
           >
-            <div className="flex items-center justify-between gap-3 border-b border-white/10 pb-1 mb-1">
-              <span className="font-bold text-white flex items-center gap-1.5">
-                <span className="w-1.5 h-1.5 rounded-full bg-purple-400 animate-ping" />
+            <div className="flex items-center justify-between gap-3 border-b border-slate-200 dark:border-white/10 pb-1 mb-1">
+              <span className="font-bold text-slate-900 dark:text-white flex items-center gap-1.5">
+                <span className="w-1.5 h-1.5 rounded-full bg-purple-500 animate-ping" />
                 {crosshair.time}
               </span>
               <span
                 className={`font-bold px-1.5 py-0.2 rounded text-[9px] ${
-                  crosshair.candle.isUp ? 'bg-emerald-500/20 text-emerald-300' : 'bg-rose-500/20 text-rose-300'
+                  crosshair.candle.isUp ? 'bg-emerald-100 text-emerald-800 dark:bg-emerald-500/20 dark:text-emerald-300' : 'bg-rose-100 text-rose-800 dark:bg-rose-500/20 dark:text-rose-300'
                 }`}
               >
                 {activeChange >= 0 ? `+${activeChange.toFixed(2)}%` : `${activeChange.toFixed(2)}%`}
               </span>
             </div>
-            <div className="grid grid-cols-2 gap-x-3 gap-y-0.5 text-slate-400 text-[9.5px]">
-              <div>O: <span className="text-slate-200 font-semibold">{formatPrice(crosshair.candle.open)}</span></div>
-              <div>H: <span className="text-emerald-400 font-semibold">{formatPrice(crosshair.candle.high)}</span></div>
-              <div>L: <span className="text-rose-400 font-semibold">{formatPrice(crosshair.candle.low)}</span></div>
-              <div>C: <span className={`font-bold ${crosshair.candle.isUp ? 'text-emerald-400' : 'text-rose-400'}`}>{formatPrice(crosshair.candle.close)}</span></div>
+            <div className="grid grid-cols-2 gap-x-3 gap-y-0.5 text-slate-500 dark:text-slate-400 text-[9.5px]">
+              <div>O: <span className="text-slate-800 dark:text-slate-200 font-semibold">{formatPrice(crosshair.candle.open)}</span></div>
+              <div>H: <span className="text-emerald-600 dark:text-emerald-400 font-semibold">{formatPrice(crosshair.candle.high)}</span></div>
+              <div>L: <span className="text-rose-600 dark:text-rose-400 font-semibold">{formatPrice(crosshair.candle.low)}</span></div>
+              <div>C: <span className={`font-bold ${crosshair.candle.isUp ? 'text-emerald-600 dark:text-emerald-400' : 'text-rose-600 dark:text-rose-400'}`}>{formatPrice(crosshair.candle.close)}</span></div>
             </div>
-            <div className="mt-1 pt-0.5 border-t border-white/[0.06] flex items-center justify-between text-[9px] text-slate-400">
+            <div className="mt-1 pt-0.5 border-t border-slate-200 dark:border-white/[0.06] flex items-center justify-between text-[9px] text-slate-500 dark:text-slate-400">
               <span>Volume</span>
-              <span className="text-slate-200 font-semibold">{formatVolume(crosshair.candle.volume)}</span>
+              <span className="text-slate-800 dark:text-slate-200 font-semibold">{formatVolume(crosshair.candle.volume)}</span>
             </div>
           </div>
         )}
@@ -541,9 +541,9 @@ export const TradeChart: React.FC<TradeChartProps> = ({
           </defs>
 
           {/* Grid lines (Dotted) */}
-          <line x1="0" y1={chartHeight * 0.25} x2={chartWidth} y2={chartHeight * 0.25} stroke="rgba(255,255,255,0.05)" strokeDasharray="3 3" />
-          <line x1="0" y1={chartHeight * 0.5} x2={chartWidth} y2={chartHeight * 0.5} stroke="rgba(255,255,255,0.05)" strokeDasharray="3 3" />
-          <line x1="0" y1={chartHeight * 0.75} x2={chartWidth} y2={chartHeight * 0.75} stroke="rgba(255,255,255,0.05)" strokeDasharray="3 3" />
+          <line x1="0" y1={chartHeight * 0.25} x2={chartWidth} y2={chartHeight * 0.25} stroke="#94A3B8" strokeOpacity="0.25" strokeDasharray="3 3" />
+          <line x1="0" y1={chartHeight * 0.5} x2={chartWidth} y2={chartHeight * 0.5} stroke="#94A3B8" strokeOpacity="0.25" strokeDasharray="3 3" />
+          <line x1="0" y1={chartHeight * 0.75} x2={chartWidth} y2={chartHeight * 0.75} stroke="#94A3B8" strokeOpacity="0.25" strokeDasharray="3 3" />
 
           {/* Mode 1: CANDLESTICKS */}
           {chartStyle === 'candles' && (
@@ -818,7 +818,7 @@ export const TradeChart: React.FC<TradeChartProps> = ({
 
         {/* Subtle mobile hint when crosshair is inactive */}
         {!crosshair && (
-          <div className="absolute bottom-1.5 left-2 pointer-events-none text-[9px] text-slate-400 font-mono-num opacity-70 sm:opacity-50">
+          <div className="absolute bottom-1.5 left-2 pointer-events-none text-[9px] text-slate-500 dark:text-slate-400 font-mono-num opacity-70 sm:opacity-50">
             Touch & drag to inspect
           </div>
         )}

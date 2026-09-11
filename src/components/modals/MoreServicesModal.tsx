@@ -1,21 +1,23 @@
 import React, { useState } from 'react';
 import {
   X,
-  Users2,
-  Building2,
-  LineChart,
-  Gift,
   Share2,
+  Gift,
+  ShieldCheck,
+  CreditCard,
+  Headphones,
   Key,
+  Ticket,
+  Receipt,
+  Landmark,
+  LineChart,
   Compass,
-  BellRing,
-  Settings,
-  HelpCircle,
   LogOut,
   ChevronRight,
-  ShieldCheck,
-  Zap,
+  CheckCircle2,
+  Clock,
   Sparkles,
+  Settings,
 } from 'lucide-react';
 import { OKNexusLogo } from '../common/OKNexusLogo';
 
@@ -28,9 +30,23 @@ interface MoreServicesModalProps {
   onOpenReferrals: () => void;
   onOpenApiManagement: () => void;
   onOpenPriceAlerts: () => void;
-  onOpenSettings: () => void;
+  onOpenSettings: (tab?: 'profile' | 'system_settings') => void;
   onOpenSupport: () => void;
   onSignOut: () => void;
+  onNavigateExplore?: () => void;
+  onNavigateAnalytics?: () => void;
+}
+
+interface ServiceItem {
+  id: string;
+  title: string;
+  subtitle: string;
+  icon: React.ComponentType<{ className?: string }>;
+  status: 'Active' | 'Coming soon';
+  category: 'active' | 'upcoming';
+  iconColor: string;
+  iconBg: string;
+  action: () => void;
 }
 
 export const MoreServicesModal: React.FC<MoreServicesModalProps> = ({
@@ -45,117 +61,103 @@ export const MoreServicesModal: React.FC<MoreServicesModalProps> = ({
   onOpenSettings,
   onOpenSupport,
   onSignOut,
+  onNavigateExplore,
+  onNavigateAnalytics,
 }) => {
-  const [activeTab, setActiveTab] = useState<'all' | 'trade' | 'tools' | 'growth'>('all');
+  const [filter, setFilter] = useState<'all' | 'active' | 'upcoming'>('all');
+  const [comingSoonToast, setComingSoonToast] = useState<string | null>(null);
 
   if (!isOpen) return null;
 
-  const services = [
-    // Trade & Desks
+  const handleComingSoonClick = (featureName: string) => {
+    setComingSoonToast(`${featureName} is in active development. You will receive an alert upon launch!`);
+    setTimeout(() => {
+      setComingSoonToast(null);
+    }, 3200);
+  };
+
+  const services: ServiceItem[] = [
     {
-      id: 'p2p',
-      title: 'P2P Trading',
-      subtitle: 'Zero fee direct peer-to-peer desk',
-      icon: Users2,
-      category: 'trade',
-      color: 'text-emerald-400',
-      bgColor: 'bg-emerald-950/40 border-emerald-500/30',
+      id: 'analytics',
+      title: 'Portfolio Analytics',
+      subtitle: 'Real-time P&L performance, win-rate metrics, strategy breakdown & trade history.',
+      icon: LineChart,
+      status: 'Active',
+      category: 'active',
+      iconColor: 'text-purple-600 dark:text-purple-400',
+      iconBg: 'bg-purple-100 dark:bg-purple-950/60 border-purple-200 dark:border-purple-500/30',
       action: () => {
         onClose();
-        onNavigateP2P();
+        if (onNavigateAnalytics) {
+          onNavigateAnalytics();
+        }
       },
     },
     {
-      id: 'otc',
-      title: 'OTC Block Trading',
-      subtitle: 'Institutional size execution ($25k+)',
-      icon: Building2,
-      category: 'trade',
-      color: 'text-purple-400',
-      bgColor: 'bg-purple-950/40 border-purple-500/30',
+      id: 'affiliates',
+      title: 'Affiliates & Referrals',
+      subtitle: "Share your referral link and earn a share of your friends' trading fees.",
+      icon: Share2,
+      status: 'Active',
+      category: 'active',
+      iconColor: 'text-purple-600 dark:text-purple-400',
+      iconBg: 'bg-purple-100 dark:bg-purple-950/60 border-purple-200 dark:border-purple-500/30',
       action: () => {
         onClose();
-        onOpenOTC();
+        onOpenReferrals();
       },
     },
-    // Tools & Analytics
-    {
-      id: 'alerts',
-      title: 'Price Alerts',
-      subtitle: 'Target price triggers & push notices',
-      icon: BellRing,
-      category: 'tools',
-      color: 'text-fuchsia-400',
-      bgColor: 'bg-fuchsia-950/40 border-fuchsia-500/30',
-      badge: 'PRO',
-      action: () => {
-        onClose();
-        onOpenPriceAlerts();
-      },
-    },
-    {
-      id: 'api',
-      title: 'API Management',
-      subtitle: 'REST & WebSocket trading bot keys',
-      icon: Key,
-      category: 'tools',
-      color: 'text-cyan-400',
-      bgColor: 'bg-cyan-950/40 border-cyan-500/30',
-      action: () => {
-        onClose();
-        onOpenApiManagement();
-      },
-    },
-    {
-      id: 'explore',
-      title: 'Web3 Ecosystem',
-      subtitle: 'Explore DeFi vaults & dApps',
-      icon: Compass,
-      category: 'tools',
-      color: 'text-blue-400',
-      bgColor: 'bg-blue-950/40 border-blue-500/30',
-      action: () => {
-        onClose();
-        onOpenSettings(); // opens Web3 Explorer & Settings
-      },
-    },
-    // Rewards & Growth
     {
       id: 'rewards',
       title: 'Rewards Hub',
-      subtitle: 'Mystery boxes & daily trading tasks',
+      subtitle: 'Bonuses, campaigns, and task-based rewards for active users.',
       icon: Gift,
-      category: 'growth',
-      color: 'text-amber-400',
-      bgColor: 'bg-amber-950/40 border-amber-500/30',
-      badge: 'FREE',
+      status: 'Active',
+      category: 'active',
+      iconColor: 'text-purple-600 dark:text-purple-400',
+      iconBg: 'bg-purple-100 dark:bg-purple-950/60 border-purple-200 dark:border-purple-500/30',
       action: () => {
         onClose();
         onOpenRewards();
       },
     },
     {
-      id: 'referrals',
-      title: 'Referral Program',
-      subtitle: 'Earn 40% lifetime trading rebates',
-      icon: Share2,
-      category: 'growth',
-      color: 'text-rose-400',
-      bgColor: 'bg-rose-950/40 border-rose-500/30',
+      id: 'system_settings',
+      title: 'System Settings',
+      subtitle: 'Light/Dark themes, orderbook frequency & advanced controls.',
+      icon: Settings,
+      status: 'Active',
+      category: 'active',
+      iconColor: 'text-purple-600 dark:text-purple-400',
+      iconBg: 'bg-purple-100 dark:bg-purple-950/60 border-purple-200 dark:border-purple-500/30',
       action: () => {
         onClose();
-        onOpenReferrals();
+        onOpenSettings('system_settings');
       },
     },
-    // System & Support
     {
-      id: 'settings',
-      title: 'Exchange Settings',
-      subtitle: 'Preferences, 2FA, biometric auth',
-      icon: Settings,
-      category: 'tools',
-      color: 'text-slate-300',
-      bgColor: 'bg-slate-900/60 border-white/10',
+      id: 'verification',
+      title: 'Verification & Limits',
+      subtitle: 'Check your KYC level and unlock higher deposit, withdrawal, and P2P limits.',
+      icon: ShieldCheck,
+      status: 'Active',
+      category: 'active',
+      iconColor: 'text-purple-600 dark:text-purple-400',
+      iconBg: 'bg-purple-100 dark:bg-purple-950/60 border-purple-200 dark:border-purple-500/30',
+      action: () => {
+        onClose();
+        onOpenSettings();
+      },
+    },
+    {
+      id: 'payment_methods',
+      title: 'Payment Methods',
+      subtitle: 'Manage saved bank accounts, cards, and mobile money for fiat and P2P.',
+      icon: CreditCard,
+      status: 'Active',
+      category: 'active',
+      iconColor: 'text-purple-600 dark:text-purple-400',
+      iconBg: 'bg-purple-100 dark:bg-purple-950/60 border-purple-200 dark:border-purple-500/30',
       action: () => {
         onClose();
         onOpenSettings();
@@ -163,102 +165,205 @@ export const MoreServicesModal: React.FC<MoreServicesModalProps> = ({
     },
     {
       id: 'support',
-      title: '24/7 AI Customer Support',
-      subtitle: 'Gemini 3.8 AI & VIP Human Specialist',
-      icon: Sparkles,
-      category: 'tools',
-      color: 'text-purple-300',
-      bgColor: 'bg-purple-950/50 border-purple-500/40',
+      title: 'Help Center & Support',
+      subtitle: 'Browse FAQs or submit a ticket to our support team.',
+      icon: Headphones,
+      status: 'Active',
+      category: 'active',
+      iconColor: 'text-purple-600 dark:text-purple-400',
+      iconBg: 'bg-purple-100 dark:bg-purple-950/60 border-purple-200 dark:border-purple-500/30',
       action: () => {
         onClose();
         onOpenSupport();
       },
     },
+    {
+      id: 'api',
+      title: 'API Management',
+      subtitle: 'Create and manage API keys for automated trading and portfolio tools.',
+      icon: Key,
+      status: 'Active',
+      category: 'active',
+      iconColor: 'text-purple-600 dark:text-purple-400',
+      iconBg: 'bg-purple-100 dark:bg-purple-950/60 border-purple-200 dark:border-purple-500/30',
+      action: () => {
+        onClose();
+        onOpenApiManagement();
+      },
+    },
+    {
+      id: 'gift_cards',
+      title: 'Gift Cards',
+      subtitle: 'Buy and redeem crypto gift cards for friends and family.',
+      icon: Ticket,
+      status: 'Coming soon',
+      category: 'upcoming',
+      iconColor: 'text-purple-600 dark:text-purple-400',
+      iconBg: 'bg-purple-100 dark:bg-purple-950/60 border-purple-200 dark:border-purple-500/30',
+      action: () => handleComingSoonClick('Gift Cards'),
+    },
+    {
+      id: 'bills',
+      title: 'Bills Payment',
+      subtitle: 'Pay for airtime, data, electricity, and more directly with crypto.',
+      icon: Receipt,
+      status: 'Coming soon',
+      category: 'upcoming',
+      iconColor: 'text-purple-600 dark:text-purple-400',
+      iconBg: 'bg-purple-100 dark:bg-purple-950/60 border-purple-200 dark:border-purple-500/30',
+      action: () => handleComingSoonClick('Bills Payment'),
+    },
+    {
+      id: 'institutional',
+      title: 'Institutional Services',
+      subtitle: 'Dedicated infrastructure, credit lines, and support for institutions.',
+      icon: Landmark,
+      status: 'Coming soon',
+      category: 'upcoming',
+      iconColor: 'text-purple-600 dark:text-purple-400',
+      iconBg: 'bg-purple-100 dark:bg-purple-950/60 border-purple-200 dark:border-purple-500/30',
+      action: () => handleComingSoonClick('Institutional Services'),
+    },
   ];
 
-  const filtered = services.filter((s) => activeTab === 'all' || s.category === activeTab);
+  const filtered = services.filter((s) => {
+    if (filter === 'all') return true;
+    return s.category === filter;
+  });
 
   return (
-    <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-end sm:items-center justify-center p-0 sm:p-4 animate-fadeIn">
-      <div className="w-full max-w-md bg-[#0E121E] border-t sm:border border-white/10 rounded-t-3xl sm:rounded-3xl p-5 safe-area-bottom text-slate-100 max-h-[88vh] overflow-y-auto shadow-2xl">
+    <div className="fixed inset-0 z-50 bg-black/70 dark:bg-black/80 backdrop-blur-sm flex items-end sm:items-center justify-center p-0 sm:p-4 animate-fadeIn">
+      <div className="w-full max-w-lg bg-white dark:bg-[#0E141B] border-t sm:border border-[#D7E0EB] dark:border-[#242E3B] rounded-t-3xl sm:rounded-3xl p-5 safe-area-bottom text-[#0F172A] dark:text-[#EDF1F5] max-h-[88vh] overflow-y-auto shadow-2xl flex flex-col">
         {/* Header */}
-        <div className="flex items-center justify-between pb-3 border-b border-white/[0.08] mb-4">
+        <div className="flex items-center justify-between pb-3 border-b border-[#D7E0EB] dark:border-[#242E3B] mb-3">
           <div className="flex items-center gap-2.5">
             <OKNexusLogo size={28} />
             <div>
-              <h3 className="font-bold text-base text-white">More Services</h3>
-              <p className="text-[11px] text-slate-400">All OKNexus exchange capabilities</p>
+              <h3 className="font-bold text-base text-[#0F172A] dark:text-white">More</h3>
+              <p className="text-[11px] text-[#64748B] dark:text-[#8E98A6]">Additional OKNexus services.</p>
             </div>
           </div>
           <button
             onClick={onClose}
-            className="p-1 rounded-lg text-slate-400 hover:text-white hover:bg-white/[0.06] transition-colors"
+            className="p-1.5 rounded-xl text-[#64748B] hover:text-[#0F172A] dark:hover:text-white hover:bg-[#F8FAFC] dark:hover:bg-[#141B24] transition-colors"
+            aria-label="Close"
           >
             <X className="w-5 h-5" />
           </button>
         </div>
 
+        {/* Coming soon feedback notification */}
+        {comingSoonToast && (
+          <div className="mb-3 px-3.5 py-2.5 rounded-xl bg-[#8B5CF6]/10 border border-[#8B5CF6]/30 text-[#8B5CF6] text-xs font-semibold flex items-center gap-2 animate-in fade-in slide-in-from-top-1">
+            <Sparkles className="w-4 h-4 text-[#8B5CF6] shrink-0" />
+            <span>{comingSoonToast}</span>
+          </div>
+        )}
+
         {/* Filter Pills */}
-        <div className="flex items-center gap-1.5 overflow-x-auto no-scrollbar pb-3 mb-3 border-b border-white/[0.05]">
-          {(['all', 'trade', 'tools', 'growth'] as const).map((cat) => (
+        <div className="flex items-center justify-between gap-1.5 pb-2.5 mb-3 border-b border-[#D7E0EB] dark:border-[#242E3B]">
+          <div className="flex items-center gap-1.5">
             <button
-              key={cat}
-              onClick={() => setActiveTab(cat)}
-              className={`px-3 py-1.5 rounded-xl text-xs font-semibold capitalize transition-all whitespace-nowrap ${
-                activeTab === cat
-                  ? 'bg-purple-600/30 text-purple-200 border border-purple-500/40'
-                  : 'bg-white/[0.03] text-slate-400 hover:text-white border border-transparent'
+              onClick={() => setFilter('all')}
+              className={`px-3 py-1 rounded-xl text-xs font-bold transition-all ${
+                filter === 'all'
+                  ? 'bg-[#8B5CF6] text-white shadow-xs'
+                  : 'bg-[#F8FAFC] dark:bg-[#141B24] text-[#64748B] dark:text-[#8E98A6] hover:text-[#0F172A] dark:hover:text-white border border-[#D7E0EB] dark:border-[#242E3B]'
               }`}
             >
-              {cat === 'all' ? 'All Services' : cat}
+              All ({services.length})
             </button>
-          ))}
+            <button
+              onClick={() => setFilter('active')}
+              className={`px-3 py-1 rounded-xl text-xs font-bold transition-all flex items-center gap-1 ${
+                filter === 'active'
+                  ? 'bg-[#10B981] text-white shadow-xs'
+                  : 'bg-[#F8FAFC] dark:bg-[#141B24] text-[#64748B] dark:text-[#8E98A6] hover:text-[#0F172A] dark:hover:text-white border border-[#D7E0EB] dark:border-[#242E3B]'
+              }`}
+            >
+              <CheckCircle2 className="w-3 h-3" />
+              <span>Active (7)</span>
+            </button>
+            <button
+              onClick={() => setFilter('upcoming')}
+              className={`px-3 py-1 rounded-xl text-xs font-bold transition-all flex items-center gap-1 ${
+                filter === 'upcoming'
+                  ? 'bg-[#8B5CF6] text-white shadow-xs'
+                  : 'bg-[#F8FAFC] dark:bg-[#141B24] text-[#64748B] dark:text-[#8E98A6] hover:text-[#0F172A] dark:hover:text-white border border-[#D7E0EB] dark:border-[#242E3B]'
+              }`}
+            >
+              <Clock className="w-3 h-3" />
+              <span>Coming soon (3)</span>
+            </button>
+          </div>
+
+          {onNavigateExplore && (
+            <button
+              onClick={() => {
+                onClose();
+                onNavigateExplore();
+              }}
+              className="text-xs font-bold text-[#8B5CF6] hover:underline flex items-center gap-1"
+            >
+              <Compass className="w-3.5 h-3.5" />
+              <span className="hidden sm:inline">Roadmap</span>
+            </button>
+          )}
         </div>
 
-        {/* Services Grid */}
-        <div className="space-y-2 mb-4">
+        {/* Services List */}
+        <div className="space-y-2 mb-4 overflow-y-auto pr-0.5">
           {filtered.map((item) => {
             const Icon = item.icon;
+            const isActive = item.status === 'Active';
+
             return (
               <button
                 key={item.id}
                 onClick={item.action}
-                className="w-full flex items-center justify-between p-3 rounded-2xl bg-[#080B14] border border-white/[0.06] hover:border-purple-500/40 hover:bg-[#111526] active:scale-[0.99] transition-all group text-left"
+                className="w-full flex items-center justify-between p-3 rounded-2xl bg-[#F8FAFC] dark:bg-[#141B24] border border-[#D7E0EB] dark:border-[#242E3B] hover:border-[#8B5CF6]/50 hover:bg-slate-100/70 dark:hover:bg-[#1A222F] active:scale-[0.99] transition-all group text-left shadow-2xs"
               >
-                <div className="flex items-center gap-3">
+                <div className="flex items-center gap-3 min-w-0 flex-1 pr-2">
                   <div
-                    className={`w-10 h-10 rounded-xl border flex items-center justify-center flex-shrink-0 shadow-sm ${item.bgColor}`}
+                    className="w-10 h-10 rounded-xl border border-[#8B5CF6]/20 bg-[#8B5CF6]/10 flex items-center justify-center flex-shrink-0 shadow-2xs group-hover:scale-105 transition-transform"
                   >
-                    <Icon className={`w-5 h-5 ${item.color}`} />
+                    <Icon className="w-5 h-5 text-[#8B5CF6]" />
                   </div>
-                  <div>
-                    <div className="flex items-center gap-1.5">
-                      <span className="font-bold text-xs text-white group-hover:text-purple-300 transition-colors">
+                  <div className="min-w-0 flex-1">
+                    <div className="flex items-center gap-2 flex-wrap">
+                      <span className="font-bold text-xs text-[#0F172A] dark:text-white group-hover:text-[#8B5CF6] transition-colors">
                         {item.title}
                       </span>
-                      {item.badge && (
-                        <span className="px-1.5 py-0.2 rounded text-[9px] font-bold bg-purple-500/30 text-purple-300 border border-purple-500/30">
-                          {item.badge}
-                        </span>
-                      )}
+                      <span
+                        className={`px-2 py-0.5 rounded-full text-[9px] font-extrabold uppercase tracking-wide border ${
+                          isActive
+                            ? 'bg-emerald-50 text-[#10B981] border-emerald-200 dark:bg-emerald-500/15 dark:border-emerald-500/30'
+                            : 'bg-purple-50 text-[#8B5CF6] border-purple-200 dark:bg-purple-500/15 dark:border-purple-500/30'
+                        }`}
+                      >
+                        {item.status}
+                      </span>
                     </div>
-                    <p className="text-[11px] text-slate-400">{item.subtitle}</p>
+                    <p className="text-[11px] text-[#64748B] dark:text-[#8E98A6] mt-0.5 leading-snug line-clamp-2">
+                      {item.subtitle}
+                    </p>
                   </div>
                 </div>
-                <ChevronRight className="w-4 h-4 text-slate-500 group-hover:text-white group-hover:translate-x-0.5 transition-all" />
+
+                <ChevronRight className="w-4 h-4 text-[#64748B] dark:text-[#8E98A6] group-hover:text-[#8B5CF6] group-hover:translate-x-0.5 transition-all shrink-0" />
               </button>
             );
           })}
         </div>
 
         {/* Sign Out Option */}
-        <div className="pt-3 border-t border-white/[0.08]">
+        <div className="pt-3 border-t border-[#D7E0EB] dark:border-[#242E3B] mt-auto">
           <button
             onClick={() => {
               onClose();
               onSignOut();
             }}
-            className="w-full py-3 rounded-2xl bg-rose-500/10 hover:bg-rose-500/20 border border-rose-500/25 text-rose-400 font-bold text-xs flex items-center justify-center gap-2 active:scale-95 transition-all"
+            className="w-full py-2.5 rounded-2xl bg-rose-50 hover:bg-rose-100 text-[#EF4444] dark:bg-rose-500/10 dark:hover:bg-rose-500/20 border border-rose-200 dark:border-rose-500/25 font-bold text-xs flex items-center justify-center gap-2 active:scale-95 transition-all"
           >
             <LogOut className="w-4 h-4" />
             <span>Sign Out of OKNexus</span>

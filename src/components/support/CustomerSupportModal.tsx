@@ -56,7 +56,6 @@ interface CustomerSupportModalProps {
     fundingUsd: number;
     earnUsd: number;
   };
-  biometricType?: string;
 }
 
 export const CustomerSupportModal: React.FC<CustomerSupportModalProps> = ({
@@ -77,7 +76,6 @@ export const CustomerSupportModal: React.FC<CustomerSupportModalProps> = ({
     fundingUsd: 8236.17,
     earnUsd: 3670.16,
   },
-  biometricType = 'face_id',
 }) => {
   const [activeTab, setActiveTab] = useState<'chat' | 'diagnostics' | 'faqs'>('chat');
   const [agentMode, setAgentMode] = useState<SupportAgentMode>('ai');
@@ -147,7 +145,16 @@ export const CustomerSupportModal: React.FC<CustomerSupportModalProps> = ({
   const handleToggleVoiceInput = () => {
     const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
     if (!SpeechRecognition) {
-      alert('Voice dictation is not supported by your current browser.');
+      setMessages((prev) => [
+        ...prev,
+        {
+          id: `msg-${Date.now()}`,
+          role: 'system',
+          content: 'Voice dictation is not supported by this browser environment. Please type your message in the chat box.',
+          timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+          source: 'nexus-knowledgebase',
+        }
+      ]);
       return;
     }
 
@@ -291,7 +298,7 @@ export const CustomerSupportModal: React.FC<CustomerSupportModalProps> = ({
             spotUsd: balances.spotUsd,
             fundingUsd: balances.fundingUsd,
             earnUsd: balances.earnUsd,
-            biometricType: biometricType === 'fingerprint' ? 'Touch ID' : 'Face ID',
+            twoFactorAuth: 'Google Authenticator TOTP Active',
           },
         }),
       });
@@ -323,7 +330,7 @@ export const CustomerSupportModal: React.FC<CustomerSupportModalProps> = ({
       const fallbackReply: ChatMessage = {
         id: `fb-${Date.now()}`,
         role: 'assistant',
-        content: `I've analyzed your account data:\n• **VIP Tier**: Tier 2 (0.08% Maker / 0.10% Taker)\n• **Total Assets**: $${balances.totalAssets.toLocaleString()}\n• **Security Status**: Fully Protected (2FA + ${biometricType === 'fingerprint' ? 'Touch ID' : 'Face ID'})\n\nHow else may I assist you with deposits, withdrawals, or bot strategies?`,
+        content: `I've analyzed your account data:\n• **VIP Tier**: Tier 2 (0.08% Maker / 0.10% Taker)\n• **Total Assets**: $${balances.totalAssets.toLocaleString()}\n• **Security Status**: Fully Protected (2FA + Hardware Security Key)\n\nHow else may I assist you with deposits, withdrawals, or bot strategies?`,
         timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
         source: 'nexus-knowledgebase',
         action: 'open_trade',
@@ -846,7 +853,7 @@ export const CustomerSupportModal: React.FC<CustomerSupportModalProps> = ({
                 <div className="flex items-center justify-between p-2 rounded-xl bg-black/30 border border-white/[0.04]">
                   <div className="flex items-center gap-2">
                     <CheckCircle2 className="w-4 h-4 text-emerald-400" />
-                    <span>Biometric Unlock ({biometricType === 'fingerprint' ? 'Touch ID' : 'Face ID'})</span>
+                    <span>Anti-Phishing Code & Session Shield</span>
                   </div>
                   <span className="text-emerald-400 font-mono font-bold text-[11px]">ENFORCED</span>
                 </div>

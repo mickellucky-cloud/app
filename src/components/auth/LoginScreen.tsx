@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { OKNexusLogo } from '../common/OKNexusLogo';
-import { ThemeToggle } from '../common/ThemeToggle';
 import { ThemeMode } from '../../types';
 import {
   AlertCircle,
@@ -14,7 +13,8 @@ import {
   ShieldCheck,
   Zap,
   TrendingUp,
-  Globe2,
+  Coins,
+  Layers,
   Shield,
 } from 'lucide-react';
 import { COUNTRY_CODES, DEV_TEST_ACCOUNT, CountryCodeItem } from '../../data/mockData';
@@ -134,8 +134,8 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({
       <div className="absolute -top-24 -right-24 w-96 h-96 rounded-full bg-purple-600/15 blur-3xl pointer-events-none" />
       <div className="absolute top-1/3 -left-20 w-80 h-80 rounded-full bg-cyan-500/10 blur-3xl pointer-events-none" />
 
-      {/* Top Header Bar with Brand & Theme Toggle */}
-      <div className="relative z-20 w-full max-w-5xl mx-auto flex items-center justify-between pb-2 mb-2">
+      {/* Top Header Bar with Brand (Hidden on mobile per user request) */}
+      <div className="hidden sm:flex relative z-20 w-full max-w-6xl mx-auto items-center justify-between pb-2 mb-2">
         <div className="flex items-center gap-2.5">
           <div className="p-1.5 rounded-xl bg-purple-950/60 border border-purple-500/30">
             <OKNexusLogo size={24} showWordmark={false} />
@@ -149,88 +149,66 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({
             </span>
           </div>
         </div>
-
-        {onToggleTheme && (
-          <ThemeToggle
-            theme={theme}
-            onToggle={onToggleTheme}
-            size="sm"
-          />
-        )}
       </div>
 
       {/* Main Responsive Grid Layout (Web & Tablet dual-column, Mobile single-column) */}
-      <div className="relative z-10 w-full max-w-5xl mx-auto my-auto grid grid-cols-1 md:grid-cols-12 gap-6 lg:gap-10 items-stretch py-3">
-        {/* Left Column: Exchange Showcase (Visible on Tablet and Web) */}
-        <div className="hidden md:flex md:col-span-6 lg:col-span-7 flex-col justify-between p-7 lg:p-9 rounded-3xl bg-gradient-to-br from-[#120F24]/90 via-[#0A0D18]/95 to-[#0D1222]/90 border border-purple-500/25 shadow-[0_12px_40px_rgba(0,0,0,0.6)] backdrop-blur-xl">
-          <div>
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-purple-500/15 border border-purple-500/30 text-purple-300 text-xs font-semibold mb-5">
-              <Sparkles className="w-3.5 h-3.5 text-amber-400" />
-              <span>Next-Gen Digital Asset Infrastructure</span>
+      <div className="relative z-10 w-full max-w-6xl mx-auto my-auto grid grid-cols-1 lg:grid-cols-12 gap-8 xl:gap-12 items-center py-4">
+        {/* Left Column: P2P Showcase matching reference image "Buy & sell directly with OKNexus P2P.jpeg" */}
+        <div className="hidden lg:flex lg:col-span-7 flex-col justify-center py-6 px-4">
+          <div className="w-full flex items-center justify-between gap-6 xl:gap-8">
+            {/* Left Headline */}
+            <div className="space-y-1.5 min-w-0 flex-1">
+              <h2 className="text-2xl xl:text-3xl 2xl:text-4xl font-extrabold text-white tracking-tight leading-tight">
+                Buy & sell directly with
+              </h2>
+              <h2 className="text-2xl xl:text-3xl 2xl:text-4xl font-extrabold tracking-tight leading-tight text-transparent bg-clip-text bg-gradient-to-r from-[#EC4899] via-[#F472B6] to-[#8B5CF6]">
+                OKNexus P2P
+              </h2>
+              <p className="text-xs text-slate-400 max-w-xs pt-1">
+                Zero gas fees, instant escrow settlement, and verified merchant liquidity.
+              </p>
             </div>
 
-            <h2 className="text-3xl lg:text-4xl font-extrabold font-display text-white tracking-tight leading-tight mb-3">
-              Trade With Precision.<br />
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 via-fuchsia-400 to-cyan-400">
-                Institutional Speed.
-              </span>
-            </h2>
+            {/* Vertical Divider Line */}
+            <div className="w-[1px] h-36 bg-white/20 shrink-0" />
 
-            <p className="text-xs lg:text-sm text-slate-400 leading-relaxed max-w-md mb-6">
-              Access deep liquidity order books, zero-fee P2P escrow, automated crypto savings, and millisecond trade execution on OKNexus.
-            </p>
-
-            {/* Platform Highlights */}
-            <div className="grid grid-cols-2 gap-3 mb-6">
-              <div className="p-3.5 rounded-2xl bg-white/[0.03] border border-white/[0.06]">
-                <div className="w-7 h-7 rounded-lg bg-purple-500/20 text-purple-400 flex items-center justify-center mb-2">
-                  <Zap className="w-4 h-4" />
+            {/* Two Stats Columns */}
+            <div className="flex items-start gap-8 xl:gap-10 shrink-0">
+              {/* Column 1: Supported Fiat */}
+              <div className="space-y-2">
+                <div className="w-12 h-12 rounded-2xl bg-[#141B2E] border border-white/10 flex items-center justify-center shadow-lg">
+                  <Coins className="w-6 h-6 text-[#EC4899]" />
                 </div>
-                <div className="text-sm font-bold text-white">100,000 TPS</div>
-                <div className="text-[11px] text-slate-400">Sub-millisecond engine</div>
+                <div className="text-xs text-slate-300 font-medium">Supported Fiat</div>
+                <div className="text-2xl xl:text-3xl font-extrabold text-white font-mono-num leading-none">
+                  5+
+                </div>
+                <div className="space-y-0.5 text-[11px] text-slate-400">
+                  <div>5+ Countries</div>
+                  <div>100+ Payment methods</div>
+                </div>
               </div>
 
-              <div className="p-3.5 rounded-2xl bg-white/[0.03] border border-white/[0.06]">
-                <div className="w-7 h-7 rounded-lg bg-emerald-500/20 text-emerald-400 flex items-center justify-center mb-2">
-                  <Shield className="w-4 h-4" />
+              {/* Column 2: Cryptos */}
+              <div className="space-y-2">
+                <div className="w-12 h-12 rounded-2xl bg-[#141B2E] border border-white/10 flex items-center justify-center shadow-lg">
+                  <Layers className="w-6 h-6 text-[#8B5CF6]" />
                 </div>
-                <div className="text-sm font-bold text-white">1:1 Reserve Proof</div>
-                <div className="text-[11px] text-slate-400">Verifiable Merkle vault</div>
-              </div>
-
-              <div className="p-3.5 rounded-2xl bg-white/[0.03] border border-white/[0.06]">
-                <div className="w-7 h-7 rounded-lg bg-cyan-500/20 text-cyan-400 flex items-center justify-center mb-2">
-                  <Globe2 className="w-4 h-4" />
+                <div className="text-xs text-slate-300 font-medium">Cryptos</div>
+                <div className="text-2xl xl:text-3xl font-extrabold text-white font-mono-num leading-none">
+                  10+
                 </div>
-                <div className="text-sm font-bold text-white">Global P2P</div>
-                <div className="text-[11px] text-slate-400">0% Maker fee escrow</div>
-              </div>
-
-              <div className="p-3.5 rounded-2xl bg-white/[0.03] border border-white/[0.06]">
-                <div className="w-7 h-7 rounded-lg bg-amber-500/20 text-amber-400 flex items-center justify-center mb-2">
-                  <TrendingUp className="w-4 h-4" />
+                <div className="space-y-0.5 text-[11px] text-slate-400">
+                  <div>10K+ Advertisements</div>
+                  <div>100K+ Daily orders</div>
                 </div>
-                <div className="text-sm font-bold text-white">High-Yield Earn</div>
-                <div className="text-[11px] text-slate-400">Up to 18.5% Staking APY</div>
               </div>
-            </div>
-          </div>
-
-          {/* Live Trust Banner */}
-          <div className="pt-4 border-t border-white/[0.08] flex items-center justify-between text-xs text-slate-400">
-            <div className="flex items-center gap-2">
-              <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-              <span>All Systems Operational</span>
-            </div>
-            <div className="flex items-center gap-1.5 text-slate-300">
-              <ShieldCheck className="w-4 h-4 text-emerald-400" />
-              <span>SOC2 Type II Certified</span>
             </div>
           </div>
         </div>
 
         {/* Right Column: Form Container (Mobile, Tablet, Desktop) */}
-        <div className="w-full md:col-span-6 lg:col-span-5 max-w-md mx-auto p-5 sm:p-7 rounded-3xl bg-[#0A0D18]/95 border border-white/[0.08] shadow-[0_12px_40px_rgba(0,0,0,0.5)] backdrop-blur-xl">
+        <div className="w-full lg:col-span-5 max-w-md mx-auto p-5 sm:p-7 rounded-3xl bg-[#0A0D18]/95 border border-white/[0.08] shadow-[0_12px_40px_rgba(0,0,0,0.5)] backdrop-blur-xl">
           {/* Mobile Only Brand Presence */}
           <div className="flex md:hidden flex-col items-center justify-center mb-5 text-center">
             <div className="p-3 rounded-2xl bg-gradient-to-br from-[#1E1433] via-[#121626] to-[#0A0D18] border border-purple-500/30 shadow-md mb-2">
@@ -467,21 +445,21 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({
           </div>
         </div>
 
-        {/* Social Authentication Options */}
-        <div className="space-y-2.5 mt-4">
+        {/* Social Authentication Options (Side by side matching reference) */}
+        <div className="grid grid-cols-2 gap-3 mt-4">
           {/* Google Button */}
           <button
             type="button"
             onClick={() => handleSocialLogin('google')}
             disabled={socialLoading !== null}
-            className="w-full py-3 px-4 rounded-2xl bg-[#0E121E] border border-white/10 hover:border-purple-500/40 active:scale-[0.99] transition-all flex items-center justify-center gap-3 text-xs font-semibold text-slate-200"
+            className="py-3 px-3 rounded-2xl bg-[#0E121E] border border-white/10 hover:border-purple-500/40 active:scale-[0.99] transition-all flex items-center justify-center gap-2 text-xs font-semibold text-slate-200"
           >
             {socialLoading === 'google' ? (
               <RefreshCw className="w-4 h-4 animate-spin text-purple-400" />
             ) : socialSuccess === 'google' ? (
               <CheckCircle2 className="w-4 h-4 text-emerald-400" />
             ) : (
-              <svg className="w-4 h-4" viewBox="0 0 24 24">
+              <svg className="w-4 h-4 shrink-0" viewBox="0 0 24 24">
                 <path
                   fill="#4285F4"
                   d="M23.745 12.27c0-.7-.06-1.4-.19-2.07H12v4.51h6.6c-.29 1.52-1.14 2.8-2.4 3.68v3.05h3.88c2.27-2.09 3.665-5.17 3.665-9.17z"
@@ -500,7 +478,7 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({
                 />
               </svg>
             )}
-            <span>Continue with Google</span>
+            <span className="truncate">Google</span>
           </button>
 
           {/* Apple Button */}
@@ -508,18 +486,18 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({
             type="button"
             onClick={() => handleSocialLogin('apple')}
             disabled={socialLoading !== null}
-            className="w-full py-3 px-4 rounded-2xl bg-[#0E121E] border border-white/10 hover:border-purple-500/40 active:scale-[0.99] transition-all flex items-center justify-center gap-3 text-xs font-semibold text-slate-200"
+            className="py-3 px-3 rounded-2xl bg-[#0E121E] border border-white/10 hover:border-purple-500/40 active:scale-[0.99] transition-all flex items-center justify-center gap-2 text-xs font-semibold text-slate-200"
           >
             {socialLoading === 'apple' ? (
               <RefreshCw className="w-4 h-4 animate-spin text-purple-400" />
             ) : socialSuccess === 'apple' ? (
               <CheckCircle2 className="w-4 h-4 text-emerald-400" />
             ) : (
-              <svg className="w-4 h-4 fill-white" viewBox="0 0 170 170">
+              <svg className="w-4 h-4 fill-white shrink-0" viewBox="0 0 170 170">
                 <path d="M150.37 130.25c-2.45 5.66-5.35 10.87-8.71 15.66-4.58 6.53-8.33 11.05-11.22 13.56-4.48 4.12-9.28 6.23-14.42 6.35-3.69 0-8.14-1.05-13.32-3.18-5.19-2.12-9.97-3.17-14.34-3.17-4.58 0-9.49 1.05-14.75 3.17-5.26 2.13-9.5 3.24-12.74 3.35-4.35.13-9.16-1.9-14.42-6.08-3.69-3.07-7.69-7.85-12-14.34-6.42-9.65-11.45-20.67-15.09-33.05-3.64-12.39-5.46-24.16-5.46-35.34 0-16.14 4.14-29.35 12.43-39.63 8.28-10.28 18.59-15.48 30.93-15.6 5.86 0 12.18 1.54 18.96 4.62 6.78 3.08 10.97 4.62 12.57 4.62 1.34 0 5.48-1.54 12.43-4.62 6.94-3.08 13.06-4.43 18.35-4.04 13.9.67 24.96 5.56 33.19 14.67-12.15 7.37-18.11 17.58-17.88 30.64.23 10.28 4.19 18.84 11.88 25.68 7.69 6.84 16.89 10.74 27.6 11.7-2.34 7.15-5.25 14.52-8.72 22.1zM119.22 33.74c0-7.37 2.68-14.28 8.04-20.73 5.36-6.45 12.01-10.68 19.95-12.69.22 1.23.34 2.35.34 3.36 0 7.37-2.79 14.39-8.38 21.05-5.59 6.66-12.45 10.76-20.57 12.3-.34-1.12-.51-2.22-.51-3.29z" />
               </svg>
             )}
-            <span>Continue with Apple</span>
+            <span className="truncate">Apple</span>
           </button>
         </div>
 

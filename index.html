@@ -14,17 +14,117 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
   </head>
-  <body class="bg-[#07090E] text-slate-100 antialiased selection:bg-purple-500 selection:text-white overflow-x-hidden font-sans">
+  <body class="bg-[#0A0E13] text-[#EDF1F5] antialiased selection:bg-[#8B5CF6] selection:text-white overflow-x-hidden font-sans">
     <script>
       (function() {
+        // Safe localStorage fallback for sandboxed iframes
         try {
-          var t = localStorage.getItem('oknexus_theme');
+          var testKey = '__okn_test__';
+          window.localStorage.setItem(testKey, '1');
+          window.localStorage.removeItem(testKey);
+        } catch (e) {
+          try {
+            var mem = {};
+            var storagePolyfill = {
+              getItem: function(k) { return mem.hasOwnProperty(k) ? mem[k] : null; },
+              setItem: function(k, v) { mem[k] = String(v); },
+              removeItem: function(k) { delete mem[k]; },
+              clear: function() { mem = {}; },
+              get length() { return Object.keys(mem).length; },
+              key: function(i) { return Object.keys(mem)[i] || null; }
+            };
+            Object.defineProperty(window, 'localStorage', {
+              value: storagePolyfill,
+              configurable: true,
+              writable: true
+            });
+          } catch (err) {}
+        }
+
+        // Theme initialization
+        try {
+          var t = window.localStorage.getItem('oknexus_theme');
           if (t === 'light') {
             document.documentElement.classList.remove('dark');
             document.documentElement.classList.add('light');
             document.documentElement.style.colorScheme = 'light';
           }
         } catch (e) {}
+
+        // Safe dialog polyfills to prevent synchronous frame-blocking inside sandboxed iframes
+        window.alert = function(msg) {
+          console.warn('[OKNexus in-app notice]:', msg);
+        };
+        window.confirm = function(msg) {
+          console.warn('[OKNexus in-app confirm]:', msg);
+          return true;
+        };
+        window.prompt = function(msg, defaultVal) {
+          console.warn('[OKNexus in-app prompt]:', msg);
+          return defaultVal || null;
+        };
+
+        // Guard against cross-origin frame access exceptions
+        // Wrapping all event property accesses in try/catch blocks because inspecting cross-origin ErrorEvent properties can throw SecurityError in Blink/WebKit
+        window.addEventListener('error', function(event) {
+          try {
+            var isSecurity = false;
+            try {
+              if (event && event.error && event.error.name === 'SecurityError') {
+                isSecurity = true;
+              }
+            } catch (e) {
+              isSecurity = true;
+            }
+
+            var msg = '';
+            try {
+              msg = String((event && event.message) || (event && event.error && event.error.message) || '');
+            } catch (e) {
+              isSecurity = true;
+            }
+
+            if (
+              isSecurity ||
+              msg.indexOf('cross-origin frame') !== -1 ||
+              msg.indexOf('SecurityError') !== -1 ||
+              msg.indexOf('Should not already be working') !== -1
+            ) {
+              if (event && event.preventDefault) event.preventDefault();
+              if (event && event.stopImmediatePropagation) event.stopImmediatePropagation();
+              return true;
+            }
+          } catch (err) {}
+        }, true);
+
+        window.addEventListener('unhandledrejection', function(event) {
+          try {
+            var isSecurity = false;
+            try {
+              if (event && event.reason && event.reason.name === 'SecurityError') {
+                isSecurity = true;
+              }
+            } catch (e) {
+              isSecurity = true;
+            }
+
+            var reasonMsg = '';
+            try {
+              reasonMsg = String((event && event.reason && (event.reason.message || event.reason)) || '');
+            } catch (e) {
+              isSecurity = true;
+            }
+
+            if (
+              isSecurity ||
+              reasonMsg.indexOf('cross-origin frame') !== -1 ||
+              reasonMsg.indexOf('SecurityError') !== -1 ||
+              reasonMsg.indexOf('Should not already be working') !== -1
+            ) {
+              if (event && event.preventDefault) event.preventDefault();
+            }
+          } catch (err) {}
+        });
       })();
     </script>
     <div id="root"></div>

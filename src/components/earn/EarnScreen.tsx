@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { EarnProduct } from '../../types';
+import { EarnProduct, ThemeMode } from '../../types';
 import { CoinIcon } from '../common/CoinIcon';
 import { Percent, Search, Coins, CheckCircle2, X } from 'lucide-react';
 
@@ -7,12 +7,16 @@ interface EarnScreenProps {
   products: EarnProduct[];
   totalEarnedUsd: number;
   onStakeProduct: (product: EarnProduct, amount: number) => void;
+  theme?: ThemeMode;
+  onToggleTheme?: () => void;
 }
 
 export const EarnScreen: React.FC<EarnScreenProps> = ({
   products,
   totalEarnedUsd,
   onStakeProduct,
+  theme = 'dark',
+  onToggleTheme,
 }) => {
   const [activeCategory, setActiveCategory] = useState<'all' | 'flexible' | 'fixed' | 'launchpad'>('all');
   const [selectedProduct, setSelectedProduct] = useState<EarnProduct | null>(null);
@@ -53,7 +57,7 @@ export const EarnScreen: React.FC<EarnScreenProps> = ({
           </div>
         </div>
         <div className="flex items-center gap-2">
-          <button className="w-9 h-9 rounded-full bg-slate-100 dark:bg-slate-900/80 border border-slate-200 dark:border-white/10 flex items-center justify-center text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white">
+          <button className="w-9 h-9 rounded-full bg-slate-100 dark:bg-slate-900/80 border border-slate-200 dark:border-white/10 flex items-center justify-center text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white transition-colors">
             <Search className="w-4 h-4" />
           </button>
         </div>

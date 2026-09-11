@@ -23,6 +23,8 @@ import { SpotTradeScreen } from './components/trade/SpotTradeScreen';
 import { EarnScreen } from './components/earn/EarnScreen';
 import { AssetsScreen } from './components/assets/AssetsScreen';
 import { P2PScreen } from './components/p2p/P2PScreen';
+import { AnalyticsScreen } from './components/analytics/AnalyticsScreen';
+import { ExploreScreen } from './components/explore/ExploreScreen';
 
 // Navigation
 import { BottomNav } from './components/navigation/BottomNav';
@@ -32,6 +34,7 @@ import { DesktopTopBar } from './components/navigation/DesktopTopBar';
 // Common
 import { ToastContainer } from './components/common/ToastContainer';
 import { playAlertChime } from './utils/audio';
+import { safeStorage } from './utils/safeStorage';
 
 // Authentication Screens & Modals
 import { LoginScreen } from './components/auth/LoginScreen';
@@ -40,7 +43,6 @@ import { ForgotPasswordScreen } from './components/auth/ForgotPasswordScreen';
 import { PuzzleVerificationModal } from './components/auth/PuzzleVerificationModal';
 import { AuthCodeScreen } from './components/auth/AuthCodeScreen';
 import { TermsPrivacyModal } from './components/auth/TermsPrivacyModal';
-import { BiometricUnlockScreen } from './components/auth/BiometricUnlockScreen';
 
 // Modals
 import { DepositModal } from './components/modals/DepositModal';
@@ -65,7 +67,7 @@ import { CustomerSupportModal } from './components/support/CustomerSupportModal'
 export default function App() {
   // Authentication State
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(() => {
-    return localStorage.getItem('oknexus_authenticated') === 'true';
+    return safeStorage.getItem('oknexus_authenticated') === 'true';
   });
   const [userEmail, setUserEmail] = useState<string>('mickel.lucky@gmail.com');
   const [authView, setAuthView] = useState<'login' | 'signup' | 'forgot_password'>('login');
@@ -79,19 +81,9 @@ export default function App() {
   const [termsModalTab, setTermsModalTab] = useState<'terms' | 'privacy'>('terms');
   const [isHomeLoading, setIsHomeLoading] = useState<boolean>(false);
 
-  // Biometric Authentication State
-  const [biometricsEnabled, setBiometricsEnabled] = useState<boolean>(() => {
-    return localStorage.getItem('oknexus_biometrics_enabled') === 'true';
-  });
-  const [biometricType, setBiometricType] = useState<'face_id' | 'fingerprint'>(() => {
-    return (localStorage.getItem('oknexus_biometric_type') as 'face_id' | 'fingerprint') || 'face_id';
-  });
-  const [isBiometricUnlockPending, setIsBiometricUnlockPending] = useState<boolean>(false);
-  const [pendingAuthUser, setPendingAuthUser] = useState<string>('');
-
   // Daylight / High-Contrast Theme State
   const [theme, setTheme] = useState<ThemeMode>(() => {
-    return (localStorage.getItem('oknexus_theme') as ThemeMode) || 'dark';
+    return (safeStorage.getItem('oknexus_theme') as ThemeMode) || 'dark';
   });
 
   useEffect(() => {
@@ -102,23 +94,30 @@ export default function App() {
       document.documentElement.classList.remove('light');
       document.documentElement.classList.add('dark');
     }
-    localStorage.setItem('oknexus_theme', theme);
+    safeStorage.setItem('oknexus_theme', theme);
   }, [theme]);
 
   const handleToggleTheme = () => {
     setTheme((prev) => (prev === 'dark' ? 'light' : 'dark'));
   };
 
-  // Initial load transition
-  useEffect(() => {
-    if (isAuthenticated) {
-      setIsHomeLoading(true);
-      const timer = setTimeout(() => {
-        setIsHomeLoading(false);
-      }, 700);
-      return () => clearTimeout(timer);
-    }
-  }, []);
+  // Custom User Profile State (Username & NFT/OKN/Custom Avatar)
+  const [username, setUsername] = useState<string>(() => {
+    return safeStorage.getItem('oknexus_username') || 'Mickel_Lucky';
+  });
+  const [userAvatar, setUserAvatar] = useState<string>(() => {
+    return safeStorage.getItem('oknexus_avatar') || '';
+  });
+
+  const handleUpdateUsername = (newUsername: string) => {
+    setUsername(newUsername);
+    safeStorage.setItem('oknexus_username', newUsername);
+  };
+
+  const handleUpdateAvatar = (newAvatar: string) => {
+    setUserAvatar(newAvatar);
+    safeStorage.setItem('oknexus_avatar', newAvatar);
+  };
 
   // Navigation State
   const [activeTab, setActiveTab] = useState<MainTab | 'p2p'>('home');
@@ -171,10 +170,37 @@ export default function App() {
   const [isPolymarketOpen, setIsPolymarketOpen] = useState(false);
   const [isNotificationsOpen, setIsNotificationsOpen] = useState(false);
   const [isProfileOpen, setIsProfileOpen] = useState(false);
+  const [profileInitialTab, setProfileInitialTab] = useState<'profile' | 'system_settings'>('profile');
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [isPriceAlertsOpen, setIsPriceAlertsOpen] = useState(false);
   const [alertTargetPair, setAlertTargetPair] = useState<MarketPair | undefined>(undefined);
   const [isSupportOpen, setIsSupportOpen] = useState(false);
+
+  const handleOpenProfile = (tab: 'profile' | 'system_settings' = 'profile') => {
+    setProfileInitialTab(tab);
+    setIsProfileOpen(true);
+  };
+
+  // Check if any modal / overlay is currently active
+  const isAnyModalOpen =
+    isDepositOpen ||
+    isWithdrawOpen ||
+    isSendOpen ||
+    isConvertOpen ||
+    isBuySellOpen ||
+    isMoreOpen ||
+    isOtcOpen ||
+    isRewardsOpen ||
+    isReferralsOpen ||
+    isApiManagementOpen ||
+    isPairSelectorOpen ||
+    isAiTraderOpen ||
+    isPolymarketOpen ||
+    isNotificationsOpen ||
+    isProfileOpen ||
+    isSearchOpen ||
+    isPriceAlertsOpen ||
+    isSupportOpen;
 
   // Price Alerts & Toasts State
   const [priceAlerts, setPriceAlerts] = useState<PriceAlert[]>(INITIAL_PRICE_ALERTS);
@@ -586,16 +612,9 @@ export default function App() {
       return;
     }
 
-    // If biometrics are enabled, require extra 'Unlock with Biometrics' step before reaching dashboard
-    if (biometricsEnabled) {
-      setPendingAuthUser(authIdentifier);
-      setIsBiometricUnlockPending(true);
-      return;
-    }
-
     // Login or Signup Complete!
     setIsAuthenticated(true);
-    localStorage.setItem('oknexus_authenticated', 'true');
+    safeStorage.setItem('oknexus_authenticated', 'true');
     setUserEmail(authIdentifier);
     setIsHomeLoading(true);
     setTimeout(() => {
@@ -617,15 +636,8 @@ export default function App() {
   const handleSocialSuccess = (provider: 'google' | 'apple') => {
     const socialAccount = provider === 'google' ? 'mickel.lucky@gmail.com' : 'apple.trader@icloud.com';
 
-    // If biometrics are enabled, require extra 'Unlock with Biometrics' step before reaching dashboard
-    if (biometricsEnabled) {
-      setPendingAuthUser(socialAccount);
-      setIsBiometricUnlockPending(true);
-      return;
-    }
-
     setIsAuthenticated(true);
-    localStorage.setItem('oknexus_authenticated', 'true');
+    safeStorage.setItem('oknexus_authenticated', 'true');
     setUserEmail(socialAccount);
     setIsHomeLoading(true);
     setTimeout(() => {
@@ -646,12 +658,11 @@ export default function App() {
 
   const handleSignOut = () => {
     setIsAuthenticated(false);
-    localStorage.removeItem('oknexus_authenticated');
+    safeStorage.removeItem('oknexus_authenticated');
     setAuthView('login');
     setShowPuzzleModal(false);
     setShowOtpScreen(false);
     setIsForgotVerified(false);
-    setIsBiometricUnlockPending(false);
     setActiveTab('home');
 
     setToasts((prev) => [
@@ -665,88 +676,6 @@ export default function App() {
       ...prev,
     ]);
   };
-
-  const handleToggleBiometrics = (enabled: boolean) => {
-    setBiometricsEnabled(enabled);
-    localStorage.setItem('oknexus_biometrics_enabled', enabled ? 'true' : 'false');
-    setToasts((prev) => [
-      {
-        id: `toast-${Date.now()}`,
-        title: enabled ? 'Biometrics Enabled 🛡️' : 'Biometrics Disabled',
-        message: enabled
-          ? `Biometric authorization (${biometricType === 'fingerprint' ? 'Touch ID' : 'Face ID'}) is active. Required after initial login.`
-          : 'Biometric authorization requirement disabled.',
-        type: enabled ? 'success' : 'info',
-        timestamp: 'Just now',
-      },
-      ...prev,
-    ]);
-  };
-
-  const handleChangeBiometricType = (type: 'face_id' | 'fingerprint') => {
-    setBiometricType(type);
-    localStorage.setItem('oknexus_biometric_type', type);
-    setToasts((prev) => [
-      {
-        id: `toast-${Date.now()}`,
-        title: `Switched to ${type === 'fingerprint' ? 'Touch ID' : 'Face ID'} ✓`,
-        message: `Default biometric sensor set to ${type === 'fingerprint' ? 'Touch ID' : 'Face ID'}.`,
-        type: 'info',
-        timestamp: 'Just now',
-      },
-      ...prev,
-    ]);
-  };
-
-  const handleTestBiometrics = () => {
-    setIsProfileOpen(false);
-    setPendingAuthUser(userEmail);
-    setIsBiometricUnlockPending(true);
-  };
-
-  const handleBiometricUnlockSuccess = () => {
-    setIsBiometricUnlockPending(false);
-    setIsAuthenticated(true);
-    localStorage.setItem('oknexus_authenticated', 'true');
-    if (pendingAuthUser) {
-      setUserEmail(pendingAuthUser);
-    }
-    setIsHomeLoading(true);
-    setTimeout(() => {
-      setIsHomeLoading(false);
-    }, 600);
-
-    setToasts((prev) => [
-      {
-        id: `toast-${Date.now()}`,
-        title: 'Biometrics Verified 🛡️',
-        message: 'Identity confirmed. Welcome to your OKNexus dashboard.',
-        type: 'success',
-        timestamp: 'Just now',
-      },
-      ...prev,
-    ]);
-  };
-
-  const handleBiometricUnlockCancel = () => {
-    setIsBiometricUnlockPending(false);
-    setIsAuthenticated(false);
-    localStorage.removeItem('oknexus_authenticated');
-    setAuthView('login');
-  };
-
-  // Render Biometric Unlock Screen if extra biometric step is required
-  if (isBiometricUnlockPending) {
-    return (
-      <BiometricUnlockScreen
-        userEmail={pendingAuthUser || userEmail}
-        defaultMode={biometricType}
-        onSuccess={handleBiometricUnlockSuccess}
-        onCancel={handleBiometricUnlockCancel}
-        onSwitchAccount={handleBiometricUnlockCancel}
-      />
-    );
-  }
 
   // Render Authentication Flow if not logged in
   if (!isAuthenticated) {
@@ -850,8 +779,10 @@ export default function App() {
         onOpenPolymarket={() => setIsPolymarketOpen(true)}
         onOpenRewards={() => setIsRewardsOpen(true)}
         onOpenSupport={() => setIsSupportOpen(true)}
-        onOpenProfile={() => setIsProfileOpen(true)}
+        onOpenProfile={handleOpenProfile}
         userEmail={userEmail}
+        username={username}
+        userAvatar={userAvatar}
         isCollapsed={isLeftNavCollapsed}
         onToggleCollapse={() => setIsLeftNavCollapsed(!isLeftNavCollapsed)}
         theme={theme}
@@ -868,16 +799,18 @@ export default function App() {
             onOpenNotifications={() => setIsNotificationsOpen(true)}
             unreadNotificationsCount={unreadNotificationsCount}
             onOpenSupport={() => setIsSupportOpen(true)}
-            onOpenProfile={() => setIsProfileOpen(true)}
+            onOpenProfile={handleOpenProfile}
             userEmail={userEmail}
+            username={username}
+            userAvatar={userAvatar}
             selectedPair={selectedPair}
             theme={theme}
             onToggleTheme={handleToggleTheme}
           />
         )}
 
-        {/* Active Screen View */}
-        <div className="flex-1">
+        {/* Active Screen View (Direct Navigation - No horizontal swipe gestures) */}
+        <main id="main-content" className="flex-1 w-full min-h-screen">
           {activeTab === 'home' && (
             <HomeScreen
               balances={balances}
@@ -892,7 +825,7 @@ export default function App() {
               onOpenSearch={() => setIsSearchOpen(true)}
               onOpenNotifications={() => setIsNotificationsOpen(true)}
               unreadNotificationsCount={unreadNotificationsCount}
-              onOpenProfile={() => setIsProfileOpen(true)}
+              onOpenProfile={handleOpenProfile}
               onOpenAiTrader={() => setIsAiTraderOpen(true)}
               onOpenPolymarket={() => setIsPolymarketOpen(true)}
               onOpenPriceAlerts={() => handleOpenPriceAlerts()}
@@ -903,12 +836,42 @@ export default function App() {
               onNavigateWallet={() => setActiveTab('assets')}
               onNavigateEarn={() => setActiveTab('earn')}
               onNavigateP2P={() => setActiveTab('p2p')}
+              onNavigateExplore={() => setActiveTab('explore')}
+              onNavigateAnalytics={() => setActiveTab('analytics')}
               onOpenBuySell={() => setIsBuySellOpen(true)}
               onOpenMore={() => setIsMoreOpen(true)}
               onOpenSupport={() => setIsSupportOpen(true)}
               isLoading={isHomeLoading}
               theme={theme}
               onToggleTheme={handleToggleTheme}
+              username={username}
+              userAvatar={userAvatar}
+            />
+          )}
+
+          {activeTab === 'explore' && (
+            <ExploreScreen
+              theme={theme}
+              onToggleTheme={handleToggleTheme}
+              onSelectPairForTrade={(symbol) => {
+                const pair = marketPairs.find((p) => p.symbol === symbol) || marketPairs[0];
+                handleSelectPairForTrade(pair);
+              }}
+              onOpenConvert={() => setIsConvertOpen(true)}
+              onOpenAiTrader={() => setIsAiTraderOpen(true)}
+              onOpenPolymarket={() => setIsPolymarketOpen(true)}
+              onBack={() => setActiveTab('home')}
+            />
+          )}
+
+          {activeTab === 'analytics' && (
+            <AnalyticsScreen
+              theme={theme}
+              onToggleTheme={handleToggleTheme}
+              onNavigateTrade={() => setActiveTab('trade')}
+              onNavigateMarkets={() => setActiveTab('market')}
+              onOpenDeposit={() => setIsDepositOpen(true)}
+              onBack={() => setActiveTab('home')}
             />
           )}
 
@@ -943,6 +906,8 @@ export default function App() {
               products={earnProducts}
               totalEarnedUsd={balances.earnUsd}
               onStakeProduct={handleStakeProduct}
+              theme={theme}
+              onToggleTheme={handleToggleTheme}
             />
           )}
 
@@ -958,6 +923,8 @@ export default function App() {
               onOpenConvert={() => setIsConvertOpen(true)}
               onOpenNotifications={() => setIsNotificationsOpen(true)}
               onSelectAssetForTrade={handleSelectAssetForTrade}
+              theme={theme}
+              onToggleTheme={handleToggleTheme}
             />
           )}
 
@@ -972,7 +939,7 @@ export default function App() {
               onToggleTheme={handleToggleTheme}
             />
           )}
-        </div>
+        </main>
 
         {/* Global Mobile Bottom Navigation Bar */}
         {activeTab !== 'p2p' && (
@@ -987,6 +954,34 @@ export default function App() {
       <DepositModal
         isOpen={isDepositOpen}
         onClose={() => setIsDepositOpen(false)}
+        onDepositSuccess={(amount, currency, isFiat) => {
+          setBalances((b) => ({
+            ...b,
+            totalAssets: b.totalAssets + amount,
+            spotUsd: b.spotUsd + amount,
+          }));
+          setRecentActivities((act) => [
+            {
+              id: `act-${Date.now()}`,
+              type: 'deposit',
+              title: `${isFiat ? 'Fiat' : 'Crypto'} Deposit: ${currency}`,
+              subtitle: 'Instant credit • 0% fee',
+              amount: `+${amount.toLocaleString()} ${currency}`,
+              time: 'Just now',
+            },
+            ...act,
+          ]);
+          setToasts((prev) => [
+            {
+              id: `toast-${Date.now()}`,
+              title: `${currency} Deposit Received`,
+              message: `+${amount.toLocaleString()} ${currency} credited to your wallet balance.`,
+              type: 'success',
+              timestamp: 'Just now',
+            },
+            ...prev,
+          ]);
+        }}
       />
 
       <WithdrawModal
@@ -1054,14 +1049,18 @@ export default function App() {
       <ProfileModal
         isOpen={isProfileOpen}
         onClose={() => setIsProfileOpen(false)}
+        initialTab={profileInitialTab}
         userEmail={userEmail}
+        username={username}
+        onUpdateUsername={handleUpdateUsername}
+        userAvatar={userAvatar}
+        onUpdateAvatar={handleUpdateAvatar}
         onSignOut={handleSignOut}
-        biometricsEnabled={biometricsEnabled}
-        onToggleBiometrics={handleToggleBiometrics}
-        biometricType={biometricType}
-        onChangeBiometricType={handleChangeBiometricType}
-        onTestBiometrics={handleTestBiometrics}
         onOpenSupport={() => setIsSupportOpen(true)}
+        onOpenAnalytics={() => {
+          setIsProfileOpen(false);
+          setActiveTab('analytics');
+        }}
         theme={theme}
         onToggleTheme={handleToggleTheme}
       />
@@ -1108,12 +1107,20 @@ export default function App() {
         isOpen={isMoreOpen}
         onClose={() => setIsMoreOpen(false)}
         onNavigateP2P={() => setActiveTab('p2p')}
+        onNavigateExplore={() => {
+          setIsMoreOpen(false);
+          setActiveTab('explore');
+        }}
+        onNavigateAnalytics={() => {
+          setIsMoreOpen(false);
+          setActiveTab('analytics');
+        }}
         onOpenOTC={() => setIsOtcOpen(true)}
         onOpenRewards={() => setIsRewardsOpen(true)}
         onOpenReferrals={() => setIsReferralsOpen(true)}
         onOpenApiManagement={() => setIsApiManagementOpen(true)}
         onOpenPriceAlerts={() => handleOpenPriceAlerts()}
-        onOpenSettings={() => setIsProfileOpen(true)}
+        onOpenSettings={(tab) => handleOpenProfile(tab || 'system_settings')}
         onOpenSupport={() => setIsSupportOpen(true)}
         onSignOut={handleSignOut}
       />
@@ -1215,7 +1222,6 @@ export default function App() {
           fundingUsd: balances.fundingUsd,
           earnUsd: balances.earnUsd,
         }}
-        biometricType={biometricType}
       />
 
       {/* Global In-App Toast Notification Stack */}

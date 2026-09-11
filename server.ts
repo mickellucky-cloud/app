@@ -93,7 +93,14 @@ const FALLBACK_RESPONSES: Record<string, { reply: string; action?: string; sugge
 
 async function startServer() {
   const app = express();
-  const PORT = 3000;
+  const args = process.argv.slice(2);
+  let portFromArg = 0;
+  for (let i = 0; i < args.length; i++) {
+    if (args[i] === '--port' && args[i + 1]) {
+      portFromArg = Number(args[i + 1]);
+    }
+  }
+  const PORT = Number(process.env.PORT) || portFromArg || 3000;
 
   app.use(express.json());
 

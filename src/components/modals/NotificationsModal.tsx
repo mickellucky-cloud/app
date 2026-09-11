@@ -64,19 +64,19 @@ export const NotificationsModal: React.FC<NotificationsModalProps> = ({
   });
 
   return (
-    <div className="fixed inset-0 z-50 bg-black/75 backdrop-blur-sm flex items-end justify-center p-0 sm:p-4">
-      <div className="w-full max-w-md bg-[#0F1320] border-t sm:border border-white/10 rounded-t-3xl sm:rounded-3xl p-5 safe-area-bottom animate-slideUp text-slate-100">
-        <div className="flex items-center justify-between pb-3 border-b border-white/[0.06] mb-3">
+    <div className="fixed inset-0 z-50 bg-black/70 dark:bg-black/80 backdrop-blur-sm flex items-end sm:items-center justify-center p-0 sm:p-4">
+      <div className="w-full max-w-md bg-white dark:bg-[#0E141B] border-t sm:border border-[#D7E0EB] dark:border-[#242E3B] rounded-t-3xl sm:rounded-3xl p-5 safe-area-bottom animate-slideUp text-[#0F172A] dark:text-[#EDF1F5] shadow-2xl">
+        <div className="flex items-center justify-between pb-3 border-b border-[#D7E0EB] dark:border-[#242E3B] mb-3">
           <div className="flex items-center gap-2">
             <div className="relative">
-              <Bell className="w-4 h-4 text-purple-400" />
+              <Bell className="w-4 h-4 text-[#8B5CF6]" />
               {unreadCount > 0 && (
-                <span className="absolute -top-1 -right-1 w-2 h-2 rounded-full bg-purple-500 shadow-[0_0_6px_rgba(168,85,247,0.8)]" />
+                <span className="absolute -top-1 -right-1 w-2 h-2 rounded-full bg-[#8B5CF6]" />
               )}
             </div>
-            <h3 className="font-bold text-base text-white">Notifications</h3>
+            <h3 className="font-bold text-base text-[#0F172A] dark:text-white">Notifications</h3>
             {unreadCount > 0 && (
-              <span className="px-2 py-0.5 rounded-full text-[10px] font-mono-num font-bold bg-purple-500/20 text-purple-300 border border-purple-500/30">
+              <span className="px-2 py-0.5 rounded-full text-[10px] font-mono-num font-bold bg-[#8B5CF6]/10 text-[#8B5CF6] dark:bg-[#8B5CF6]/20 border border-[#8B5CF6]/30">
                 {unreadCount} new
               </span>
             )}
@@ -86,14 +86,14 @@ export const NotificationsModal: React.FC<NotificationsModalProps> = ({
               <button
                 id="notifications-mark-all-read-btn"
                 onClick={onMarkAllAsRead}
-                className="flex items-center gap-1 px-2.5 py-1 rounded-lg text-[11px] font-medium text-purple-300 hover:text-white bg-purple-500/10 hover:bg-purple-500/20 border border-purple-500/20 transition-all"
+                className="flex items-center gap-1 px-2.5 py-1 rounded-lg text-[11px] font-medium text-[#8B5CF6] hover:text-[#7C3AED] bg-[#8B5CF6]/10 hover:bg-[#8B5CF6]/20 border border-[#8B5CF6]/20 transition-all"
                 title="Mark all notifications as read"
               >
                 <CheckCheck className="w-3.5 h-3.5" />
                 <span>Mark all read</span>
               </button>
             )}
-            <button onClick={onClose} className="p-1 text-slate-400 hover:text-white" aria-label="Close notifications">
+            <button onClick={onClose} className="p-1 text-[#64748B] hover:text-[#0F172A] dark:text-[#8E98A6] dark:hover:text-white" aria-label="Close notifications">
               <X className="w-5 h-5" />
             </button>
           </div>
@@ -107,25 +107,25 @@ export const NotificationsModal: React.FC<NotificationsModalProps> = ({
               onClose();
               onOpenPriceAlerts();
             }}
-            className="w-full mb-3 p-3 rounded-2xl bg-gradient-to-r from-purple-900/30 via-[#18122B] to-[#121626] border border-purple-500/30 hover:border-purple-500/60 flex items-center justify-between text-left group transition-all"
+            className="w-full mb-3 p-3 rounded-2xl bg-gradient-to-r from-[#8B5CF6]/10 via-[#F8FAFC] to-[#8B5CF6]/5 dark:from-[#8B5CF6]/20 dark:via-[#141B24] dark:to-[#0A0E13] border border-[#8B5CF6]/20 dark:border-[#8B5CF6]/30 hover:border-[#8B5CF6]/60 flex items-center justify-between text-left group transition-all shadow-xs"
           >
             <div className="flex items-center gap-2.5">
-              <div className="w-8 h-8 rounded-xl bg-purple-500/20 text-purple-300 flex items-center justify-center">
-                <BellRing className="w-4 h-4 text-purple-400" />
+              <div className="w-8 h-8 rounded-xl bg-[#8B5CF6]/15 text-[#8B5CF6] flex items-center justify-center">
+                <BellRing className="w-4 h-4 text-[#8B5CF6]" />
               </div>
               <div>
                 <div className="flex items-center gap-1.5">
-                  <span className="text-xs font-bold text-white group-hover:text-purple-300 transition-colors">
+                  <span className="text-xs font-bold text-[#0F172A] dark:text-white group-hover:text-[#8B5CF6] transition-colors">
                     Price Alerts Center
                   </span>
-                  <span className="text-[9px] font-bold px-1.5 py-0.2 rounded bg-purple-500/30 text-purple-200">
+                  <span className="text-[9px] font-bold px-1.5 py-0.2 rounded bg-[#8B5CF6]/20 text-[#8B5CF6]">
                     {activeAlertsCount > 0 ? `${activeAlertsCount} ACTIVE` : 'MANAGE'}
                   </span>
                 </div>
-                <p className="text-[10px] text-slate-400">Configure real-time target price triggers</p>
+                <p className="text-[10px] text-[#64748B] dark:text-[#8E98A6]">Configure real-time target price triggers</p>
               </div>
             </div>
-            <ChevronRight className="w-4 h-4 text-slate-400 group-hover:text-white transition-colors" />
+            <ChevronRight className="w-4 h-4 text-[#64748B] dark:text-[#8E98A6] group-hover:text-[#8B5CF6] transition-colors" />
           </button>
         )}
 
@@ -137,8 +137,8 @@ export const NotificationsModal: React.FC<NotificationsModalProps> = ({
               onClick={() => setFilter(cat)}
               className={`px-3 py-1 rounded-lg text-xs font-semibold capitalize transition-all ${
                 filter === cat
-                  ? 'bg-purple-600/30 text-purple-200 border border-purple-500/40'
-                  : 'bg-white/[0.04] text-slate-400 hover:text-white'
+                  ? 'bg-[#8B5CF6] text-white'
+                  : 'bg-[#F8FAFC] dark:bg-[#141B24] text-[#64748B] dark:text-[#8E98A6] hover:text-[#0F172A] dark:hover:text-white border border-[#D7E0EB] dark:border-[#242E3B]'
               }`}
             >
               {cat === 'unread' ? `Unread (${unreadCount})` : cat}
@@ -149,8 +149,8 @@ export const NotificationsModal: React.FC<NotificationsModalProps> = ({
         {/* Notifications List */}
         <div className="space-y-2.5 max-h-[50vh] overflow-y-auto pr-0.5">
           {filtered.length === 0 ? (
-            <div className="py-8 text-center text-slate-400 text-xs">
-              <Bell className="w-6 h-6 mx-auto mb-2 text-slate-500 opacity-50" />
+            <div className="py-8 text-center text-[#64748B] dark:text-[#8E98A6] text-xs">
+              <Bell className="w-6 h-6 mx-auto mb-2 text-[#64748B] dark:text-[#8E98A6] opacity-50" />
               <p>No notifications in this category</p>
             </div>
           ) : (
@@ -160,35 +160,35 @@ export const NotificationsModal: React.FC<NotificationsModalProps> = ({
                 onClick={() => !n.read && onMarkAsRead?.(n.id)}
                 className={`p-3 rounded-2xl border transition-all flex items-start gap-3 cursor-pointer ${
                   !n.read
-                    ? 'bg-[#121626] border-purple-500/30 hover:border-purple-500/50 shadow-[0_2px_12px_rgba(168,85,247,0.08)]'
-                    : 'bg-[#090C14] border-white/[0.06] hover:border-white/10 opacity-75'
+                    ? 'bg-[#F8FAFC] dark:bg-[#141B24] border-[#8B5CF6]/40 hover:border-[#8B5CF6] shadow-xs'
+                    : 'bg-white dark:bg-[#0A0E13] border-[#D7E0EB] dark:border-[#242E3B] opacity-75'
                 }`}
               >
-                <div className="relative p-2 rounded-xl bg-purple-500/10 text-purple-400 flex-shrink-0 mt-0.5">
+                <div className="relative p-2 rounded-xl bg-[#8B5CF6]/10 text-[#8B5CF6] flex-shrink-0 mt-0.5">
                   {n.type === 'success' ? (
-                    <CheckCircle2 className="w-4 h-4 text-emerald-400" />
+                    <CheckCircle2 className="w-4 h-4 text-[#10B981]" />
                   ) : n.type === 'security' ? (
-                    <ShieldAlert className="w-4 h-4 text-amber-400" />
+                    <ShieldAlert className="w-4 h-4 text-[#F59E0B]" />
                   ) : n.type === 'alert' ? (
-                    <BellRing className="w-4 h-4 text-purple-400" />
+                    <BellRing className="w-4 h-4 text-[#8B5CF6]" />
                   ) : (
-                    <Sparkles className="w-4 h-4 text-fuchsia-400" />
+                    <Sparkles className="w-4 h-4 text-[#EC4899]" />
                   )}
                   {!n.read && (
-                    <span className="absolute -top-1 -right-1 w-2.5 h-2.5 rounded-full bg-purple-500 border border-[#0F1320] shadow-[0_0_6px_rgba(168,85,247,0.9)]" />
+                    <span className="absolute -top-1 -right-1 w-2.5 h-2.5 rounded-full bg-[#8B5CF6] border-2 border-white dark:border-[#0E141B]" />
                   )}
                 </div>
                 <div className="flex-1">
                   <div className="flex justify-between items-center mb-0.5">
                     <div className="flex items-center gap-1.5">
-                      <h4 className="font-semibold text-xs text-white">{n.title}</h4>
+                      <h4 className="font-semibold text-xs text-[#0F172A] dark:text-white">{n.title}</h4>
                       {!n.read && (
-                        <span className="w-1.5 h-1.5 rounded-full bg-purple-400" />
+                        <span className="w-1.5 h-1.5 rounded-full bg-[#8B5CF6]" />
                       )}
                     </div>
-                    <span className="text-[10px] text-slate-400">{n.time}</span>
+                    <span className="text-[10px] text-[#64748B] dark:text-[#8E98A6]">{n.time}</span>
                   </div>
-                  <p className="text-[11px] text-slate-400 leading-snug">{n.desc}</p>
+                  <p className="text-[11px] text-[#64748B] dark:text-[#8E98A6] leading-snug">{n.desc}</p>
                 </div>
               </div>
             ))
