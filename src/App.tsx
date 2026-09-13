@@ -25,6 +25,7 @@ import { AssetsScreen } from './components/assets/AssetsScreen';
 import { P2PScreen } from './components/p2p/P2PScreen';
 import { AnalyticsScreen } from './components/analytics/AnalyticsScreen';
 import { ExploreScreen } from './components/explore/ExploreScreen';
+import { ProfileScreen } from './components/profile/ProfileScreen';
 
 // Navigation
 import { BottomNav } from './components/navigation/BottomNav';
@@ -79,7 +80,25 @@ export default function App() {
   const [isForgotVerified, setIsForgotVerified] = useState<boolean>(false);
   const [isTermsModalOpen, setIsTermsModalOpen] = useState<boolean>(false);
   const [termsModalTab, setTermsModalTab] = useState<'terms' | 'privacy'>('terms');
-  const [isHomeLoading, setIsHomeLoading] = useState<boolean>(false);
+  const [isHomeLoading, setIsHomeLoading] = useState<boolean>(true);
+  const [tabLoading, setTabLoading] = useState<Record<string, boolean>>({
+    home: false,
+    market: false,
+    trade: false,
+    earn: false,
+    assets: false,
+    explore: false,
+    analytics: false,
+    p2p: false,
+    profile: false,
+  });
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsHomeLoading(false);
+    }, 450);
+    return () => clearTimeout(timer);
+  }, []);
 
   // Daylight / High-Contrast Theme State
   const [theme, setTheme] = useState<ThemeMode>(() => {
@@ -121,7 +140,19 @@ export default function App() {
 
   // Navigation State
   const [activeTab, setActiveTab] = useState<MainTab | 'p2p'>('home');
+  const [previousTab, setPreviousTab] = useState<MainTab | 'p2p'>('home');
   const [isLeftNavCollapsed, setIsLeftNavCollapsed] = useState<boolean>(false);
+
+  const navigateTab = (targetTab: MainTab | 'p2p') => {
+    if (activeTab === targetTab) return;
+    setPreviousTab(activeTab);
+    setActiveTab(targetTab);
+    // Trigger skeleton loading state on page transition
+    setTabLoading((prev) => ({ ...prev, [targetTab]: true }));
+    setTimeout(() => {
+      setTabLoading((prev) => ({ ...prev, [targetTab]: false }));
+    }, 380);
+  };
 
   // Balances
   const [balances, setBalances] = useState({
@@ -178,7 +209,13 @@ export default function App() {
 
   const handleOpenProfile = (tab: 'profile' | 'system_settings' = 'profile') => {
     setProfileInitialTab(tab);
-    setIsProfileOpen(true);
+    if (typeof window !== 'undefined' && window.innerWidth < 768) {
+      setPreviousTab(activeTab === 'profile' ? 'home' : activeTab);
+      navigateTab('profile');
+      setIsProfileOpen(false);
+    } else {
+      setIsProfileOpen(true);
+    }
   };
 
   // Check if any modal / overlay is currently active
@@ -476,7 +513,7 @@ export default function App() {
   // Pair Selection for Trade
   const handleSelectPairForTrade = (pair: MarketPair) => {
     setSelectedPair(pair);
-    setActiveTab('trade');
+    navigateTab('trade');
   };
 
   // Select Asset from Assets screen to trade
@@ -765,7 +802,7 @@ export default function App() {
       {/* Left Navigation Menu (for Web and Tablet) */}
       <LeftNav
         activeTab={activeTab}
-        onSelectTab={(tab) => setActiveTab(tab)}
+        onSelectTab={(tab) => navigateTab(tab)}
         balances={balances}
         showBalances={showBalances}
         onToggleShowBalances={() => setShowBalances(!showBalances)}
@@ -831,17 +868,17 @@ export default function App() {
               onOpenPriceAlerts={() => handleOpenPriceAlerts()}
               activeAlertsCount={totalActiveAlerts}
               onSelectPair={handleSelectPairForTrade}
-              onNavigateMarkets={() => setActiveTab('market')}
-              onNavigateTrade={() => setActiveTab('trade')}
-              onNavigateWallet={() => setActiveTab('assets')}
-              onNavigateEarn={() => setActiveTab('earn')}
-              onNavigateP2P={() => setActiveTab('p2p')}
-              onNavigateExplore={() => setActiveTab('explore')}
-              onNavigateAnalytics={() => setActiveTab('analytics')}
+              onNavigateMarkets={() => navigateTab('market')}
+              onNavigateTrade={() => navigateTab('trade')}
+              onNavigateWallet={() => navigateTab('assets')}
+              onNavigateEarn={() => navigateTab('earn')}
+              onNavigateP2P={() => navigateTab('p2p')}
+              onNavigateExplore={() => navigateTab('explore')}
+              onNavigateAnalytics={() => navigateTab('analytics')}
               onOpenBuySell={() => setIsBuySellOpen(true)}
               onOpenMore={() => setIsMoreOpen(true)}
               onOpenSupport={() => setIsSupportOpen(true)}
-              isLoading={isHomeLoading}
+              isLoading={isHomeLoading || tabLoading['home']}
               theme={theme}
               onToggleTheme={handleToggleTheme}
               username={username}
@@ -860,7 +897,8 @@ export default function App() {
               onOpenConvert={() => setIsConvertOpen(true)}
               onOpenAiTrader={() => setIsAiTraderOpen(true)}
               onOpenPolymarket={() => setIsPolymarketOpen(true)}
-              onBack={() => setActiveTab('home')}
+              onBack={() => navigateTab(previousTab === 'explore' ? 'home' : previousTab)}
+              isLoading={tabLoading['explore']}
             />
           )}
 
@@ -868,10 +906,11 @@ export default function App() {
             <AnalyticsScreen
               theme={theme}
               onToggleTheme={handleToggleTheme}
-              onNavigateTrade={() => setActiveTab('trade')}
-              onNavigateMarkets={() => setActiveTab('market')}
+              onNavigateTrade={() => navigateTab('trade')}
+              onNavigateMarkets={() => navigateTab('market')}
               onOpenDeposit={() => setIsDepositOpen(true)}
-              onBack={() => setActiveTab('home')}
+              onBack={() => navigateTab(previousTab === 'analytics' ? 'home' : previousTab)}
+              isLoading={tabLoading['analytics']}
             />
           )}
 
@@ -883,6 +922,7 @@ export default function App() {
               onOpenPriceAlerts={(pair) => handleOpenPriceAlerts(pair)}
               theme={theme}
               onToggleTheme={handleToggleTheme}
+              isLoading={tabLoading['market']}
             />
           )}
 
@@ -898,6 +938,7 @@ export default function App() {
               activeAlertsCount={activeAlertsForCurrentPair}
               theme={theme}
               onToggleTheme={handleToggleTheme}
+              isLoading={tabLoading['trade']}
             />
           )}
 
@@ -908,6 +949,7 @@ export default function App() {
               onStakeProduct={handleStakeProduct}
               theme={theme}
               onToggleTheme={handleToggleTheme}
+              isLoading={tabLoading['earn']}
             />
           )}
 
@@ -925,6 +967,7 @@ export default function App() {
               onSelectAssetForTrade={handleSelectAssetForTrade}
               theme={theme}
               onToggleTheme={handleToggleTheme}
+              isLoading={tabLoading['assets']}
             />
           )}
 
@@ -933,10 +976,31 @@ export default function App() {
               merchants={merchants}
               orders={p2pOrders}
               ads={p2pAds}
-              onExitP2P={() => setActiveTab('home')}
+              onExitP2P={() => navigateTab('home')}
               onPlaceP2POrder={handlePlaceP2POrder}
               theme={theme}
               onToggleTheme={handleToggleTheme}
+              isLoading={tabLoading['p2p']}
+            />
+          )}
+
+          {activeTab === 'profile' && (
+            <ProfileScreen
+              userEmail={userEmail}
+              uid="8829410"
+              username={username}
+              onUpdateUsername={handleUpdateUsername}
+              userAvatar={userAvatar}
+              onUpdateAvatar={handleUpdateAvatar}
+              onSignOut={handleSignOut}
+              theme={theme}
+              onToggleTheme={handleToggleTheme}
+              onOpenSupport={() => setIsSupportOpen(true)}
+              onOpenAnalytics={() => navigateTab('analytics')}
+              onOpenApiManagement={() => setIsApiManagementOpen(true)}
+              onBack={() => navigateTab(previousTab === 'profile' ? 'home' : previousTab)}
+              initialSubView={profileInitialTab}
+              isLoading={tabLoading['profile']}
             />
           )}
         </main>
@@ -945,7 +1009,7 @@ export default function App() {
         {activeTab !== 'p2p' && (
           <BottomNav
             activeTab={activeTab as MainTab}
-            onSelectTab={(tab) => setActiveTab(tab)}
+            onSelectTab={(tab) => navigateTab(tab)}
           />
         )}
       </div>
@@ -1046,24 +1110,26 @@ export default function App() {
         activeAlertsCount={totalActiveAlerts}
       />
 
-      <ProfileModal
-        isOpen={isProfileOpen}
-        onClose={() => setIsProfileOpen(false)}
-        initialTab={profileInitialTab}
-        userEmail={userEmail}
-        username={username}
-        onUpdateUsername={handleUpdateUsername}
-        userAvatar={userAvatar}
-        onUpdateAvatar={handleUpdateAvatar}
-        onSignOut={handleSignOut}
-        onOpenSupport={() => setIsSupportOpen(true)}
-        onOpenAnalytics={() => {
-          setIsProfileOpen(false);
-          setActiveTab('analytics');
-        }}
-        theme={theme}
-        onToggleTheme={handleToggleTheme}
-      />
+      {typeof window !== 'undefined' && window.innerWidth >= 768 && (
+        <ProfileModal
+          isOpen={isProfileOpen}
+          onClose={() => setIsProfileOpen(false)}
+          initialTab={profileInitialTab}
+          userEmail={userEmail}
+          username={username}
+          onUpdateUsername={handleUpdateUsername}
+          userAvatar={userAvatar}
+          onUpdateAvatar={handleUpdateAvatar}
+          onSignOut={handleSignOut}
+          onOpenSupport={() => setIsSupportOpen(true)}
+          onOpenAnalytics={() => {
+            setIsProfileOpen(false);
+            navigateTab('analytics');
+          }}
+          theme={theme}
+          onToggleTheme={handleToggleTheme}
+        />
+      )}
 
       {/* Instant Buy / Sell Modal */}
       <BuySellModal
@@ -1071,11 +1137,11 @@ export default function App() {
         onClose={() => setIsBuySellOpen(false)}
         onNavigateTrade={() => {
           setIsBuySellOpen(false);
-          setActiveTab('trade');
+          navigateTab('trade');
         }}
         onNavigateP2P={() => {
           setIsBuySellOpen(false);
-          setActiveTab('p2p');
+          navigateTab('p2p');
         }}
         onSuccess={(type, coin, fiat, crypto) => {
           setRecentActivities((act) => [
@@ -1106,14 +1172,14 @@ export default function App() {
       <MoreServicesModal
         isOpen={isMoreOpen}
         onClose={() => setIsMoreOpen(false)}
-        onNavigateP2P={() => setActiveTab('p2p')}
+        onNavigateP2P={() => navigateTab('p2p')}
         onNavigateExplore={() => {
           setIsMoreOpen(false);
-          setActiveTab('explore');
+          navigateTab('explore');
         }}
         onNavigateAnalytics={() => {
           setIsMoreOpen(false);
-          setActiveTab('analytics');
+          navigateTab('analytics');
         }}
         onOpenOTC={() => setIsOtcOpen(true)}
         onOpenRewards={() => setIsRewardsOpen(true)}
@@ -1156,7 +1222,7 @@ export default function App() {
         onSelectPair={handleSelectPairForTrade}
         onOpenAiTrader={() => setIsAiTraderOpen(true)}
         onOpenPolymarket={() => setIsPolymarketOpen(true)}
-        onNavigateP2P={() => setActiveTab('p2p')}
+        onNavigateP2P={() => navigateTab('p2p')}
         onOpenPriceAlerts={() => handleOpenPriceAlerts()}
       />
 
@@ -1193,11 +1259,11 @@ export default function App() {
         }}
         onOpenTrade={() => {
           setIsSupportOpen(false);
-          setActiveTab('trade');
+          navigateTab('trade');
         }}
         onOpenP2P={() => {
           setIsSupportOpen(false);
-          setActiveTab('p2p');
+          navigateTab('p2p');
         }}
         onOpenAiTrader={() => {
           setIsSupportOpen(false);
@@ -1209,11 +1275,11 @@ export default function App() {
         }}
         onOpenSecurity={() => {
           setIsSupportOpen(false);
-          setIsProfileOpen(true);
+          handleOpenProfile('profile');
         }}
         onOpenEarn={() => {
           setIsSupportOpen(false);
-          setActiveTab('earn');
+          navigateTab('earn');
         }}
         userEmail={userEmail}
         balances={{

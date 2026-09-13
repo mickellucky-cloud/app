@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { EarnProduct, ThemeMode } from '../../types';
 import { CoinIcon } from '../common/CoinIcon';
 import { Percent, Search, Coins, CheckCircle2, X } from 'lucide-react';
+import { EarnSkeleton } from '../skeletons/EarnSkeleton';
 
 interface EarnScreenProps {
   products: EarnProduct[];
@@ -9,6 +10,7 @@ interface EarnScreenProps {
   onStakeProduct: (product: EarnProduct, amount: number) => void;
   theme?: ThemeMode;
   onToggleTheme?: () => void;
+  isLoading?: boolean;
 }
 
 export const EarnScreen: React.FC<EarnScreenProps> = ({
@@ -17,7 +19,11 @@ export const EarnScreen: React.FC<EarnScreenProps> = ({
   onStakeProduct,
   theme = 'dark',
   onToggleTheme,
+  isLoading = false,
 }) => {
+  if (isLoading) {
+    return <EarnSkeleton />;
+  }
   const [activeCategory, setActiveCategory] = useState<'all' | 'flexible' | 'fixed' | 'launchpad'>('all');
   const [selectedProduct, setSelectedProduct] = useState<EarnProduct | null>(null);
   const [stakeAmount, setStakeAmount] = useState('');

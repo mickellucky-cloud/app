@@ -39,6 +39,7 @@ import {
   Flame,
   Layers,
 } from 'lucide-react';
+import { P2PSkeleton } from '../skeletons/P2PSkeleton';
 
 interface P2PScreenProps {
   merchants: P2PMerchant[];
@@ -49,6 +50,7 @@ interface P2PScreenProps {
   onShowToast?: (title: string, message: string, type?: 'success' | 'alert' | 'info') => void;
   theme?: ThemeMode;
   onToggleTheme?: () => void;
+  isLoading?: boolean;
 }
 
 export const P2PScreen: React.FC<P2PScreenProps> = ({
@@ -60,7 +62,11 @@ export const P2PScreen: React.FC<P2PScreenProps> = ({
   onShowToast,
   theme = 'dark',
   onToggleTheme,
+  isLoading = false,
 }) => {
+  if (isLoading) {
+    return <P2PSkeleton onExit={onExitP2P} />;
+  }
   const [activeP2PTab, setActiveP2PTab] = useState<P2PTab>('p2p_market');
   const [tradeSide, setTradeSide] = useState<'buy' | 'sell'>('buy');
 

@@ -4,6 +4,7 @@ import { CoinIcon } from '../common/CoinIcon';
 import { Sparkline } from '../common/Sparkline';
 import { MarketHeatmap } from './MarketHeatmap';
 import { Search, Star, ArrowUpDown, Bell, List, LayoutGrid, ArrowRight, Flame } from 'lucide-react';
+import { MarketsSkeleton } from '../skeletons/MarketsSkeleton';
 
 interface MarketsScreenProps {
   marketPairs: MarketPair[];
@@ -12,6 +13,7 @@ interface MarketsScreenProps {
   onOpenPriceAlerts?: (pair?: MarketPair) => void;
   theme?: ThemeMode;
   onToggleTheme?: () => void;
+  isLoading?: boolean;
 }
 
 export const MarketsScreen: React.FC<MarketsScreenProps> = ({
@@ -21,7 +23,11 @@ export const MarketsScreen: React.FC<MarketsScreenProps> = ({
   onOpenPriceAlerts,
   theme = 'dark',
   onToggleTheme,
+  isLoading = false,
 }) => {
+  if (isLoading) {
+    return <MarketsSkeleton />;
+  }
   const [viewMode, setViewMode] = useState<'list' | 'heatmap'>('list');
   const [activeCategory, setActiveCategory] = useState<'favorites' | 'hot' | 'gainers' | 'new' | 'losers'>('hot');
   const [quoteFilter, setQuoteFilter] = useState<'all' | 'USDT' | 'BTC' | 'ETH' | 'SOL'>('all');

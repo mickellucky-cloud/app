@@ -18,6 +18,7 @@ import {
   Search,
   ChevronRight,
 } from 'lucide-react';
+import { AssetsSkeleton } from '../skeletons/AssetsSkeleton';
 
 interface AssetsScreenProps {
   balances: {
@@ -43,6 +44,7 @@ interface AssetsScreenProps {
   onSelectAssetForTrade?: (symbol: string) => void;
   theme?: ThemeMode;
   onToggleTheme?: () => void;
+  isLoading?: boolean;
 }
 
 export const AssetsScreen: React.FC<AssetsScreenProps> = ({
@@ -58,7 +60,11 @@ export const AssetsScreen: React.FC<AssetsScreenProps> = ({
   onSelectAssetForTrade,
   theme = 'dark',
   onToggleTheme,
+  isLoading = false,
 }) => {
+  if (isLoading) {
+    return <AssetsSkeleton />;
+  }
   const [activeCategory, setActiveCategory] = useState<'all' | 'spot' | 'funding' | 'earn'>('all');
   const [searchQuery, setSearchQuery] = useState('');
 

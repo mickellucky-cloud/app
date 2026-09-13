@@ -15,6 +15,7 @@ import {
   Sparkles,
   Share2,
 } from 'lucide-react';
+import { TradeSkeleton } from '../skeletons/TradeSkeleton';
 
 interface SpotTradeScreenProps {
   selectedPair: MarketPair;
@@ -27,6 +28,7 @@ interface SpotTradeScreenProps {
   activeAlertsCount?: number;
   theme?: ThemeMode;
   onToggleTheme?: () => void;
+  isLoading?: boolean;
 }
 
 export const SpotTradeScreen: React.FC<SpotTradeScreenProps> = ({
@@ -40,7 +42,11 @@ export const SpotTradeScreen: React.FC<SpotTradeScreenProps> = ({
   activeAlertsCount = 0,
   theme = 'dark',
   onToggleTheme,
+  isLoading = false,
 }) => {
+  if (isLoading) {
+    return <TradeSkeleton />;
+  }
   const [timeframe, setTimeframe] = useState<ChartTimeframe>('1H');
   const [selectedBookPrice, setSelectedBookPrice] = useState<number | null>(null);
   const [openOrders, setOpenOrders] = useState<OpenOrder[]>([

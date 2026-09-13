@@ -20,6 +20,7 @@ import {
   ChevronRight,
 } from 'lucide-react';
 import { ThemeMode } from '../../types';
+import { ExploreSkeleton } from '../skeletons/ExploreSkeleton';
 
 interface ExploreScreenProps {
   theme?: ThemeMode;
@@ -29,6 +30,7 @@ interface ExploreScreenProps {
   onOpenAiTrader?: () => void;
   onOpenPolymarket?: () => void;
   onBack?: () => void;
+  isLoading?: boolean;
 }
 
 interface UpcomingFeature {
@@ -167,7 +169,11 @@ export const ExploreScreen: React.FC<ExploreScreenProps> = ({
   theme = 'dark',
   onToggleTheme,
   onBack,
+  isLoading = false,
 }) => {
+  if (isLoading) {
+    return <ExploreSkeleton onBack={onBack} />;
+  }
   const [activeCategory, setActiveCategory] = useState<'all' | 'trade_earn' | 'payments_spending' | 'build_access'>(
     'all'
   );

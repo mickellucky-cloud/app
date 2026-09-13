@@ -20,6 +20,7 @@ import {
   ArrowLeft,
 } from 'lucide-react';
 import { ThemeMode } from '../../types';
+import { AnalyticsSkeleton } from '../skeletons/AnalyticsSkeleton';
 
 interface AnalyticsScreenProps {
   theme?: ThemeMode;
@@ -28,6 +29,7 @@ interface AnalyticsScreenProps {
   onNavigateMarkets?: () => void;
   onOpenDeposit?: () => void;
   onBack?: () => void;
+  isLoading?: boolean;
 }
 
 type TimeRange = '24H' | '7D' | '30D' | '90D' | '1Y' | 'ALL';
@@ -120,7 +122,11 @@ export const AnalyticsScreen: React.FC<AnalyticsScreenProps> = ({
   onNavigateMarkets,
   onOpenDeposit,
   onBack,
+  isLoading = false,
 }) => {
+  if (isLoading) {
+    return <AnalyticsSkeleton onBack={onBack} />;
+  }
   const [timeRange, setTimeRange] = useState<TimeRange>('30D');
   const currentPerf = PERFORMANCE_DATA[timeRange];
 

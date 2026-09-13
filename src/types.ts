@@ -1,4 +1,4 @@
-export type MainTab = 'home' | 'market' | 'trade' | 'earn' | 'assets' | 'analytics' | 'explore';
+export type MainTab = 'home' | 'market' | 'trade' | 'earn' | 'assets' | 'analytics' | 'explore' | 'profile';
 export type P2PTab = 'p2p_market' | 'p2p_orders' | 'p2p_ads' | 'p2p_profile';
 
 export interface CryptoAsset {
