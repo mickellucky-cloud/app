@@ -369,37 +369,20 @@ export const TotalAssetsArea: React.FC<TotalAssetsAreaProps> = ({
                 </div>
               </div>
             </div>
-
-            {/* Link to Analytics */}
-            {onNavigateAnalytics && (
-              <div className="mt-2 pt-2 border-t border-slate-200/60 dark:border-white/[0.06] flex items-center justify-between text-[11px]">
-                <span className="text-slate-600 dark:text-slate-400 flex items-center gap-1 font-medium">
-                  <Activity className="w-3 h-3 text-purple-500" />
-                  Portfolio Alpha Score: <strong className="text-emerald-700 dark:text-emerald-400">94.8/100 (Strong)</strong>
-                </span>
-                <button
-                  onClick={onNavigateAnalytics}
-                  className="flex items-center gap-0.5 font-bold text-purple-600 dark:text-purple-400 hover:underline"
-                >
-                  Detailed Analytics
-                  <ChevronRight className="w-3 h-3" />
-                </button>
-              </div>
-            )}
           </div>
 
           {/* Quick Financial Actions (Deposit | Withdraw | Send | Convert) */}
           <div
             id="total-assets-actions"
-            className="relative z-10 grid grid-cols-4 gap-2 pt-3.5 border-t border-slate-200/80 dark:border-white/[0.08]"
+            className="relative z-10 grid grid-cols-4 gap-2 pt-3 border-t border-slate-200/80 dark:border-white/[0.08]"
           >
             {/* Action 1: Deposit (Highlighted Hero Primary Button) */}
             <motion.button
               id="action-deposit-btn"
               onClick={onOpenDeposit}
               whileHover={{ y: -2, scale: 1.02 }}
-              whileTap={{ scale: 0.95 }}
-              className="relative overflow-hidden flex flex-col items-center justify-center py-2.5 px-1 rounded-2xl bg-gradient-to-b from-[#8B5CF6] to-[#7C3AED] text-white shadow-[0_4px_16px_rgba(139,92,246,0.3)] hover:shadow-[0_6px_20px_rgba(139,92,246,0.4)] border border-purple-400/30 transition-all group"
+              whileTap={{ scale: 0.96 }}
+              className="relative overflow-hidden flex flex-col items-center justify-center py-2.5 px-1 rounded-2xl bg-gradient-to-b from-purple-600 via-purple-600 to-indigo-700 text-white shadow-[0_4px_16px_rgba(139,92,246,0.35)] hover:shadow-[0_6px_22px_rgba(139,92,246,0.45)] border border-purple-400/30 transition-all group"
             >
               <div className="absolute inset-0 bg-white/15 opacity-0 group-hover:opacity-100 transition-opacity" />
               <div className="w-8 h-8 rounded-xl bg-white/20 flex items-center justify-center mb-1 group-hover:scale-110 transition-transform">
@@ -413,7 +396,7 @@ export const TotalAssetsArea: React.FC<TotalAssetsAreaProps> = ({
               id="action-withdraw-btn"
               onClick={onOpenWithdraw}
               whileHover={{ y: -2, scale: 1.02 }}
-              whileTap={{ scale: 0.95 }}
+              whileTap={{ scale: 0.96 }}
               className="flex flex-col items-center justify-center py-2.5 px-1 rounded-2xl bg-white hover:bg-slate-50 dark:bg-[#141A26] dark:hover:bg-[#1A2232] border border-slate-200 dark:border-white/[0.08] hover:border-purple-300 dark:hover:border-purple-500/30 transition-all group shadow-xs"
             >
               <div className="w-8 h-8 rounded-xl bg-purple-500/10 dark:bg-purple-500/15 text-purple-600 dark:text-purple-400 flex items-center justify-center mb-1 group-hover:scale-110 transition-transform">
@@ -429,7 +412,7 @@ export const TotalAssetsArea: React.FC<TotalAssetsAreaProps> = ({
               id="action-send-btn"
               onClick={onOpenSend}
               whileHover={{ y: -2, scale: 1.02 }}
-              whileTap={{ scale: 0.95 }}
+              whileTap={{ scale: 0.96 }}
               className="flex flex-col items-center justify-center py-2.5 px-1 rounded-2xl bg-white hover:bg-slate-50 dark:bg-[#141A26] dark:hover:bg-[#1A2232] border border-slate-200 dark:border-white/[0.08] hover:border-purple-300 dark:hover:border-purple-500/30 transition-all group shadow-xs"
             >
               <div className="w-8 h-8 rounded-xl bg-purple-500/10 dark:bg-purple-500/15 text-purple-600 dark:text-purple-400 flex items-center justify-center mb-1 group-hover:scale-110 transition-transform">
@@ -445,7 +428,7 @@ export const TotalAssetsArea: React.FC<TotalAssetsAreaProps> = ({
               id="action-convert-btn"
               onClick={onOpenConvert}
               whileHover={{ y: -2, scale: 1.02 }}
-              whileTap={{ scale: 0.95 }}
+              whileTap={{ scale: 0.96 }}
               className="flex flex-col items-center justify-center py-2.5 px-1 rounded-2xl bg-white hover:bg-slate-50 dark:bg-[#141A26] dark:hover:bg-[#1A2232] border border-slate-200 dark:border-white/[0.08] hover:border-purple-300 dark:hover:border-purple-500/30 transition-all group shadow-xs"
             >
               <div className="w-8 h-8 rounded-xl bg-purple-500/10 dark:bg-purple-500/15 text-purple-600 dark:text-purple-400 flex items-center justify-center mb-1 group-hover:rotate-180 transition-transform duration-300">

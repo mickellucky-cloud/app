@@ -90,7 +90,7 @@ export const MarketsScreen: React.FC<MarketsScreenProps> = ({
       {/* Header */}
       <div className="flex items-center justify-between mb-3 gap-2">
         <div className="flex items-center gap-2">
-          <h1 className="text-xl font-bold font-display text-slate-900 dark:text-white tracking-tight">Markets</h1>
+          <h1 className="hidden md:block text-xl font-bold font-display text-slate-900 dark:text-white tracking-tight">Markets</h1>
           
           {/* List vs Heatmap Segmented View Switcher */}
           <div className="flex items-center bg-slate-100 dark:bg-[#111624] border border-slate-200 dark:border-white/10 rounded-xl p-0.5">
@@ -98,7 +98,7 @@ export const MarketsScreen: React.FC<MarketsScreenProps> = ({
               id="markets-view-mode-list"
               type="button"
               onClick={() => setViewMode('list')}
-              className={`px-2 py-1 rounded-lg text-xs font-semibold flex items-center gap-1 transition-all ${
+              className={`px-2.5 py-1 rounded-lg text-xs font-semibold flex items-center gap-1 transition-all ${
                 viewMode === 'list'
                   ? 'bg-purple-600 text-white shadow-xs'
                   : 'text-slate-600 hover:text-slate-900 dark:text-slate-400 dark:hover:text-slate-200'
@@ -107,13 +107,13 @@ export const MarketsScreen: React.FC<MarketsScreenProps> = ({
               aria-label="List View"
             >
               <List className="w-3.5 h-3.5" />
-              <span className="hidden sm:inline">List</span>
+              <span>List</span>
             </button>
             <button
               id="markets-view-mode-heatmap"
               type="button"
               onClick={() => setViewMode('heatmap')}
-              className={`px-2 py-1 rounded-lg text-xs font-semibold flex items-center gap-1 transition-all ${
+              className={`px-2.5 py-1 rounded-lg text-xs font-semibold flex items-center gap-1 transition-all ${
                 viewMode === 'heatmap'
                   ? 'bg-purple-600 text-white shadow-xs'
                   : 'text-slate-600 hover:text-slate-900 dark:text-slate-400 dark:hover:text-slate-200'
@@ -127,7 +127,8 @@ export const MarketsScreen: React.FC<MarketsScreenProps> = ({
           </div>
         </div>
 
-        <div className="flex items-center gap-1.5 shrink-0 sm:flex-1 sm:max-w-[280px] justify-end">
+        {/* Desktop Search & Alerts (Mobile search is handled globally in MobileTopBar) */}
+        <div className="hidden sm:flex items-center gap-1.5 shrink-0 sm:flex-1 sm:max-w-[280px] justify-end">
           <div className="relative flex-1 min-w-[100px] max-w-[160px] sm:max-w-none">
             <input
               type="text"

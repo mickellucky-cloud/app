@@ -96,27 +96,18 @@ export const AssetsScreen: React.FC<AssetsScreenProps> = ({
           </div>
         </div>
 
-        <div className="flex items-center gap-2">
-          <div className="hidden sm:flex items-center gap-2">
-            <button
-              onClick={onOpenDeposit}
-              className="px-3.5 py-1.5 rounded-xl text-xs font-semibold bg-gradient-to-r from-purple-600 to-fuchsia-600 text-white hover:brightness-110 transition-all shadow-xs"
-            >
-              Deposit Funds
-            </button>
-            <button
-              onClick={onOpenWithdraw}
-              className="px-3.5 py-1.5 rounded-xl text-xs font-semibold bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-white/10 hover:border-purple-500/40 text-slate-700 dark:text-slate-200 hover:text-slate-900 dark:hover:text-white transition-all"
-            >
-              Withdraw
-            </button>
-          </div>
+        <div className="hidden sm:flex items-center gap-2">
           <button
-            onClick={onOpenNotifications}
-            className="md:hidden w-9 h-9 rounded-full bg-slate-100 dark:bg-slate-900/80 border border-slate-200 dark:border-white/10 flex items-center justify-center text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white active:scale-95 transition-all"
-            aria-label="Notifications"
+            onClick={onOpenDeposit}
+            className="px-3.5 py-1.5 rounded-xl text-xs font-semibold bg-gradient-to-r from-purple-600 to-fuchsia-600 text-white hover:brightness-110 transition-all shadow-xs"
           >
-            <Bell className="w-4 h-4" />
+            Deposit Funds
+          </button>
+          <button
+            onClick={onOpenWithdraw}
+            className="px-3.5 py-1.5 rounded-xl text-xs font-semibold bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-white/10 hover:border-purple-500/40 text-slate-700 dark:text-slate-200 hover:text-slate-900 dark:hover:text-white transition-all"
+          >
+            Withdraw
           </button>
         </div>
       </header>

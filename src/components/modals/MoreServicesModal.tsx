@@ -12,7 +12,6 @@ import {
   Landmark,
   LineChart,
   Compass,
-  LogOut,
   ChevronRight,
   CheckCircle2,
   Clock,
@@ -33,7 +32,6 @@ interface MoreServicesModalProps {
   onOpenSettings: (tab?: any) => void;
   onOpenProfile?: (section?: string) => void;
   onOpenSupport: () => void;
-  onSignOut: () => void;
   onNavigateExplore?: () => void;
   onNavigateAnalytics?: () => void;
 }
@@ -62,7 +60,6 @@ export const MoreServicesModal: React.FC<MoreServicesModalProps> = ({
   onOpenSettings,
   onOpenProfile,
   onOpenSupport,
-  onSignOut,
   onNavigateExplore,
   onNavigateAnalytics,
 }) => {
@@ -360,20 +357,6 @@ export const MoreServicesModal: React.FC<MoreServicesModalProps> = ({
               </button>
             );
           })}
-        </div>
-
-        {/* Sign Out Option */}
-        <div className="pt-3 border-t border-[#D7E0EB] dark:border-[#242E3B] mt-auto">
-          <button
-            onClick={() => {
-              onClose();
-              onSignOut();
-            }}
-            className="w-full py-2.5 rounded-2xl bg-rose-50 hover:bg-rose-100 text-[#EF4444] dark:bg-rose-500/10 dark:hover:bg-rose-500/20 border border-rose-200 dark:border-rose-500/25 font-bold text-xs flex items-center justify-center gap-2 active:scale-95 transition-all"
-          >
-            <LogOut className="w-4 h-4" />
-            <span>Sign Out of OKNexus</span>
-          </button>
         </div>
       </div>
     </div>

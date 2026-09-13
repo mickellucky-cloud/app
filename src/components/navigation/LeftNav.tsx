@@ -26,6 +26,7 @@ import {
   Compass,
   LineChart,
   ScanLine,
+  LayoutGrid,
 } from 'lucide-react';
 
 export interface LeftNavProps {
@@ -140,6 +141,12 @@ export const LeftNav: React.FC<LeftNavProps> = ({
       icon: Headphones,
       badge: '24/7',
       onClick: onOpenSupport,
+    },
+    {
+      id: 'more',
+      label: 'All Services',
+      icon: LayoutGrid,
+      onClick: () => onSelectTab('more'),
     },
     {
       id: 'settings',

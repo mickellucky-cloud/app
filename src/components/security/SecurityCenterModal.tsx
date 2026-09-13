@@ -16,7 +16,6 @@ import {
   Laptop,
   Globe,
   Clock,
-  LogOut,
   ChevronRight,
   Sparkles,
   CheckCircle2,

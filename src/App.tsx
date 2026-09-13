@@ -26,12 +26,14 @@ import { P2PScreen } from './components/p2p/P2PScreen';
 import { AnalyticsScreen } from './components/analytics/AnalyticsScreen';
 import { ExploreScreen } from './components/explore/ExploreScreen';
 import { ProfileScreen } from './components/profile/ProfileScreen';
+import { MoreServicesScreen } from './components/more/MoreServicesScreen';
 import { SupportCenterScreen } from './components/support/SupportCenterScreen';
 
 // Navigation
 import { BottomNav } from './components/navigation/BottomNav';
 import { LeftNav } from './components/navigation/LeftNav';
 import { DesktopTopBar } from './components/navigation/DesktopTopBar';
+import { MobileTopBar } from './components/navigation/MobileTopBar';
 
 // Common
 import { ToastContainer } from './components/common/ToastContainer';
@@ -208,6 +210,7 @@ export default function App() {
         p2p: 'OK Nexus | P2P Trading',
         explore: 'OK Nexus | Explore Web3',
         analytics: 'OK Nexus | Portfolio Analytics',
+        more: 'OK Nexus | All Services & Tools',
       };
       if (titleMap[targetTab]) {
         document.title = titleMap[targetTab];
@@ -809,6 +812,53 @@ export default function App() {
     ]);
   };
 
+  const handleCloseAccount = () => {
+    setIsAuthenticated(false);
+    safeStorage.removeItem('oknexus_authenticated');
+    setAuthView('login');
+    setShowPuzzleModal(false);
+    setShowOtpScreen(false);
+    setIsForgotVerified(false);
+    setActiveTab('home');
+
+    setToasts((prev) => [
+      {
+        id: `toast-${Date.now()}`,
+        title: 'Account Frozen / Closed',
+        message: 'Your account and active trading sessions have been safely frozen.',
+        type: 'alert',
+        timestamp: 'Just now',
+      },
+      ...prev,
+    ]);
+  };
+
+  const handleDeleteAccount = (type?: 'deactivate' | 'delete') => {
+    setIsAuthenticated(false);
+    safeStorage.removeItem('oknexus_authenticated');
+    safeStorage.removeItem('oknexus_username');
+    safeStorage.removeItem('oknexus_user_avatar');
+    setAuthView('login');
+    setShowPuzzleModal(false);
+    setShowOtpScreen(false);
+    setIsForgotVerified(false);
+    setActiveTab('home');
+
+    setToasts((prev) => [
+      {
+        id: `toast-${Date.now()}`,
+        title: type === 'deactivate' ? 'Account Closed' : 'Account Permanently Deleted',
+        message:
+          type === 'deactivate'
+            ? 'Your account has been frozen. You can contact support to reactivate.'
+            : 'All personal account data and credentials have been permanently purged.',
+        type: 'info',
+        timestamp: 'Just now',
+      },
+      ...prev,
+    ]);
+  };
+
   // Render Authentication Flow if not logged in
   if (!isAuthenticated) {
     return (
@@ -948,6 +998,35 @@ export default function App() {
           />
         )}
 
+        {/* Mobile Unified Top Navigation Bar */}
+        {activeTab !== 'p2p' && (
+          <MobileTopBar
+            activeTab={activeTab}
+            onSelectTab={(tab) => navigateTab(tab)}
+            onBack={() => navigateTab(previousTab === activeTab ? 'home' : previousTab)}
+            onOpenSearch={() => setIsSearchOpen(true)}
+            onOpenDeposit={() => setIsDepositOpen(true)}
+            onOpenScanToPay={() => setIsScanToPayOpen(true)}
+            onOpenNotifications={() => setIsNotificationsOpen(true)}
+            unreadNotificationsCount={unreadNotificationsCount}
+            notifications={notifications}
+            onMarkNotificationAsRead={handleMarkNotificationAsRead}
+            onMarkAllNotificationsAsRead={handleMarkAllNotificationsAsRead}
+            onOpenPriceAlerts={(pair) => handleOpenPriceAlerts(pair)}
+            activeAlertsCount={totalActiveAlerts}
+            onOpenSupport={() => navigateTab('support')}
+            onOpenProfile={handleOpenProfile}
+            userEmail={userEmail}
+            username={username}
+            userAvatar={userAvatar}
+            selectedPair={selectedPair}
+            onOpenPairSelector={() => setIsPairSelectorOpen(true)}
+            onToggleFavorite={handleToggleFavorite}
+            theme={theme}
+            onToggleTheme={handleToggleTheme}
+          />
+        )}
+
         {/* Active Screen View (Direct Navigation - No horizontal swipe gestures) */}
         <main id="main-content" className="flex-1 w-full min-h-screen">
           {activeTab === 'home' && (
@@ -982,7 +1061,7 @@ export default function App() {
               onNavigateExplore={() => navigateTab('explore')}
               onNavigateAnalytics={() => navigateTab('analytics')}
               onOpenBuySell={() => setIsBuySellOpen(true)}
-              onOpenMore={() => setIsMoreOpen(true)}
+              onOpenMore={() => navigateTab('more')}
               onOpenSupport={() => navigateTab('support')}
               isLoading={isHomeLoading || tabLoading['home']}
               theme={theme}
@@ -1110,6 +1189,37 @@ export default function App() {
             />
           )}
 
+          {activeTab === 'more' && (
+            <MoreServicesScreen
+              theme={theme}
+              onToggleTheme={handleToggleTheme}
+              onBack={() => navigateTab(previousTab === 'more' ? 'home' : previousTab)}
+              onNavigateMarkets={() => navigateTab('market')}
+              onNavigateTrade={() => navigateTab('trade')}
+              onNavigateEarn={() => navigateTab('earn')}
+              onNavigateAssets={() => navigateTab('assets')}
+              onNavigateP2P={() => navigateTab('p2p')}
+              onNavigateExplore={() => navigateTab('explore')}
+              onNavigateAnalytics={() => navigateTab('analytics')}
+              onOpenDeposit={() => setIsDepositOpen(true)}
+              onOpenWithdraw={() => setIsWithdrawOpen(true)}
+              onOpenSend={() => setIsSendOpen(true)}
+              onOpenConvert={() => setIsConvertOpen(true)}
+              onOpenScanToPay={() => setIsScanToPayOpen(true)}
+              onOpenAiTrader={() => setIsAiTraderOpen(true)}
+              onOpenPolymarket={() => setIsPolymarketOpen(true)}
+              onOpenOTC={() => setIsOtcOpen(true)}
+              onOpenRewards={() => setIsRewardsOpen(true)}
+              onOpenReferrals={() => setIsReferralsOpen(true)}
+              onOpenApiManagement={() => setIsApiManagementOpen(true)}
+              onOpenPriceAlerts={() => handleOpenPriceAlerts()}
+              onOpenProfile={() => navigateTab('profile')}
+              onOpenSettings={(cat) => handleOpenSettings(cat)}
+              onOpenSupport={() => navigateTab('support')}
+              isLoading={tabLoading['more']}
+            />
+          )}
+
           {activeTab === 'settings' && (
             <SettingsScreen
               userEmail={userEmail}
@@ -1121,6 +1231,9 @@ export default function App() {
               onToggleTheme={handleToggleTheme}
               onOpenSupport={() => navigateTab('support')}
               onOpenProfile={handleOpenProfile}
+              onSignOut={handleSignOut}
+              onCloseAccount={handleCloseAccount}
+              onDeleteAccount={handleDeleteAccount}
               onBack={() => navigateTab(previousTab === 'settings' ? 'home' : previousTab)}
               initialCategory={settingsInitialCategory}
               isLoading={tabLoading['settings']}
@@ -1317,7 +1430,6 @@ export default function App() {
           setIsMoreOpen(false);
           navigateTab('support');
         }}
-        onSignOut={handleSignOut}
       />
 
       {/* OTC Block Trading Modal */}

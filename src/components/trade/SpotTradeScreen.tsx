@@ -175,8 +175,8 @@ export const SpotTradeScreen: React.FC<SpotTradeScreenProps> = ({
       id="spot-trade-screen"
       className="pb-32 md:pb-12 pt-2 px-3 sm:px-6 lg:px-8 max-w-lg md:max-w-4xl lg:max-w-7xl mx-auto min-h-screen text-slate-900 dark:text-slate-100 bg-white dark:bg-[#07090E] transition-colors"
     >
-      {/* Top Bar Header */}
-      <header className="flex items-center justify-between pb-2.5 border-b border-slate-200 dark:border-white/[0.06] mb-2.5">
+      {/* Desktop Top Bar Header (Hidden on Mobile where MobileTopBar handles it) */}
+      <header className="hidden md:flex items-center justify-between pb-2.5 border-b border-slate-200 dark:border-white/[0.06] mb-2.5">
         <div className="flex items-center gap-2">
           <OKNexusLogo size={24} />
           <button

@@ -100,6 +100,7 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({
   const [activeSection, setActiveSection] = useState<ProfileSection>(
     initialSubView === 'system_settings' ? 'preferences' : 'overview'
   );
+  const [mobileDrillDownActive, setMobileDrillDownActive] = useState(false);
 
   // Username editing
   const [isEditingUsername, setIsEditingUsername] = useState(false);
@@ -274,8 +275,8 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({
       id="standalone-profile-page"
       className="min-h-screen bg-slate-50 dark:bg-[#07090E] text-[#0F172A] dark:text-[#EDF1F5] pb-28 transition-colors"
     >
-      {/* Top Header */}
-      <header className="sticky top-0 z-30 bg-white/95 dark:bg-[#0A0E13]/95 backdrop-blur-md border-b border-[#D7E0EB] dark:border-[#1E2633] px-4 py-3 sm:px-6">
+      {/* Desktop Top Header (Hidden on Mobile where MobileTopBar handles it) */}
+      <header className="hidden md:block sticky top-0 z-30 bg-white/95 dark:bg-[#0A0E13]/95 backdrop-blur-md border-b border-[#D7E0EB] dark:border-[#1E2633] px-4 py-3 sm:px-6">
         <div className="max-w-6xl mx-auto flex items-center justify-between">
           <div className="flex items-center gap-3">
             <button
@@ -339,7 +340,9 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({
         {/* User Hero Banner - Upgraded Luxury Exchange Profile Card */}
         <section
           id="profile-hero-card"
-          className="mb-6 rounded-3xl bg-gradient-to-br from-purple-900/20 via-white to-indigo-900/10 dark:from-purple-950/60 dark:via-[#0D121B] dark:to-indigo-950/40 border border-purple-500/25 dark:border-purple-500/20 shadow-sm relative overflow-hidden p-5 sm:p-6"
+          className={`mb-6 rounded-3xl bg-gradient-to-br from-purple-900/20 via-white to-indigo-900/10 dark:from-purple-950/60 dark:via-[#0D121B] dark:to-indigo-950/40 border border-purple-500/25 dark:border-purple-500/20 shadow-sm relative overflow-hidden p-5 sm:p-6 ${
+            mobileDrillDownActive ? 'hidden lg:block' : 'block'
+          }`}
         >
           {/* Subtle Ambient Glow */}
           <div className="absolute top-0 right-0 w-80 h-80 bg-purple-500/10 dark:bg-purple-600/10 rounded-full blur-3xl pointer-events-none -mr-20 -mt-20" />
@@ -644,7 +647,7 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({
         {/* TWO-COLUMN LAYOUT WITH VERTICAL OPTIONS LIST (ZERO HORIZONTAL SLIDERS) */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
           {/* LEFT COLUMN: Vertical Options List */}
-          <aside className="lg:col-span-4 space-y-4">
+          <aside className={`${mobileDrillDownActive ? 'hidden lg:block' : 'block'} lg:col-span-4 space-y-4`}>
             <div className="rounded-3xl bg-white dark:bg-[#0E141B] border border-[#D7E0EB] dark:border-[#1E2633] p-3 shadow-xs space-y-1">
               <div className="px-3 py-2 flex items-center justify-between border-b border-slate-100 dark:border-white/[0.05] mb-1">
                 <span className="text-[11px] font-extrabold uppercase tracking-wider text-slate-500 dark:text-slate-400">
@@ -664,7 +667,10 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({
                     <button
                       key={sec.id}
                       type="button"
-                      onClick={() => setActiveSection(sec.id)}
+                      onClick={() => {
+                        setActiveSection(sec.id);
+                        setMobileDrillDownActive(true);
+                      }}
                       className={`w-full flex items-center justify-between p-3 rounded-2xl text-left transition-all group ${
                         isActive
                           ? 'bg-gradient-to-r from-purple-600 to-indigo-600 text-white shadow-md font-bold'
@@ -732,7 +738,18 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({
           </aside>
 
           {/* RIGHT COLUMN: Active Section Content */}
-          <main className="lg:col-span-8 space-y-4">
+          <main className={`${mobileDrillDownActive ? 'block' : 'hidden lg:block'} lg:col-span-8 space-y-4`}>
+            {/* Mobile Back Button to Return to Options List */}
+            {mobileDrillDownActive && (
+              <button
+                type="button"
+                onClick={() => setMobileDrillDownActive(false)}
+                className="lg:hidden flex items-center gap-2 px-3.5 py-2 rounded-2xl bg-white dark:bg-[#0E141B] border border-slate-200 dark:border-[#242E3B] text-xs font-bold text-slate-800 dark:text-white shadow-2xs hover:border-purple-500/50 transition-all mb-2"
+              >
+                <ArrowLeft className="w-4 h-4 text-purple-600" />
+                <span>Back to Profile Options</span>
+              </button>
+            )}
 
         {/* SECTION 1: OVERVIEW & IDENTITY */}
         {activeSection === 'overview' && (

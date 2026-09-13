@@ -37,6 +37,8 @@ import {
   RefreshCw,
   Plus,
   ShieldAlert,
+  FileDown,
+  X,
 } from 'lucide-react';
 import { ThemeMode } from '../../types';
 import { SettingsSkeleton } from '../skeletons/SettingsSkeleton';
@@ -49,7 +51,10 @@ export type SettingsCategory =
   | 'preferences'
   | 'payments'
   | 'privacy'
-  | 'sessions';
+  | 'sessions'
+  | 'close_account';
+
+export type AccountClosureAction = 'deactivate' | 'delete';
 
 interface SettingsScreenProps {
   userEmail?: string;
@@ -61,6 +66,9 @@ interface SettingsScreenProps {
   onToggleTheme?: () => void;
   onOpenSupport?: () => void;
   onOpenProfile?: () => void;
+  onSignOut?: () => void;
+  onCloseAccount?: () => void;
+  onDeleteAccount?: (type?: AccountClosureAction) => void;
   onBack: () => void;
   initialCategory?: SettingsCategory;
   isLoading?: boolean;
@@ -76,11 +84,15 @@ export const SettingsScreen: React.FC<SettingsScreenProps> = ({
   onToggleTheme,
   onOpenSupport,
   onOpenProfile,
+  onSignOut,
+  onCloseAccount,
+  onDeleteAccount,
   onBack,
   initialCategory = 'account',
   isLoading = false,
 }) => {
   const [activeCategory, setActiveCategory] = useState<SettingsCategory>(initialCategory);
+  const [mobileDrillDown, setMobileDrillDown] = useState(false);
   const [searchFilter, setSearchFilter] = useState('');
   const [toastMessage, setToastMessage] = useState<string | null>(null);
 
@@ -88,6 +100,9 @@ export const SettingsScreen: React.FC<SettingsScreenProps> = ({
   useEffect(() => {
     if (initialCategory) {
       setActiveCategory(initialCategory);
+      if (initialCategory !== 'account') {
+        setMobileDrillDown(true);
+      }
     }
   }, [initialCategory]);
 
@@ -234,7 +249,99 @@ export const SettingsScreen: React.FC<SettingsScreenProps> = ({
     { id: 'payments', label: 'Payment Settings', description: 'Payment rails, whitelist & cooling period', icon: CreditCard },
     { id: 'privacy', label: 'Privacy', description: 'Public visibility & anonymous orderbook', icon: Eye },
     { id: 'sessions', label: 'Session & Devices', description: 'Active devices, authorizations & logs', icon: Laptop, badge: `${sessions.length}` },
+    { id: 'close_account', label: 'Close or Delete Account', description: 'Freeze trading or permanently erase account data', icon: Trash2, badge: 'Danger' },
   ];
+
+  // Close / Delete Account state
+  const [showDeactivateModal, setShowDeactivateModal] = useState(false);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [deactivateReason, setDeactivateReason] = useState('Taking a break from cryptocurrency trading');
+  const [deactivateConfirmChecked, setDeactivateConfirmChecked] = useState(false);
+  const [isDeactivating, setIsDeactivating] = useState(false);
+
+  const [deleteConfirmText, setDeleteConfirmText] = useState('');
+  const [deleteCheckboxFunds, setDeleteCheckboxFunds] = useState(false);
+  const [deleteCheckboxPermanent, setDeleteCheckboxPermanent] = useState(false);
+  const [deleteSecurityCode, setDeleteSecurityCode] = useState('');
+  const [isDeleting, setIsDeleting] = useState(false);
+
+  const handleDownloadLedgerHistory = () => {
+    const data = {
+      uid,
+      email: userEmail,
+      username,
+      exportTimestamp: new Date().toISOString(),
+      accountStatus: 'Active',
+      kycTier: 'Tier 3 (Enterprise Verified)',
+      balances: [
+        { asset: 'USDT', total: '14,250.00', available: '12,500.00', inOrders: '1,750.00' },
+        { asset: 'BTC', total: '0.4520', available: '0.4520', inOrders: '0.0000' },
+        { asset: 'ETH', total: '3.8500', available: '3.8500', inOrders: '0.0000' },
+        { asset: 'SOL', total: '42.100', available: '42.100', inOrders: '0.0000' },
+      ],
+      recentTrades: [
+        { id: 'TX-9021', pair: 'BTC/USDT', side: 'BUY', price: '64,250.00', amount: '0.25', timestamp: '2026-03-10T14:22:00Z' },
+        { id: 'TX-9020', pair: 'ETH/USDT', side: 'SELL', price: '3,480.00', amount: '1.50', timestamp: '2026-03-08T09:15:00Z' },
+      ],
+    };
+    const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `OKNexus_Account_Archive_${uid}.json`;
+    a.click();
+    URL.revokeObjectURL(url);
+    showToast('Account archive & tax history downloaded!');
+  };
+
+  const handleExecuteDeactivate = () => {
+    if (!deactivateConfirmChecked) {
+      showToast('Please confirm understanding before deactivating.');
+      return;
+    }
+    setIsDeactivating(true);
+    setTimeout(() => {
+      setIsDeactivating(false);
+      setShowDeactivateModal(false);
+      showToast('Account has been safely closed and frozen.');
+      if (onCloseAccount) {
+        onCloseAccount();
+      } else if (onDeleteAccount) {
+        onDeleteAccount('deactivate');
+      } else if (onSignOut) {
+        onSignOut();
+      }
+    }, 1200);
+  };
+
+  const handleExecuteDeleteAccount = () => {
+    if (deleteConfirmText !== 'DELETE ACCOUNT') {
+      showToast('Please type DELETE ACCOUNT in uppercase to confirm.');
+      return;
+    }
+    if (!deleteCheckboxFunds || !deleteCheckboxPermanent) {
+      showToast('Please check all confirmation boxes.');
+      return;
+    }
+    if (!deleteSecurityCode || deleteSecurityCode.trim().length < 4) {
+      showToast('Please enter your 4-digit PIN or 6-digit 2FA code.');
+      return;
+    }
+
+    setIsDeleting(true);
+    setTimeout(() => {
+      setIsDeleting(false);
+      setShowDeleteModal(false);
+      showToast('Account permanently deleted and purged.');
+      if (onDeleteAccount) {
+        onDeleteAccount('delete');
+      } else if (onCloseAccount) {
+        onCloseAccount();
+      } else if (onSignOut) {
+        onSignOut();
+      }
+    }, 1500);
+  };
 
   const filteredCategories = categories.filter((c) =>
     c.label.toLowerCase().includes(searchFilter.toLowerCase()) ||
@@ -332,8 +439,8 @@ export const SettingsScreen: React.FC<SettingsScreenProps> = ({
       id="dedicated-settings-page"
       className="min-h-screen bg-slate-50 dark:bg-[#07090E] text-[#0F172A] dark:text-[#EDF1F5] pb-28 md:pb-12 transition-colors"
     >
-      {/* Top Application Header */}
-      <header className="sticky top-0 z-30 bg-white/95 dark:bg-[#0A0E13]/95 backdrop-blur-md border-b border-[#D7E0EB] dark:border-[#1E2633] px-4 py-3 sm:px-6">
+      {/* Top Application Header (Hidden on mobile where MobileTopBar handles it) */}
+      <header className="hidden md:block sticky top-0 z-30 bg-white/95 dark:bg-[#0A0E13]/95 backdrop-blur-md border-b border-[#D7E0EB] dark:border-[#1E2633] px-4 py-3 sm:px-6">
         <div className="max-w-7xl mx-auto flex items-center justify-between">
           <div className="flex items-center gap-3">
             <button
@@ -429,76 +536,108 @@ export const SettingsScreen: React.FC<SettingsScreenProps> = ({
         </div>
 
         {/* Mobile Category Vertical List Menu (NO horizontal slider) */}
-        <div className="md:hidden mb-5">
-          <div className="rounded-2xl bg-white dark:bg-[#0E141B] border border-[#D7E0EB] dark:border-[#242E3B] p-2 shadow-xs space-y-1">
-            <div className="px-3 py-2 flex items-center justify-between border-b border-slate-100 dark:border-white/[0.05]">
-              <span className="text-[11px] font-extrabold uppercase tracking-wider text-slate-500 dark:text-slate-400">
-                Settings Categories
-              </span>
-              <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-purple-500/10 text-purple-600 dark:text-purple-400">
-                Active: {categories.find((c) => c.id === activeCategory)?.label || 'Options'}
-              </span>
-            </div>
-            <div className="space-y-1 pt-1">
-              {filteredCategories.map((cat) => {
-                const Icon = cat.icon;
-                const isActive = activeCategory === cat.id;
-                return (
-                  <button
-                    key={cat.id}
-                    type="button"
-                    onClick={() => setActiveCategory(cat.id)}
-                    className={`w-full flex items-center justify-between p-2.5 rounded-xl text-left transition-all ${
-                      isActive
-                        ? 'bg-gradient-to-r from-purple-600 to-indigo-600 text-white shadow-xs font-bold'
-                        : 'text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-[#141B24]'
-                    }`}
-                  >
-                    <div className="flex items-center gap-2.5 min-w-0">
-                      <div
-                        className={`w-8 h-8 rounded-lg flex items-center justify-center shrink-0 ${
-                          isActive
-                            ? 'bg-white/20 text-white'
-                            : 'bg-slate-100 dark:bg-white/[0.06] text-slate-500 dark:text-slate-400'
-                        }`}
-                      >
-                        <Icon className="w-4 h-4" />
-                      </div>
-                      <div className="min-w-0">
-                        <div className="text-xs font-bold truncate leading-tight">{cat.label}</div>
-                        <div
-                          className={`text-[10px] truncate ${
-                            isActive ? 'text-white/80' : 'text-slate-400 dark:text-slate-500'
-                          }`}
-                        >
-                          {cat.description}
+        {!mobileDrillDown && (
+          <div className="md:hidden mb-5">
+            <div className="rounded-3xl bg-white dark:bg-[#0E141B] border border-[#D7E0EB] dark:border-[#242E3B] p-2.5 shadow-xs space-y-1">
+              <div className="px-3 py-2 flex items-center justify-between border-b border-slate-100 dark:border-white/[0.05]">
+                <span className="text-[11px] font-extrabold uppercase tracking-wider text-slate-500 dark:text-slate-400">
+                  Settings Menu
+                </span>
+                <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-purple-500/10 text-purple-600 dark:text-purple-400">
+                  {categories.length} Categories
+                </span>
+              </div>
+              <div className="space-y-1.5 pt-1">
+                {filteredCategories.map((cat) => {
+                  const Icon = cat.icon;
+                  const isDanger = cat.id === 'close_account';
+                  return (
+                    <button
+                      key={cat.id}
+                      type="button"
+                      onClick={() => {
+                        setActiveCategory(cat.id);
+                        setMobileDrillDown(true);
+                      }}
+                      className={`w-full flex items-center justify-between p-3 rounded-2xl text-left transition-all active:scale-[0.99] border ${
+                        isDanger
+                          ? 'text-rose-600 dark:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-500/10 border-rose-500/20'
+                          : 'text-slate-800 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-[#141B24] border-transparent hover:border-slate-200 dark:hover:border-white/5'
+                      }`}
+                    >
+                      <div className="flex items-center gap-3 min-w-0">
+                        <div className={`w-10 h-10 rounded-xl flex items-center justify-center shrink-0 ${
+                          isDanger
+                            ? 'bg-rose-500/10 text-rose-600 dark:text-rose-400'
+                            : 'bg-purple-500/10 text-purple-600 dark:text-purple-400'
+                        }`}>
+                          <Icon className="w-5 h-5" />
+                        </div>
+                        <div className="min-w-0">
+                          <div className="text-sm font-bold truncate leading-tight">{cat.label}</div>
+                          <div className={`text-[11px] truncate mt-0.5 ${
+                            isDanger ? 'text-rose-500/80 dark:text-rose-400/80' : 'text-slate-400 dark:text-slate-500'
+                          }`}>
+                            {cat.description}
+                          </div>
                         </div>
                       </div>
-                    </div>
-                    <div className="flex items-center gap-1.5 shrink-0 ml-2">
-                      {cat.badge && (
-                        <span
-                          className={`text-[10px] font-mono font-bold px-1.5 py-0.5 rounded-md ${
-                            isActive
-                              ? 'bg-white/20 text-white'
+                      <div className="flex items-center gap-2 shrink-0 ml-2">
+                        {cat.badge && (
+                          <span className={`text-[10px] font-mono font-bold px-2 py-0.5 rounded-md ${
+                            isDanger
+                              ? 'bg-rose-500/10 text-rose-600 dark:text-rose-400 border border-rose-500/20'
                               : 'bg-purple-500/10 text-purple-600 dark:text-purple-400 border border-purple-500/20'
-                          }`}
-                        >
-                          {cat.badge}
-                        </span>
-                      )}
-                      <ChevronRight
-                        className={`w-3.5 h-3.5 ${isActive ? 'text-white' : 'text-slate-400'}`}
-                      />
-                    </div>
-                  </button>
-                );
-              })}
+                          }`}>
+                            {cat.badge}
+                          </span>
+                        )}
+                        <ChevronRight className={`w-4 h-4 ${isDanger ? 'text-rose-400' : 'text-slate-400'}`} />
+                      </div>
+                    </button>
+                  );
+                })}
+                {onSignOut && (
+                  <div className="pt-2 border-t border-slate-100 dark:border-white/[0.06] mt-2">
+                    <button
+                      type="button"
+                      id="settings-mobile-signout-btn"
+                      onClick={onSignOut}
+                      className="w-full flex items-center justify-between p-3 rounded-2xl text-left transition-all text-rose-600 dark:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-500/10 active:scale-[0.99] border border-rose-500/20"
+                    >
+                      <div className="flex items-center gap-3">
+                        <div className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0 bg-rose-500/10 text-rose-600 dark:text-rose-400">
+                          <LogOut className="w-5 h-5" />
+                        </div>
+                        <div>
+                          <div className="text-sm font-bold leading-tight">Log Out of OKNexus</div>
+                          <div className="text-[11px] text-rose-500/80 mt-0.5">Securely sign out of your account</div>
+                        </div>
+                      </div>
+                      <ChevronRight className="w-4 h-4 text-rose-400" />
+                    </button>
+                  </div>
+                )}
+              </div>
             </div>
           </div>
-        </div>
+        )}
 
-        {/* Desktop 2-Column Layout */}
+        {/* Mobile Back Button when in Category Drill-down */}
+        {mobileDrillDown && (
+          <div className="md:hidden mb-4">
+            <button
+              type="button"
+              onClick={() => setMobileDrillDown(false)}
+              className="flex items-center gap-2 px-3.5 py-2 rounded-2xl bg-white dark:bg-[#0E141B] border border-slate-200 dark:border-[#242E3B] text-xs font-bold text-slate-800 dark:text-white shadow-2xs hover:border-purple-500/50 active:scale-98 transition-all"
+            >
+              <ArrowLeft className="w-4 h-4 text-purple-600" />
+              <span>Back to Settings Menu</span>
+            </button>
+          </div>
+        )}
+
+        {/* 2-Column Layout */}
         <div className="grid grid-cols-1 md:grid-cols-12 gap-6">
           {/* Left Category Sidebar (Desktop) */}
           <aside className="hidden md:block md:col-span-4 lg:col-span-3">
@@ -506,6 +645,7 @@ export const SettingsScreen: React.FC<SettingsScreenProps> = ({
               {filteredCategories.map((cat) => {
                 const Icon = cat.icon;
                 const isActive = activeCategory === cat.id;
+                const isDanger = cat.id === 'close_account';
                 return (
                   <button
                     key={cat.id}
@@ -513,13 +653,21 @@ export const SettingsScreen: React.FC<SettingsScreenProps> = ({
                     onClick={() => setActiveCategory(cat.id)}
                     className={`w-full flex items-center justify-between p-3 rounded-2xl text-left transition-all ${
                       isActive
-                        ? 'bg-[#8B5CF6] text-white shadow-xs font-bold'
+                        ? isDanger
+                          ? 'bg-rose-600 text-white shadow-xs font-bold'
+                          : 'bg-[#8B5CF6] text-white shadow-xs font-bold'
+                        : isDanger
+                        ? 'text-rose-600 dark:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-500/10'
                         : 'text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-[#141B24]'
                     }`}
                   >
                     <div className="flex items-center gap-3 min-w-0">
                       <div className={`p-1.5 rounded-xl ${
-                        isActive ? 'bg-white/20 text-white' : 'bg-slate-100 dark:bg-[#1A222D] text-slate-500 dark:text-slate-400'
+                        isActive
+                          ? 'bg-white/20 text-white'
+                          : isDanger
+                          ? 'bg-rose-500/10 text-rose-600 dark:text-rose-400'
+                          : 'bg-slate-100 dark:bg-[#1A222D] text-slate-500 dark:text-slate-400'
                       }`}>
                         <Icon className="w-4 h-4" />
                       </div>
@@ -527,14 +675,24 @@ export const SettingsScreen: React.FC<SettingsScreenProps> = ({
                         <div className="text-xs sm:text-sm font-semibold truncate leading-tight">
                           {cat.label}
                         </div>
-                        <div className={`text-[10px] truncate ${isActive ? 'text-white/80' : 'text-slate-400 dark:text-slate-500'}`}>
+                        <div className={`text-[10px] truncate ${
+                          isActive
+                            ? 'text-white/80'
+                            : isDanger
+                            ? 'text-rose-500/70 dark:text-rose-400/70'
+                            : 'text-slate-400 dark:text-slate-500'
+                        }`}>
                           {cat.description}
                         </div>
                       </div>
                     </div>
                     {cat.badge && (
                       <span className={`text-[10px] font-mono font-bold px-1.5 py-0.5 rounded-md shrink-0 ml-2 ${
-                        isActive ? 'bg-white/25 text-white' : 'bg-[#8B5CF6]/10 text-[#8B5CF6] border border-[#8B5CF6]/20'
+                        isActive
+                          ? 'bg-white/25 text-white'
+                          : isDanger
+                          ? 'bg-rose-500/10 text-rose-600 dark:text-rose-400 border border-rose-500/20'
+                          : 'bg-[#8B5CF6]/10 text-[#8B5CF6] border border-[#8B5CF6]/20'
                       }`}>
                         {cat.badge}
                       </span>
@@ -542,11 +700,30 @@ export const SettingsScreen: React.FC<SettingsScreenProps> = ({
                   </button>
                 );
               })}
+
+              {onSignOut && (
+                <div className="pt-2 mt-2 border-t border-[#D7E0EB] dark:border-[#242E3B]">
+                  <button
+                    type="button"
+                    id="settings-desktop-signout-btn"
+                    onClick={onSignOut}
+                    className="w-full flex items-center justify-between p-3 rounded-2xl text-left text-rose-600 dark:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-500/10 transition-all font-semibold text-xs group"
+                  >
+                    <div className="flex items-center gap-3">
+                      <div className="p-1.5 rounded-xl bg-rose-500/10 text-rose-600 dark:text-rose-400">
+                        <LogOut className="w-4 h-4" />
+                      </div>
+                      <span>Log Out of OKNexus</span>
+                    </div>
+                    <ChevronRight className="w-3.5 h-3.5 text-rose-400 opacity-0 group-hover:opacity-100 group-hover:translate-x-0.5 transition-all" />
+                  </button>
+                </div>
+              )}
             </div>
           </aside>
 
           {/* Right Main Settings Pane */}
-          <main className="md:col-span-8 lg:col-span-9 space-y-6">
+          <main className={`${mobileDrillDown ? 'block' : 'hidden md:block'} md:col-span-8 lg:col-span-9 space-y-6`}>
             {/* 1. ACCOUNT CATEGORY */}
             {activeCategory === 'account' && (
               <div className="space-y-6 animate-in fade-in duration-200">
@@ -703,6 +880,82 @@ export const SettingsScreen: React.FC<SettingsScreenProps> = ({
                     </div>
                   </div>
                 </div>
+
+                {/* Close or Delete Account in Account Category */}
+                <div className="p-5 sm:p-6 rounded-3xl bg-white dark:bg-[#0E141B] border border-rose-500/25 dark:border-rose-500/35 shadow-xs space-y-4">
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                    <div>
+                      <div className="flex items-center gap-2">
+                        <Trash2 className="w-4 h-4 text-rose-500" />
+                        <h3 className="font-bold text-sm text-[#0F172A] dark:text-white">
+                          Close or Delete Account
+                        </h3>
+                        <span className="px-2 py-0.5 rounded-full text-[9px] font-black uppercase tracking-wider bg-rose-500/15 text-rose-600 dark:text-rose-400 border border-rose-500/25">
+                          Danger Zone
+                        </span>
+                      </div>
+                      <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
+                        Temporarily freeze trading and API access, or permanently erase your profile, KYC documents, and order history.
+                      </p>
+                    </div>
+
+                    <div className="flex items-center gap-2 flex-wrap">
+                      <button
+                        type="button"
+                        id="settings-account-freeze-btn"
+                        onClick={() => setShowDeactivateModal(true)}
+                        className="px-3.5 py-2 rounded-xl bg-slate-100 dark:bg-white/[0.06] hover:bg-slate-200 dark:hover:bg-white/[0.1] text-slate-700 dark:text-slate-300 font-bold text-xs transition-colors flex items-center gap-1.5"
+                      >
+                        <Lock className="w-3.5 h-3.5" />
+                        <span>Freeze / Close</span>
+                      </button>
+                      <button
+                        type="button"
+                        id="settings-account-delete-btn"
+                        onClick={() => setShowDeleteModal(true)}
+                        className="px-3.5 py-2 rounded-xl bg-rose-600 hover:bg-rose-500 active:scale-95 text-white font-bold text-xs transition-all shadow-xs flex items-center gap-1.5"
+                      >
+                        <Trash2 className="w-3.5 h-3.5" />
+                        <span>Delete Account</span>
+                      </button>
+                      <button
+                        type="button"
+                        id="settings-account-closure-hub-btn"
+                        onClick={() => {
+                          setActiveCategory('close_account');
+                          setMobileDrillDown(true);
+                        }}
+                        className="px-3.5 py-2 rounded-xl bg-rose-500/10 hover:bg-rose-500/20 text-rose-600 dark:text-rose-400 border border-rose-500/25 font-bold text-xs transition-colors"
+                      >
+                        Details
+                      </button>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Log Out Option in Account Category */}
+                {onSignOut && (
+                  <div className="p-5 sm:p-6 rounded-3xl bg-white dark:bg-[#0E141B] border border-rose-500/20 dark:border-rose-500/30 shadow-xs flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                    <div>
+                      <h3 className="font-bold text-sm text-rose-600 dark:text-rose-400 flex items-center gap-2">
+                        <LogOut className="w-4 h-4" />
+                        <span>Sign Out of Account</span>
+                      </h3>
+                      <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
+                        Securely terminate your active session and sign out of OKNexus on this device.
+                      </p>
+                    </div>
+                    <button
+                      type="button"
+                      id="settings-account-signout-btn"
+                      onClick={onSignOut}
+                      className="px-5 py-2.5 rounded-2xl bg-rose-500/10 hover:bg-rose-500/20 active:bg-rose-500/30 text-rose-600 dark:text-rose-400 border border-rose-500/25 font-bold text-xs flex items-center justify-center gap-2 transition-all self-start sm:self-auto"
+                    >
+                      <LogOut className="w-4 h-4" />
+                      <span>Log Out Now</span>
+                    </button>
+                  </div>
+                )}
               </div>
             )}
 
@@ -1591,15 +1844,29 @@ export const SettingsScreen: React.FC<SettingsScreenProps> = ({
                       <Laptop className="w-5 h-5 text-[#8B5CF6]" />
                       <h2 className="text-base font-bold text-[#0F172A] dark:text-white">Active Authorized Sessions</h2>
                     </div>
-                    {sessions.length > 1 && (
-                      <button
-                        onClick={handleRevokeAllOtherSessions}
-                        className="px-3.5 py-1.5 rounded-xl bg-rose-500/10 hover:bg-rose-500/20 text-rose-600 dark:text-rose-400 text-xs font-bold flex items-center gap-1.5 transition-colors self-start sm:self-auto"
-                      >
-                        <LogOut className="w-3.5 h-3.5" />
-                        <span>Log Out All Other Devices</span>
-                      </button>
-                    )}
+                    <div className="flex items-center gap-2 flex-wrap">
+                      {sessions.length > 1 && (
+                        <button
+                          type="button"
+                          onClick={handleRevokeAllOtherSessions}
+                          className="px-3.5 py-1.5 rounded-xl bg-rose-500/10 hover:bg-rose-500/20 text-rose-600 dark:text-rose-400 text-xs font-bold flex items-center gap-1.5 transition-colors self-start sm:self-auto"
+                        >
+                          <LogOut className="w-3.5 h-3.5" />
+                          <span>Log Out All Other Devices</span>
+                        </button>
+                      )}
+                      {onSignOut && (
+                        <button
+                          type="button"
+                          id="settings-sessions-signout-btn"
+                          onClick={onSignOut}
+                          className="px-3.5 py-1.5 rounded-xl bg-rose-600 hover:bg-rose-500 active:scale-95 text-white text-xs font-bold flex items-center gap-1.5 transition-all self-start sm:self-auto shadow-xs"
+                        >
+                          <LogOut className="w-3.5 h-3.5" />
+                          <span>Log Out Current Device</span>
+                        </button>
+                      )}
+                    </div>
                   </div>
 
                   <div className="space-y-3">
@@ -1673,9 +1940,400 @@ export const SettingsScreen: React.FC<SettingsScreenProps> = ({
                 </div>
               </div>
             )}
+
+            {/* 9. CLOSE OR DELETE ACCOUNT CATEGORY */}
+            {activeCategory === 'close_account' && (
+              <div className="space-y-6 animate-in fade-in duration-200">
+                {/* Warning Banner */}
+                <div className="p-5 sm:p-6 rounded-3xl bg-rose-500/10 border border-rose-500/25 shadow-xs">
+                  <div className="flex items-start gap-4">
+                    <div className="w-12 h-12 rounded-2xl bg-rose-500/20 border border-rose-500/30 flex items-center justify-center text-rose-600 dark:text-rose-400 shrink-0">
+                      <AlertTriangle className="w-6 h-6" />
+                    </div>
+                    <div className="space-y-1">
+                      <div className="flex items-center gap-2">
+                        <h2 className="text-base font-extrabold text-rose-600 dark:text-rose-400">
+                          Account Closure & Deletion Protocols
+                        </h2>
+                        <span className="px-2 py-0.5 rounded-full bg-rose-500/20 text-rose-600 dark:text-rose-400 text-[10px] font-extrabold">
+                          SECURITY LEVEL 4
+                        </span>
+                      </div>
+                      <p className="text-xs text-slate-600 dark:text-slate-300 leading-relaxed max-w-3xl">
+                        Before closing or deleting your OKNexus account, review the settlement checklist below. Choose between <strong>Temporarily Freezing / Closing</strong> (reversible pause on trading, active orders & APIs) or <strong>Permanently Deleting</strong> (irreversible erasure of records, KYC data, and account UID).
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Pre-Closure Readiness Checklist */}
+                <div className="p-5 sm:p-6 rounded-3xl bg-white dark:bg-[#0E141B] border border-[#D7E0EB] dark:border-[#242E3B] shadow-xs space-y-4">
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-[#D7E0EB] dark:border-[#1E2633]">
+                    <div className="flex items-center gap-2">
+                      <ShieldAlert className="w-5 h-5 text-amber-500" />
+                      <h3 className="text-sm font-bold text-[#0F172A] dark:text-white">
+                        Pre-Closure Settlement Checklist
+                      </h3>
+                    </div>
+                    <button
+                      type="button"
+                      id="close-account-download-history-btn"
+                      onClick={handleDownloadLedgerHistory}
+                      className="text-xs font-bold text-purple-600 dark:text-purple-400 hover:underline flex items-center gap-1.5 self-start sm:self-auto"
+                    >
+                      <FileDown className="w-3.5 h-3.5" />
+                      <span>Download Tax & Trade History</span>
+                    </button>
+                  </div>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+                    <div className="p-3.5 rounded-2xl bg-slate-50 dark:bg-[#141B24] border border-[#D7E0EB]/70 dark:border-[#1E2633] flex items-start gap-3">
+                      <CheckCircle2 className="w-4 h-4 text-emerald-500 shrink-0 mt-0.5" />
+                      <div>
+                        <div className="text-xs font-bold text-slate-900 dark:text-white">Active Orders & P2P Escrow</div>
+                        <div className="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5">
+                          Ensure all limit orders, stop-losses, margin positions, and open P2P trades are cancelled or settled.
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="p-3.5 rounded-2xl bg-slate-50 dark:bg-[#141B24] border border-[#D7E0EB]/70 dark:border-[#1E2633] flex items-start gap-3">
+                      <CheckCircle2 className="w-4 h-4 text-emerald-500 shrink-0 mt-0.5" />
+                      <div>
+                        <div className="text-xs font-bold text-slate-900 dark:text-white">Crypto & Fiat Balances</div>
+                        <div className="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5">
+                          Withdraw remaining assets to external self-custody wallets. Any residual dust balance (&lt;$1) may be forfeited upon permanent deletion.
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="p-3.5 rounded-2xl bg-slate-50 dark:bg-[#141B24] border border-[#D7E0EB]/70 dark:border-[#1E2633] flex items-start gap-3">
+                      <CheckCircle2 className="w-4 h-4 text-emerald-500 shrink-0 mt-0.5" />
+                      <div>
+                        <div className="text-xs font-bold text-slate-900 dark:text-white">Automated API Keys & Webhooks</div>
+                        <div className="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5">
+                          All trading bots, high-frequency execution keys, and OAuth connections will be instantly terminated.
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="p-3.5 rounded-2xl bg-slate-50 dark:bg-[#141B24] border border-[#D7E0EB]/70 dark:border-[#1E2633] flex items-start gap-3">
+                      <CheckCircle2 className="w-4 h-4 text-emerald-500 shrink-0 mt-0.5" />
+                      <div>
+                        <div className="text-xs font-bold text-slate-900 dark:text-white">Tax Records & Regulatory Ledger</div>
+                        <div className="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5">
+                          Save your annual P&amp;L reports and transaction journals now. After permanent erasure, historic statements cannot be retrieved.
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Two Options Side by Side */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                  {/* Option 1: Temporary Account Freeze / Deactivation */}
+                  <div className="p-5 sm:p-6 rounded-3xl bg-white dark:bg-[#0E141B] border border-amber-500/30 dark:border-amber-500/25 shadow-xs flex flex-col justify-between space-y-4">
+                    <div className="space-y-3">
+                      <div className="w-10 h-10 rounded-2xl bg-amber-500/10 border border-amber-500/20 text-amber-600 dark:text-amber-400 flex items-center justify-center">
+                        <Lock className="w-5 h-5" />
+                      </div>
+                      <div>
+                        <span className="text-[10px] font-extrabold uppercase tracking-wider text-amber-600 dark:text-amber-400">
+                          Option 1: Reversible Pause
+                        </span>
+                        <h3 className="text-base font-bold text-[#0F172A] dark:text-white mt-0.5">
+                          Temporarily Close / Freeze Account
+                        </h3>
+                      </div>
+                      <p className="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">
+                        Pause all activity immediately. Locks login access, stops API keys, and prevents unauthorized withdrawals while preserving your account history and assets.
+                      </p>
+
+                      <ul className="space-y-2 text-xs text-slate-600 dark:text-slate-300 pt-2 border-t border-slate-100 dark:border-white/[0.06]">
+                        <li className="flex items-center gap-2">
+                          <Check className="w-3.5 h-3.5 text-emerald-500 shrink-0" />
+                          <span>Balances remain safe in cold storage custody</span>
+                        </li>
+                        <li className="flex items-center gap-2">
+                          <Check className="w-3.5 h-3.5 text-emerald-500 shrink-0" />
+                          <span>All open orders and API keys paused immediately</span>
+                        </li>
+                        <li className="flex items-center gap-2">
+                          <Check className="w-3.5 h-3.5 text-emerald-500 shrink-0" />
+                          <span>Reactivate anytime via support concierge or 2FA</span>
+                        </li>
+                      </ul>
+                    </div>
+
+                    <button
+                      type="button"
+                      id="close-account-deactivate-btn"
+                      onClick={() => setShowDeactivateModal(true)}
+                      className="w-full py-2.5 rounded-2xl bg-amber-500/10 hover:bg-amber-500/20 active:bg-amber-500/30 text-amber-700 dark:text-amber-300 border border-amber-500/30 font-bold text-xs flex items-center justify-center gap-2 transition-all cursor-pointer"
+                    >
+                      <Lock className="w-4 h-4" />
+                      <span>Close / Freeze Account</span>
+                    </button>
+                  </div>
+
+                  {/* Option 2: Permanent Account Deletion */}
+                  <div className="p-5 sm:p-6 rounded-3xl bg-white dark:bg-[#0E141B] border border-rose-500/30 dark:border-rose-500/35 shadow-xs flex flex-col justify-between space-y-4">
+                    <div className="space-y-3">
+                      <div className="w-10 h-10 rounded-2xl bg-rose-500/10 border border-rose-500/20 text-rose-600 dark:text-rose-400 flex items-center justify-center">
+                        <Trash2 className="w-5 h-5" />
+                      </div>
+                      <div>
+                        <span className="text-[10px] font-extrabold uppercase tracking-wider text-rose-600 dark:text-rose-400">
+                          Option 2: Irreversible Purge
+                        </span>
+                        <h3 className="text-base font-bold text-[#0F172A] dark:text-white mt-0.5">
+                          Permanently Delete Account
+                        </h3>
+                      </div>
+                      <p className="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">
+                        Irreversibly delete your UID, KYC verification documents, merchant reputation, referral links, and ledger records from the OKNexus platform.
+                      </p>
+
+                      <ul className="space-y-2 text-xs text-slate-600 dark:text-slate-300 pt-2 border-t border-slate-100 dark:border-white/[0.06]">
+                        <li className="flex items-center gap-2">
+                          <AlertTriangle className="w-3.5 h-3.5 text-rose-500 shrink-0" />
+                          <span>All personal data and verification erased</span>
+                        </li>
+                        <li className="flex items-center gap-2">
+                          <AlertTriangle className="w-3.5 h-3.5 text-rose-500 shrink-0" />
+                          <span>Unwithdrawn balances forfeited permanently</span>
+                        </li>
+                        <li className="flex items-center gap-2">
+                          <AlertTriangle className="w-3.5 h-3.5 text-rose-500 shrink-0" />
+                          <span>Cannot be undone, restored, or reactivated</span>
+                        </li>
+                      </ul>
+                    </div>
+
+                    <button
+                      type="button"
+                      id="close-account-delete-btn"
+                      onClick={() => setShowDeleteModal(true)}
+                      className="w-full py-2.5 rounded-2xl bg-rose-600 hover:bg-rose-500 active:scale-98 text-white font-bold text-xs flex items-center justify-center gap-2 transition-all shadow-xs cursor-pointer"
+                    >
+                      <Trash2 className="w-4 h-4" />
+                      <span>Permanently Delete Account</span>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            )}
           </main>
         </div>
       </div>
+
+      {/* Deactivate / Freeze Account Modal */}
+      {showDeactivateModal && (
+        <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-md flex items-center justify-center p-4 animate-in fade-in">
+          <div className="w-full max-w-lg bg-white dark:bg-[#0C0F1B] border border-amber-500/30 rounded-3xl shadow-2xl flex flex-col overflow-hidden">
+            {/* Header */}
+            <div className="flex items-center justify-between px-6 py-4 border-b border-slate-100 dark:border-white/[0.08] bg-amber-500/5">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-2xl bg-amber-500/20 border border-amber-500/30 flex items-center justify-center text-amber-600 dark:text-amber-400">
+                  <Lock className="w-5 h-5" />
+                </div>
+                <div>
+                  <h3 className="font-extrabold text-base text-[#0F172A] dark:text-white">
+                    Temporarily Freeze Account
+                  </h3>
+                  <p className="text-[11px] text-slate-500 dark:text-slate-400">
+                    Safe pause for breaks or suspected security issues
+                  </p>
+                </div>
+              </div>
+              <button
+                onClick={() => setShowDeactivateModal(false)}
+                className="p-1.5 rounded-xl text-slate-400 hover:text-slate-700 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-white/10"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            {/* Body */}
+            <div className="p-6 space-y-4 text-xs">
+              <div className="p-3.5 rounded-2xl bg-amber-500/10 border border-amber-500/25 text-amber-700 dark:text-amber-300 leading-relaxed">
+                Freezing will pause active spot/margin orders, revoke active API keys, and log out of all mobile and desktop sessions. Your balances remain safely held in cold storage.
+              </div>
+
+              <div>
+                <label className="block font-bold text-slate-700 dark:text-slate-300 mb-1.5">
+                  Reason for Temporary Closure
+                </label>
+                <select
+                  value={deactivateReason}
+                  onChange={(e) => setDeactivateReason(e.target.value)}
+                  className="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 dark:bg-[#141B24] border border-slate-200 dark:border-[#242E3B] text-slate-900 dark:text-white focus:outline-none focus:border-amber-500 text-xs font-medium"
+                >
+                  <option value="Taking a break from cryptocurrency trading">Taking a break from cryptocurrency trading</option>
+                  <option value="Switching to hardware / cold storage wallet">Switching to hardware / cold storage wallet</option>
+                  <option value="Security concern or compromised device">Security concern or compromised device</option>
+                  <option value="Reducing screen time and emotional stress">Reducing screen time and emotional stress</option>
+                  <option value="Dissatisfied with platform fees or liquidity">Dissatisfied with platform fees or liquidity</option>
+                  <option value="Other personal reason">Other personal reason</option>
+                </select>
+              </div>
+
+              <label className="flex items-start gap-3 p-3 rounded-xl bg-slate-50 dark:bg-[#141B24] border border-slate-200 dark:border-[#242E3B] cursor-pointer">
+                <input
+                  type="checkbox"
+                  checked={deactivateConfirmChecked}
+                  onChange={(e) => setDeactivateConfirmChecked(e.target.checked)}
+                  className="mt-0.5 rounded border-slate-300 text-amber-500 focus:ring-amber-500"
+                />
+                <span className="text-slate-600 dark:text-slate-300 leading-normal">
+                  I understand my account will be locked immediately and I can reactivate anytime via email confirmation or VIP support.
+                </span>
+              </label>
+            </div>
+
+            {/* Footer */}
+            <div className="flex items-center justify-end gap-3 px-6 py-4 border-t border-slate-100 dark:border-white/[0.08] bg-slate-50 dark:bg-[#0E1222]/80">
+              <button
+                type="button"
+                onClick={() => setShowDeactivateModal(false)}
+                className="px-4 py-2 rounded-xl text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white text-xs font-semibold"
+              >
+                Cancel
+              </button>
+              <button
+                type="button"
+                id="modal-confirm-freeze-btn"
+                disabled={!deactivateConfirmChecked || isDeactivating}
+                onClick={handleExecuteDeactivate}
+                className="px-5 py-2 rounded-xl bg-amber-600 hover:bg-amber-500 disabled:opacity-40 text-white text-xs font-bold transition-all shadow-md flex items-center gap-2 cursor-pointer"
+              >
+                {isDeactivating && <RefreshCw className="w-3.5 h-3.5 animate-spin" />}
+                <span>{isDeactivating ? 'Freezing Account...' : 'Confirm Freeze / Closure'}</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Delete Account Modal */}
+      {showDeleteModal && (
+        <div className="fixed inset-0 z-50 bg-black/85 backdrop-blur-md flex items-center justify-center p-4 animate-in fade-in">
+          <div className="w-full max-w-lg bg-white dark:bg-[#0E0709] border border-rose-500/40 rounded-3xl shadow-2xl flex flex-col overflow-hidden">
+            {/* Header */}
+            <div className="flex items-center justify-between px-6 py-4 border-b border-rose-500/20 bg-rose-500/10">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-2xl bg-rose-500/20 border border-rose-500/30 flex items-center justify-center text-rose-600 dark:text-rose-400">
+                  <AlertTriangle className="w-5 h-5" />
+                </div>
+                <div>
+                  <h3 className="font-extrabold text-base text-rose-600 dark:text-rose-400">
+                    Permanent Account Deletion
+                  </h3>
+                  <p className="text-[11px] text-slate-500 dark:text-slate-400">
+                    Cryptographic erasure of UID: {uid}
+                  </p>
+                </div>
+              </div>
+              <button
+                onClick={() => setShowDeleteModal(false)}
+                className="p-1.5 rounded-xl text-slate-400 hover:text-slate-700 dark:hover:text-white hover:bg-rose-500/10"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            {/* Body */}
+            <div className="p-6 space-y-4 text-xs">
+              <div className="p-3.5 rounded-2xl bg-rose-500/10 border border-rose-500/25 text-rose-700 dark:text-rose-300 leading-relaxed font-medium">
+                This action is irreversible. Once processed, your identity, tier credentials, trading history, and affiliate balances will be permanently destroyed.
+              </div>
+
+              <div className="space-y-2">
+                <label className="flex items-start gap-3 p-3 rounded-xl bg-slate-50 dark:bg-[#150B0E] border border-slate-200 dark:border-rose-500/20 cursor-pointer">
+                  <input
+                    type="checkbox"
+                    checked={deleteCheckboxFunds}
+                    onChange={(e) => setDeleteCheckboxFunds(e.target.checked)}
+                    className="mt-0.5 rounded border-slate-300 text-rose-600 focus:ring-rose-500"
+                  />
+                  <span className="text-slate-700 dark:text-slate-300 leading-normal">
+                    I confirm that all funds have been withdrawn or I permanently forfeit any residual dust balances.
+                  </span>
+                </label>
+
+                <label className="flex items-start gap-3 p-3 rounded-xl bg-slate-50 dark:bg-[#150B0E] border border-slate-200 dark:border-rose-500/20 cursor-pointer">
+                  <input
+                    type="checkbox"
+                    checked={deleteCheckboxPermanent}
+                    onChange={(e) => setDeleteCheckboxPermanent(e.target.checked)}
+                    className="mt-0.5 rounded border-slate-300 text-rose-600 focus:ring-rose-500"
+                  />
+                  <span className="text-slate-700 dark:text-slate-300 leading-normal">
+                    I understand that my UID, VIP tier, and transaction history cannot be restored or recovered.
+                  </span>
+                </label>
+              </div>
+
+              <div>
+                <label className="block font-bold text-slate-700 dark:text-slate-300 mb-1">
+                  Type confirmation phrase: <span className="font-mono text-rose-600 dark:text-rose-400">DELETE ACCOUNT</span>
+                </label>
+                <input
+                  type="text"
+                  value={deleteConfirmText}
+                  onChange={(e) => setDeleteConfirmText(e.target.value)}
+                  placeholder="Type DELETE ACCOUNT"
+                  className="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 dark:bg-black/60 border border-slate-200 dark:border-rose-500/30 text-rose-600 dark:text-rose-300 font-mono text-xs uppercase focus:outline-none focus:border-rose-500"
+                />
+              </div>
+
+              <div>
+                <label className="block font-bold text-slate-700 dark:text-slate-300 mb-1">
+                  Security Code / Trading PIN
+                </label>
+                <input
+                  type="password"
+                  maxLength={6}
+                  value={deleteSecurityCode}
+                  onChange={(e) => setDeleteSecurityCode(e.target.value)}
+                  placeholder="Enter 4-digit PIN or 6-digit 2FA code"
+                  className="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 dark:bg-black/60 border border-slate-200 dark:border-rose-500/30 text-slate-900 dark:text-white font-mono text-xs tracking-wider focus:outline-none focus:border-rose-500"
+                />
+                <p className="text-[10px] text-slate-400 mt-1">
+                  Demo code: any 4 to 6 digits (e.g. 884920 or your trading PIN)
+                </p>
+              </div>
+            </div>
+
+            {/* Footer */}
+            <div className="flex items-center justify-end gap-3 px-6 py-4 border-t border-slate-100 dark:border-rose-500/20 bg-slate-50 dark:bg-[#12070A]">
+              <button
+                type="button"
+                onClick={() => setShowDeleteModal(false)}
+                className="px-4 py-2 rounded-xl text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white text-xs font-semibold"
+              >
+                Abort Deletion
+              </button>
+              <button
+                type="button"
+                id="modal-confirm-delete-btn"
+                disabled={
+                  deleteConfirmText !== 'DELETE ACCOUNT' ||
+                  !deleteCheckboxFunds ||
+                  !deleteCheckboxPermanent ||
+                  deleteSecurityCode.trim().length < 4 ||
+                  isDeleting
+                }
+                onClick={handleExecuteDeleteAccount}
+                className="px-5 py-2 rounded-xl bg-rose-600 hover:bg-rose-500 disabled:opacity-40 text-white text-xs font-bold transition-all shadow-md flex items-center gap-2 cursor-pointer"
+              >
+                {isDeleting && <RefreshCw className="w-3.5 h-3.5 animate-spin" />}
+                <span>{isDeleting ? 'Erasing Account Records...' : 'Confirm Permanent Erasure'}</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

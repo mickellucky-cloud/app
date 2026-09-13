@@ -213,19 +213,19 @@ export const AccountCenterModal: React.FC<AccountCenterModalProps> = ({
           </button>
         </div>
 
-        {/* Tab Navigation */}
-        <div className="flex items-center gap-1 px-6 pt-3 pb-2 border-b border-white/[0.06] bg-[#080B14] overflow-x-auto no-scrollbar text-xs font-semibold">
+        {/* Tab Navigation - Clean Non-Sliding Grid Layout */}
+        <div className="grid grid-cols-2 sm:grid-cols-5 gap-1.5 p-3 border-b border-white/[0.06] bg-[#080B14] text-xs font-semibold">
           <button
             onClick={() => setActiveTab('profile')}
-            className={`px-3.5 py-1.5 rounded-xl whitespace-nowrap transition-all ${
+            className={`px-3 py-2 rounded-xl text-center transition-all ${
               activeTab === 'profile' ? 'bg-purple-600 text-white shadow-md' : 'text-slate-400 hover:text-white hover:bg-white/[0.04]'
             }`}
           >
-            Profile Overview
+            Overview
           </button>
           <button
             onClick={() => setActiveTab('credentials')}
-            className={`px-3.5 py-1.5 rounded-xl whitespace-nowrap transition-all ${
+            className={`px-3 py-2 rounded-xl text-center transition-all ${
               activeTab === 'credentials' ? 'bg-purple-600 text-white shadow-md' : 'text-slate-400 hover:text-white hover:bg-white/[0.04]'
             }`}
           >
@@ -233,7 +233,7 @@ export const AccountCenterModal: React.FC<AccountCenterModalProps> = ({
           </button>
           <button
             onClick={() => setActiveTab('preferences')}
-            className={`px-3.5 py-1.5 rounded-xl whitespace-nowrap transition-all ${
+            className={`px-3 py-2 rounded-xl text-center transition-all ${
               activeTab === 'preferences' ? 'bg-purple-600 text-white shadow-md' : 'text-slate-400 hover:text-white hover:bg-white/[0.04]'
             }`}
           >
@@ -241,19 +241,19 @@ export const AccountCenterModal: React.FC<AccountCenterModalProps> = ({
           </button>
           <button
             onClick={() => setActiveTab('referrals')}
-            className={`px-3.5 py-1.5 rounded-xl whitespace-nowrap transition-all ${
+            className={`px-3 py-2 rounded-xl text-center transition-all ${
               activeTab === 'referrals' ? 'bg-purple-600 text-white shadow-md' : 'text-slate-400 hover:text-white hover:bg-white/[0.04]'
             }`}
           >
-            Referral Center
+            Referrals
           </button>
           <button
             onClick={() => setActiveTab('danger')}
-            className={`px-3.5 py-1.5 rounded-xl whitespace-nowrap transition-all ${
+            className={`col-span-2 sm:col-span-1 px-3 py-2 rounded-xl text-center transition-all ${
               activeTab === 'danger' ? 'bg-rose-500/20 text-rose-300 border border-rose-500/30' : 'text-slate-500 hover:text-rose-400 hover:bg-white/[0.04]'
             }`}
           >
-            Account Security & Delete
+            Security & Delete
           </button>
         </div>
 
@@ -766,22 +766,6 @@ export const AccountCenterModal: React.FC<AccountCenterModalProps> = ({
                 <p className="text-xs text-slate-300 leading-relaxed">
                   Deleting your account permanently revokes trading access, terminates API credentials, erases order history, and forfeits unwithdrawn balances.
                 </p>
-              </div>
-
-              <div className="p-4 rounded-2xl bg-[#0F1322] border border-white/[0.07] flex items-center justify-between">
-                <div>
-                  <span className="text-xs font-bold text-white block">Sign Out From Current Browser</span>
-                  <span className="text-[11px] text-slate-400">Safely clear active session tokens on this machine</span>
-                </div>
-                <button
-                  onClick={() => {
-                    onClose();
-                    onSignOut?.();
-                  }}
-                  className="px-3 py-1.5 rounded-xl bg-white/[0.06] hover:bg-white/10 text-xs font-bold text-slate-200 transition-colors"
-                >
-                  Sign Out
-                </button>
               </div>
 
               <div className="p-4 rounded-2xl bg-[#0F1322] border border-rose-500/30 flex items-center justify-between">

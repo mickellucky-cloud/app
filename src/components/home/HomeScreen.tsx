@@ -150,109 +150,12 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
   }
 
   return (
-    <div id="home-screen" className="pb-28 md:pb-12 pt-3 px-3 sm:px-6 lg:px-8 max-w-md md:max-w-4xl lg:max-w-7xl mx-auto min-h-screen text-[#0F172A] dark:text-[#EDF1F5] bg-white dark:bg-[#0A0E13] transition-colors">
-      {/* Top Header - Shown on mobile, hidden on tablet/desktop where DesktopTopNav is present */}
-      <header className="flex md:hidden items-center justify-between py-2 mb-3 gap-1.5 sm:gap-2 w-full min-w-0">
-        {/* Left: Only Profile Icon (username and VIP level removed per user request) */}
-        <button
-          id="home-mobile-profile-btn"
-          onClick={onOpenProfile}
-          className="active:scale-95 transition-transform shrink-0"
-          aria-label="User profile and settings"
-          title={`@${username} • Profile & Settings`}
-        >
-          <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-[#8B5CF6] via-[#EC4899] to-[#F59E0B] p-[1.5px] shadow-xs">
-            <div className="w-full h-full rounded-full bg-white dark:bg-[#0E141B] flex items-center justify-center overflow-hidden">
-              {userAvatar ? (
-                <img src={userAvatar} alt={username} className="w-full h-full object-cover" referrerPolicy="no-referrer" />
-              ) : (
-                <span className="font-display text-[11px] font-bold text-[#8B5CF6]">
-                  {username.slice(0, 2).toUpperCase()}
-                </span>
-              )}
-            </div>
-          </div>
-        </button>
-
-        {/* Right: Search, Scan to Pay, Notifications Dropdown, Support */}
-        <div className="flex items-center gap-1 sm:gap-1.5 shrink-0">
-          <button
-            id="home-search-btn"
-            onClick={onOpenSearch}
-            className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-[#F8FAFC] dark:bg-[#141B24] border border-[#D7E0EB] dark:border-[#242E3B] flex items-center justify-center text-[#475569] dark:text-[#EDF1F5] hover:text-[#0F172A] dark:hover:text-white active:scale-95 transition-all shrink-0"
-            aria-label="Search markets"
-          >
-            <Search className="w-3.5 h-3.5" />
-          </button>
-
-          {onOpenScanToPay && (
-            <button
-              id="home-mobile-scan-btn"
-              onClick={onOpenScanToPay}
-              className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-[#F8FAFC] dark:bg-[#141B24] border border-[#D7E0EB] dark:border-[#242E3B] flex items-center justify-center text-[#475569] dark:text-[#EDF1F5] hover:text-[#8B5CF6] dark:hover:text-[#8B5CF6] active:scale-95 transition-all shrink-0"
-              aria-label="Scan to Pay"
-              title="Scan to Pay"
-            >
-              <ScanLine className="w-3.5 h-3.5 text-[#8B5CF6]" />
-            </button>
-          )}
-
-          {/* Unified Notifications Dropdown Anchor */}
-          <div className="relative">
-            <button
-              id="home-notifications-btn"
-              onClick={() => setIsNotificationsDropdownOpen((prev) => !prev)}
-              className={`relative w-7 h-7 sm:w-8 sm:h-8 rounded-full border flex items-center justify-center active:scale-95 transition-all shrink-0 ${
-                unreadNotificationsCount > 0 || isNotificationsDropdownOpen
-                  ? 'bg-[#8B5CF6]/10 border-[#8B5CF6]/40 text-[#8B5CF6] dark:bg-[#8B5CF6]/20 dark:border-[#8B5CF6]/40 dark:text-[#EDF1F5] shadow-xs'
-                  : 'bg-[#F8FAFC] dark:bg-[#141B24] border-[#D7E0EB] dark:border-[#242E3B] text-[#475569] dark:text-[#EDF1F5] hover:text-[#0F172A] dark:hover:text-white'
-              }`}
-              aria-label="Notifications"
-              aria-expanded={isNotificationsDropdownOpen}
-              title={unreadNotificationsCount > 0 ? `${unreadNotificationsCount} unread notifications` : 'Notifications'}
-            >
-              <Bell className={`w-3.5 h-3.5 transition-colors ${unreadNotificationsCount > 0 || isNotificationsDropdownOpen ? 'text-[#8B5CF6]' : 'text-[#64748B] dark:text-[#8E98A6]'}`} />
-              {unreadNotificationsCount > 0 && (
-                <span className="absolute -top-1 -right-1 min-w-[14px] h-[14px] px-1 rounded-full bg-gradient-to-r from-[#8B5CF6] to-[#EC4899] text-white text-[7.5px] font-mono-num font-bold flex items-center justify-center border border-white dark:border-[#0A0E13] shadow-[0_0_8px_rgba(139,92,246,0.6)] animate-in zoom-in-75">
-                  {unreadNotificationsCount > 9 ? '9+' : unreadNotificationsCount}
-                </span>
-              )}
-            </button>
-
-            {/* Anchored Dropdown Panel */}
-            <NotificationsDropdown
-              isOpen={isNotificationsDropdownOpen}
-              onClose={() => setIsNotificationsDropdownOpen(false)}
-              notifications={notifications}
-              onMarkAsRead={(id) => onMarkNotificationAsRead?.(id)}
-              onMarkAllAsRead={() => onMarkAllNotificationsAsRead?.()}
-              onOpenPriceAlerts={onOpenPriceAlerts}
-              activeAlertsCount={activeAlertsCount}
-              align="right"
-              className="-right-10 sm:right-0"
-            />
-          </div>
-
-          {onOpenSupport && (
-            <button
-              id="home-ai-support-btn"
-              onClick={onOpenSupport}
-              className="hidden min-[360px]:flex relative w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-[#8B5CF6]/10 dark:bg-[#141B24] border border-[#8B5CF6]/20 dark:border-[#242E3B] items-center justify-center text-[#8B5CF6] dark:text-[#8E98A6] hover:text-[#8B5CF6] dark:hover:text-white hover:border-[#8B5CF6]/50 active:scale-95 transition-all shadow-2xs group shrink-0"
-              aria-label="24/7 AI Customer Support"
-              title="24/7 AI Customer Support & Concierge"
-            >
-              <Headphones className="w-3.5 h-3.5 text-[#8B5CF6] transition-colors" />
-              <span className="absolute -top-0.5 -right-0.5 w-2 h-2 rounded-full bg-[#10B981] border border-white dark:border-[#0A0E13]" />
-            </button>
-          )}
-        </div>
-      </header>
-
+    <div id="home-screen" className="pb-28 md:pb-12 pt-1 sm:pt-3 px-3 sm:px-6 lg:px-8 max-w-md md:max-w-4xl lg:max-w-7xl mx-auto min-h-screen text-[#0F172A] dark:text-[#EDF1F5] bg-white dark:bg-[#0A0E13] transition-colors">
       {/* Responsive Grid Layout for Tablet and Web */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 items-start">
         {/* Main Column */}
         <div className="lg:col-span-7 xl:col-span-8 space-y-4">
-          {/* Upgraded Total Assets Area with animations, live currency switcher, P&L sparklines, and asset breakdown */}
+          {/* Upgraded Total Assets Area with luxury animations, live currency switcher & P&L sparklines */}
           <TotalAssetsArea
             balances={balances}
             showBalances={showBalances}
@@ -261,273 +164,225 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
             onOpenWithdraw={onOpenWithdraw}
             onOpenSend={onOpenSend}
             onOpenConvert={onOpenConvert}
-            onNavigateAnalytics={onNavigateAnalytics}
             onNavigateWallet={onNavigateWallet}
             variant="home"
-            className="mb-4"
+            className="mb-3"
           />
 
+          {/* Clean Modern Quick Actions Grid (4-col Mobile / 8-col Desktop) */}
+          <section id="home-quick-actions" className="mb-3">
+            <div className="grid grid-cols-4 sm:grid-cols-8 gap-2.5 sm:gap-3 py-1">
+              {/* Action 1: Deposit */}
+              <button
+                id="quick-action-deposit"
+                onClick={onOpenDeposit}
+                className="flex flex-col items-center justify-center p-2 rounded-2xl hover:bg-slate-50 dark:hover:bg-white/[0.04] active:scale-95 transition-all text-center group"
+              >
+                <div className="w-12 h-12 rounded-2xl bg-purple-100 dark:bg-purple-950/60 border border-purple-200/80 dark:border-purple-500/30 text-purple-600 dark:text-purple-300 flex items-center justify-center group-hover:scale-105 group-hover:bg-purple-200 dark:group-hover:bg-purple-900/60 transition-transform shadow-xs">
+                  <PlusSquare className="w-5 h-5" />
+                </div>
+                <span className="text-xs font-semibold text-slate-800 dark:text-slate-200 mt-1.5">Deposit</span>
+              </button>
+
+              {/* Action 2: Trade */}
+              <button
+                id="quick-action-trade"
+                onClick={onNavigateTrade}
+                className="flex flex-col items-center justify-center p-2 rounded-2xl hover:bg-slate-50 dark:hover:bg-white/[0.04] active:scale-95 transition-all text-center group"
+              >
+                <div className="w-12 h-12 rounded-2xl bg-blue-100 dark:bg-blue-950/60 border border-blue-200/80 dark:border-blue-500/30 text-blue-600 dark:text-blue-300 flex items-center justify-center group-hover:scale-105 group-hover:bg-blue-200 dark:group-hover:bg-blue-900/60 transition-transform shadow-xs">
+                  <CandlestickChart className="w-5 h-5" />
+                </div>
+                <span className="text-xs font-semibold text-slate-800 dark:text-slate-200 mt-1.5">Spot</span>
+              </button>
+
+              {/* Action 3: P2P */}
+              <button
+                id="quick-action-p2p"
+                onClick={onNavigateP2P}
+                className="relative flex flex-col items-center justify-center p-2 rounded-2xl hover:bg-slate-50 dark:hover:bg-white/[0.04] active:scale-95 transition-all text-center group"
+              >
+                <span className="absolute top-1 right-2 px-1 py-0.2 rounded bg-emerald-500 text-white text-[9px] font-extrabold uppercase shadow-2xs">
+                  0%
+                </span>
+                <div className="w-12 h-12 rounded-2xl bg-emerald-100 dark:bg-emerald-950/60 border border-emerald-200/80 dark:border-emerald-500/30 text-emerald-600 dark:text-emerald-300 flex items-center justify-center group-hover:scale-105 group-hover:bg-emerald-200 dark:group-hover:bg-emerald-900/60 transition-transform shadow-xs">
+                  <Users2 className="w-5 h-5" />
+                </div>
+                <span className="text-xs font-semibold text-slate-800 dark:text-slate-200 mt-1.5">P2P</span>
+              </button>
+
+              {/* Action 4: Earn */}
+              <button
+                id="quick-action-earn"
+                onClick={onNavigateEarn}
+                className="relative flex flex-col items-center justify-center p-2 rounded-2xl hover:bg-slate-50 dark:hover:bg-white/[0.04] active:scale-95 transition-all text-center group"
+              >
+                <span className="absolute top-1 right-1 px-1 py-0.2 rounded bg-amber-500 text-white text-[9px] font-extrabold shadow-2xs">
+                  18%
+                </span>
+                <div className="w-12 h-12 rounded-2xl bg-amber-100 dark:bg-amber-950/60 border border-amber-200/80 dark:border-amber-500/30 text-amber-600 dark:text-amber-300 flex items-center justify-center group-hover:scale-105 group-hover:bg-amber-200 dark:group-hover:bg-amber-900/60 transition-transform shadow-xs">
+                  <Coins className="w-5 h-5" />
+                </div>
+                <span className="text-xs font-semibold text-slate-800 dark:text-slate-200 mt-1.5">Earn</span>
+              </button>
+
+              {/* Action 5: Convert */}
+              <button
+                id="quick-action-convert"
+                onClick={onOpenConvert}
+                className="flex flex-col items-center justify-center p-2 rounded-2xl hover:bg-slate-50 dark:hover:bg-white/[0.04] active:scale-95 transition-all text-center group"
+              >
+                <div className="w-12 h-12 rounded-2xl bg-indigo-100 dark:bg-indigo-950/60 border border-indigo-200/80 dark:border-indigo-500/30 text-indigo-600 dark:text-indigo-300 flex items-center justify-center group-hover:scale-105 group-hover:bg-indigo-200 dark:group-hover:bg-indigo-900/60 transition-transform shadow-xs">
+                  <Repeat className="w-5 h-5" />
+                </div>
+                <span className="text-xs font-semibold text-slate-800 dark:text-slate-200 mt-1.5">Convert</span>
+              </button>
+
+              {/* Action 6: AI Bot */}
+              <button
+                id="quick-action-ai-bot"
+                onClick={onOpenAiTrader}
+                className="relative flex flex-col items-center justify-center p-2 rounded-2xl hover:bg-slate-50 dark:hover:bg-white/[0.04] active:scale-95 transition-all text-center group"
+              >
+                <span className="absolute top-1 right-2 px-1 py-0.2 rounded bg-purple-600 text-white text-[9px] font-extrabold uppercase shadow-2xs">
+                  PRO
+                </span>
+                <div className="w-12 h-12 rounded-2xl bg-purple-100 dark:bg-purple-950/60 border border-purple-200/80 dark:border-purple-500/30 text-purple-600 dark:text-purple-300 flex items-center justify-center group-hover:scale-105 group-hover:bg-purple-200 dark:group-hover:bg-purple-900/60 transition-transform shadow-xs">
+                  <Cpu className="w-5 h-5" />
+                </div>
+                <span className="text-xs font-semibold text-slate-800 dark:text-slate-200 mt-1.5">AI Bot</span>
+              </button>
+
+              {/* Action 7: Predictions */}
+              <button
+                id="quick-action-predictions"
+                onClick={onOpenPolymarket}
+                className="relative flex flex-col items-center justify-center p-2 rounded-2xl hover:bg-slate-50 dark:hover:bg-white/[0.04] active:scale-95 transition-all text-center group"
+              >
+                <span className="absolute top-1 right-1 px-1 py-0.2 rounded bg-cyan-600 text-white text-[9px] font-extrabold uppercase shadow-2xs">
+                  HOT
+                </span>
+                <div className="w-12 h-12 rounded-2xl bg-cyan-100 dark:bg-cyan-950/60 border border-cyan-200/80 dark:border-cyan-500/30 text-cyan-600 dark:text-cyan-300 flex items-center justify-center group-hover:scale-105 group-hover:bg-cyan-200 dark:group-hover:bg-cyan-900/60 transition-transform shadow-xs">
+                  <Sparkles className="w-5 h-5" />
+                </div>
+                <span className="text-xs font-semibold text-slate-800 dark:text-slate-200 mt-1.5">Predict</span>
+              </button>
+
+              {/* Action 8: More */}
+              <button
+                id="quick-action-more"
+                onClick={onOpenMore}
+                className="flex flex-col items-center justify-center p-2 rounded-2xl hover:bg-slate-50 dark:hover:bg-white/[0.04] active:scale-95 transition-all text-center group"
+              >
+                <div className="w-12 h-12 rounded-2xl bg-slate-100 dark:bg-slate-800/80 border border-slate-200 dark:border-white/10 text-slate-600 dark:text-slate-300 flex items-center justify-center group-hover:scale-105 group-hover:bg-slate-200 dark:group-hover:bg-slate-700 transition-transform shadow-xs">
+                  <LayoutGrid className="w-5 h-5" />
+                </div>
+                <span className="text-xs font-semibold text-slate-800 dark:text-slate-200 mt-1.5">More</span>
+              </button>
+            </div>
+          </section>
+
           {/* Promotional / Advertisement Slider & Announcements */}
-      <section id="home-promotional-section" className="mb-4">
-        <PromotionalBannerCarousel
-          onNavigateP2P={onNavigateP2P}
-          onOpenAiTrader={onOpenAiTrader}
-          onOpenPolymarket={onOpenPolymarket}
-          onNavigateMarkets={onNavigateMarkets}
-          onNavigateEarn={onNavigateEarn}
-          onOpenDeposit={onOpenDeposit}
-        />
-      </section>
+          <section id="home-promotional-section" className="mb-4">
+            <PromotionalBannerCarousel
+              onNavigateP2P={onNavigateP2P}
+              onOpenAiTrader={onOpenAiTrader}
+              onOpenPolymarket={onOpenPolymarket}
+              onNavigateMarkets={onNavigateMarkets}
+              onNavigateEarn={onNavigateEarn}
+              onOpenDeposit={onOpenDeposit}
+            />
+          </section>
 
-      {/* OKNexus Feature Grid (8 Dedicated Tiles: Markets | Trade, Convert | Buy/Sell, P2P | Wallet, Earn | More) */}
-      <section id="home-feature-grid" className="mb-4">
-        <div className="flex items-center justify-between mb-2">
-          <span className="text-[11px] font-bold text-[#64748B] dark:text-[#8E98A6] uppercase tracking-wider">
-            Exchange Features
-          </span>
-          <span className="text-[10px] text-[#8B5CF6] font-semibold">Web3 Hub</span>
-        </div>
-
-        {isLoading ? (
-          <FeatureGridSkeleton />
-        ) : (
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 animate-fade-in">
-            {/* Feature 1: Markets */}
-            <button
-              id="feature-markets"
-              onClick={onNavigateMarkets}
-              className="flex items-center gap-3 p-3 rounded-2xl bg-white dark:bg-[#0D101C] border border-slate-200 dark:border-white/[0.06] hover:border-purple-300 dark:hover:border-purple-500/40 hover:bg-purple-50/40 dark:hover:bg-[#13182B] active:scale-[0.99] transition-all group text-left shadow-2xs"
-            >
-              <div className="w-9 h-9 rounded-xl bg-purple-100 border border-purple-200 text-purple-700 dark:bg-purple-950/70 dark:border-purple-500/30 dark:text-purple-300 flex items-center justify-center group-hover:scale-105 group-hover:bg-purple-200/80 dark:group-hover:bg-purple-900/60 transition-all flex-shrink-0">
-                <BarChart2 className="w-4 h-4" />
-              </div>
-              <div className="min-w-0">
-                <div className="text-xs font-bold text-slate-900 dark:text-white group-hover:text-purple-600 dark:group-hover:text-purple-300 transition-colors">
-                  Markets
+          {/* Mobile-First Market Watch: Immediately Visible on Mobile */}
+          <div className="block lg:hidden mb-4">
+            <section id="home-markets-preview-mobile" className="rounded-2xl bg-white dark:bg-[#0E141B] border border-[#D7E0EB] dark:border-[#242E3B] p-3.5 sm:p-4 shadow-xs">
+              <div className="flex items-center justify-between mb-2.5">
+                <div className="flex items-center gap-2">
+                  <h2 className="text-sm font-bold text-[#0F172A] dark:text-[#EDF1F5] tracking-tight">Market Watch</h2>
+                  {isLoading && (
+                    <span className="inline-flex items-center gap-1 text-[11px] text-[#8B5CF6] font-mono font-medium animate-pulse">
+                      <RefreshCw className="w-2.5 h-2.5 animate-spin" />
+                      Syncing...
+                    </span>
+                  )}
                 </div>
-                <div className="text-[10px] text-slate-500 dark:text-slate-400 truncate">Quotes & trends</div>
+                <button
+                  onClick={onNavigateMarkets}
+                  className="text-xs font-bold text-[#8B5CF6] hover:text-[#8B5CF6]/80 flex items-center gap-0.5 transition-colors"
+                >
+                  View All
+                  <ChevronRight className="w-3.5 h-3.5" />
+                </button>
               </div>
-            </button>
 
-            {/* Feature 2: Trade */}
-            <button
-              id="feature-trade"
-              onClick={onNavigateTrade}
-              className="flex items-center gap-3 p-3 rounded-2xl bg-white dark:bg-[#0D101C] border border-slate-200 dark:border-white/[0.06] hover:border-purple-300 dark:hover:border-purple-500/40 hover:bg-purple-50/40 dark:hover:bg-[#13182B] active:scale-[0.99] transition-all group text-left shadow-2xs"
-            >
-              <div className="w-9 h-9 rounded-xl bg-purple-100 border border-purple-200 text-purple-700 dark:bg-purple-950/70 dark:border-purple-500/30 dark:text-purple-300 flex items-center justify-center group-hover:scale-105 group-hover:bg-purple-200/80 dark:group-hover:bg-purple-900/60 transition-all flex-shrink-0">
-                <CandlestickChart className="w-4 h-4" />
+              {/* Market Subtabs */}
+              <div className="flex items-center gap-4 border-b border-[#D7E0EB] dark:border-[#242E3B] pb-2 mb-2 text-xs font-semibold">
+                {(['hot', 'gainers', 'new', 'losers'] as const).map((tab) => (
+                  <button
+                    key={tab}
+                    onClick={() => setMarketTab(tab)}
+                    className={`capitalize transition-colors relative pb-1 ${
+                      marketTab === tab
+                        ? 'text-[#0F172A] dark:text-[#EDF1F5] font-bold'
+                        : 'text-[#64748B] dark:text-[#8E98A6] hover:text-[#0F172A] dark:hover:text-[#EDF1F5]'
+                    }`}
+                  >
+                    {tab}
+                    {marketTab === tab && (
+                      <span className="absolute bottom-[-9px] left-0 right-0 h-[2px] bg-gradient-to-r from-[#8B5CF6] to-[#EC4899] rounded-full" />
+                    )}
+                  </button>
+                ))}
               </div>
-              <div className="min-w-0">
-                <div className="text-xs font-bold text-slate-900 dark:text-white group-hover:text-purple-600 dark:group-hover:text-purple-300 transition-colors">
-                  Trade
-                </div>
-                <div className="text-[10px] text-slate-500 dark:text-slate-400 truncate">Spot orderbook</div>
-              </div>
-            </button>
 
-            {/* Feature 3: Explore */}
-            <button
-              id="feature-explore"
-              onClick={onNavigateExplore}
-              className="flex items-center gap-3 p-3 rounded-2xl bg-white dark:bg-[#0D101C] border border-slate-200 dark:border-white/[0.06] hover:border-purple-300 dark:hover:border-purple-500/40 hover:bg-purple-50/40 dark:hover:bg-[#13182B] active:scale-[0.99] transition-all group text-left shadow-2xs"
-            >
-              <div className="w-9 h-9 rounded-xl bg-purple-100 border border-purple-200 text-purple-700 dark:bg-purple-950/70 dark:border-purple-500/30 dark:text-purple-300 flex items-center justify-center group-hover:scale-105 group-hover:bg-purple-200/80 dark:group-hover:bg-purple-900/60 transition-all flex-shrink-0">
-                <Compass className="w-4 h-4" />
-              </div>
-              <div className="min-w-0">
-                <div className="flex items-center gap-1">
-                  <span className="text-xs font-bold text-slate-900 dark:text-white group-hover:text-purple-600 dark:group-hover:text-purple-300 transition-colors">
-                    Explore
-                  </span>
-                  <span className="px-1 py-0.2 rounded bg-purple-100 text-purple-700 border border-purple-200/60 dark:bg-purple-500/20 dark:text-purple-300 dark:border-purple-500/30 text-[8px] font-bold">
-                    NEW
-                  </span>
-                </div>
-                <div className="text-[10px] text-slate-500 dark:text-slate-400 truncate">What's next & ecosystem</div>
-              </div>
-            </button>
+              {/* Compact Market Rows */}
+              {isLoading ? (
+                <MarketListSkeleton />
+              ) : (
+                <div className="space-y-1 animate-fade-in">
+                  {filteredMarkets.map((pair) => (
+                    <div
+                      key={pair.symbol}
+                      onClick={() => onSelectPair(pair)}
+                      className="flex items-center justify-between p-2.5 rounded-xl hover:bg-[#F8FAFC] active:bg-[#F1F5F9] dark:hover:bg-[#141B24] dark:active:bg-[#1A222D] transition-colors cursor-pointer group"
+                    >
+                      <div className="flex items-center gap-2.5">
+                        <CoinIcon symbol={pair.base} size={32} />
+                        <div>
+                          <div className="font-bold text-xs text-[#0F172A] group-hover:text-[#8B5CF6] dark:text-[#EDF1F5] dark:group-hover:text-[#8B5CF6] transition-colors">
+                            {pair.symbol}
+                          </div>
+                          <div className="text-[11px] text-[#64748B] dark:text-[#8E98A6]">{pair.name}</div>
+                        </div>
+                      </div>
 
-            {/* Feature 4: Analytics */}
-            <button
-              id="feature-analytics"
-              onClick={onNavigateAnalytics}
-              className="flex items-center gap-3 p-3 rounded-2xl bg-white dark:bg-[#0D101C] border border-slate-200 dark:border-white/[0.06] hover:border-purple-300 dark:hover:border-purple-500/40 hover:bg-purple-50/40 dark:hover:bg-[#13182B] active:scale-[0.99] transition-all group text-left shadow-2xs"
-            >
-              <div className="w-9 h-9 rounded-xl bg-purple-100 border border-purple-200 text-purple-700 dark:bg-purple-950/70 dark:border-purple-500/30 dark:text-purple-300 flex items-center justify-center group-hover:scale-105 group-hover:bg-purple-200/80 dark:group-hover:bg-purple-900/60 transition-all flex-shrink-0">
-                <LineChart className="w-4 h-4" />
-              </div>
-              <div className="min-w-0">
-                <div className="flex items-center gap-1">
-                  <span className="text-xs font-bold text-slate-900 dark:text-white group-hover:text-purple-600 dark:group-hover:text-purple-300 transition-colors">
-                    Analytics
-                  </span>
-                  <span className="px-1 py-0.2 rounded bg-purple-100 text-purple-700 border border-purple-200/60 dark:bg-purple-500/20 dark:text-purple-300 dark:border-purple-500/30 text-[8px] font-bold">
-                    P&L
-                  </span>
-                </div>
-                <div className="text-[10px] text-slate-500 dark:text-slate-400 truncate">Portfolio & performance</div>
-              </div>
-            </button>
+                      <div className="flex items-center gap-2.5">
+                        <div className="text-right">
+                          <div className="font-mono-num text-xs font-bold text-[#0F172A] dark:text-[#EDF1F5]">
+                            ${pair.price >= 1 ? pair.price.toLocaleString('en-US', { minimumFractionDigits: 2 }) : pair.price.toFixed(4)}
+                          </div>
+                        </div>
 
-            {/* Feature 5: Convert */}
-            <button
-              id="feature-convert"
-              onClick={onOpenConvert}
-              className="flex items-center gap-3 p-3 rounded-2xl bg-white dark:bg-[#0D101C] border border-slate-200 dark:border-white/[0.06] hover:border-purple-300 dark:hover:border-purple-500/40 hover:bg-purple-50/40 dark:hover:bg-[#13182B] active:scale-[0.99] transition-all group text-left shadow-2xs"
-            >
-              <div className="w-9 h-9 rounded-xl bg-purple-100 border border-purple-200 text-purple-700 dark:bg-purple-950/70 dark:border-purple-500/30 dark:text-purple-300 flex items-center justify-center group-hover:scale-105 group-hover:bg-purple-200/80 dark:group-hover:bg-purple-900/60 transition-all flex-shrink-0">
-                <Repeat className="w-4 h-4" />
-              </div>
-              <div className="min-w-0">
-                <div className="text-xs font-bold text-slate-900 dark:text-white group-hover:text-purple-600 dark:group-hover:text-purple-300 transition-colors">
-                  Convert
+                        <div
+                          className={`min-w-[62px] px-2 py-1 rounded-lg text-right font-mono-num text-xs font-bold ${
+                            pair.change24h >= 0
+                              ? 'bg-emerald-50 text-[#10B981] border border-emerald-200 dark:bg-emerald-500/15 dark:text-[#10B981] dark:border-emerald-500/20'
+                              : 'bg-rose-50 text-[#EF4444] border border-rose-200 dark:bg-rose-500/15 dark:text-[#EF4444] dark:border-rose-500/20'
+                          }`}
+                        >
+                          {pair.change24h >= 0 ? `+${pair.change24h}%` : `${pair.change24h}%`}
+                        </div>
+                      </div>
+                    </div>
+                  ))}
                 </div>
-                <div className="text-[10px] text-slate-500 dark:text-slate-400 truncate">0 Slippage swap</div>
-              </div>
-            </button>
-
-            {/* Feature 6: Buy/Sell */}
-            <button
-              id="feature-buy-sell"
-              onClick={onOpenBuySell}
-              className="flex items-center gap-3 p-3 rounded-2xl bg-white dark:bg-[#0D101C] border border-slate-200 dark:border-white/[0.06] hover:border-purple-300 dark:hover:border-purple-500/40 hover:bg-purple-50/40 dark:hover:bg-[#13182B] active:scale-[0.99] transition-all group text-left shadow-2xs"
-            >
-              <div className="w-9 h-9 rounded-xl bg-purple-100 border border-purple-200 text-purple-700 dark:bg-purple-950/70 dark:border-purple-500/30 dark:text-purple-300 flex items-center justify-center group-hover:scale-105 group-hover:bg-purple-200/80 dark:group-hover:bg-purple-900/60 transition-all flex-shrink-0">
-                <CreditCard className="w-4 h-4" />
-              </div>
-              <div className="min-w-0">
-                <div className="text-xs font-bold text-slate-900 dark:text-white group-hover:text-purple-600 dark:group-hover:text-purple-300 transition-colors">
-                  Buy/Sell
-                </div>
-                <div className="text-[10px] text-slate-500 dark:text-slate-400 truncate">Card & fiat ramp</div>
-              </div>
-            </button>
-
-            {/* Feature 7: P2P */}
-            <button
-              id="feature-p2p"
-              onClick={onNavigateP2P}
-              className="flex items-center gap-3 p-3 rounded-2xl bg-white dark:bg-[#0D101C] border border-slate-200 dark:border-white/[0.06] hover:border-purple-300 dark:hover:border-purple-500/40 hover:bg-purple-50/40 dark:hover:bg-[#13182B] active:scale-[0.99] transition-all group text-left shadow-2xs"
-            >
-              <div className="w-9 h-9 rounded-xl bg-purple-100 border border-purple-200 text-purple-700 dark:bg-purple-950/70 dark:border-purple-500/30 dark:text-purple-300 flex items-center justify-center group-hover:scale-105 group-hover:bg-purple-200/80 dark:group-hover:bg-purple-900/60 transition-all flex-shrink-0">
-                <Users2 className="w-4 h-4" />
-              </div>
-              <div className="min-w-0">
-                <div className="flex items-center gap-1">
-                  <span className="text-xs font-bold text-slate-900 dark:text-white group-hover:text-purple-600 dark:group-hover:text-purple-300 transition-colors">
-                    P2P
-                  </span>
-                  <span className="px-1 py-0.2 rounded bg-purple-100 text-purple-700 border border-purple-200/60 dark:bg-purple-500/20 dark:text-purple-300 dark:border-purple-500/30 text-[8px] font-bold">
-                    0% FEE
-                  </span>
-                </div>
-                <div className="text-[10px] text-slate-500 dark:text-slate-400 truncate">Peer-to-peer</div>
-              </div>
-            </button>
-
-            {/* Feature 8: Wallet */}
-            <button
-              id="feature-wallet"
-              onClick={onNavigateWallet}
-              className="flex items-center gap-3 p-3 rounded-2xl bg-white dark:bg-[#0D101C] border border-slate-200 dark:border-white/[0.06] hover:border-purple-300 dark:hover:border-purple-500/40 hover:bg-purple-50/40 dark:hover:bg-[#13182B] active:scale-[0.99] transition-all group text-left shadow-2xs"
-            >
-              <div className="w-9 h-9 rounded-xl bg-purple-100 border border-purple-200 text-purple-700 dark:bg-purple-950/70 dark:border-purple-500/30 dark:text-purple-300 flex items-center justify-center group-hover:scale-105 group-hover:bg-purple-200/80 dark:group-hover:bg-purple-900/60 transition-all flex-shrink-0">
-                <Wallet className="w-4 h-4" />
-              </div>
-              <div className="min-w-0">
-                <div className="text-xs font-bold text-slate-900 dark:text-white group-hover:text-purple-600 dark:group-hover:text-purple-300 transition-colors">
-                  Wallet
-                </div>
-                <div className="text-[10px] text-slate-500 dark:text-slate-400 truncate">Assets & ledger</div>
-              </div>
-            </button>
-
-            {/* Feature 9: Earn */}
-            <button
-              id="feature-earn"
-              onClick={onNavigateEarn}
-              className="flex items-center gap-3 p-3 rounded-2xl bg-white dark:bg-[#0D101C] border border-slate-200 dark:border-white/[0.06] hover:border-purple-300 dark:hover:border-purple-500/40 hover:bg-purple-50/40 dark:hover:bg-[#13182B] active:scale-[0.99] transition-all group text-left shadow-2xs"
-            >
-              <div className="w-9 h-9 rounded-xl bg-purple-100 border border-purple-200 text-purple-700 dark:bg-purple-950/70 dark:border-purple-500/30 dark:text-purple-300 flex items-center justify-center group-hover:scale-105 group-hover:bg-purple-200/80 dark:group-hover:bg-purple-900/60 transition-all flex-shrink-0">
-                <Coins className="w-4 h-4" />
-              </div>
-              <div className="min-w-0">
-                <div className="flex items-center gap-1">
-                  <span className="text-xs font-bold text-slate-900 dark:text-white group-hover:text-purple-600 dark:group-hover:text-purple-300 transition-colors">
-                    Earn
-                  </span>
-                  <span className="px-1 py-0.2 rounded bg-purple-100 text-purple-700 border border-purple-200/60 dark:bg-purple-500/20 dark:text-purple-300 dark:border-purple-500/30 text-[8px] font-bold">
-                    18% APY
-                  </span>
-                </div>
-                <div className="text-[10px] text-slate-500 dark:text-slate-400 truncate">Yield vaults</div>
-              </div>
-            </button>
-
-            {/* Feature 10: AI Bot */}
-            <button
-              id="feature-ai-bot"
-              onClick={onOpenAiTrader}
-              className="flex items-center gap-3 p-3 rounded-2xl bg-white dark:bg-[#0D101C] border border-slate-200 dark:border-white/[0.06] hover:border-purple-300 dark:hover:border-purple-500/40 hover:bg-purple-50/40 dark:hover:bg-[#13182B] active:scale-[0.99] transition-all group text-left shadow-2xs"
-            >
-              <div className="w-9 h-9 rounded-xl bg-purple-100 border border-purple-200 text-purple-700 dark:bg-purple-950/70 dark:border-purple-500/30 dark:text-purple-300 flex items-center justify-center group-hover:scale-105 group-hover:bg-purple-200/80 dark:group-hover:bg-purple-900/60 transition-all flex-shrink-0">
-                <Cpu className="w-4 h-4" />
-              </div>
-              <div className="min-w-0">
-                <div className="flex items-center gap-1">
-                  <span className="text-xs font-bold text-slate-900 dark:text-white group-hover:text-purple-600 dark:group-hover:text-purple-300 transition-colors">
-                    AI Bot
-                  </span>
-                  <span className="px-1 py-0.2 rounded bg-purple-100 text-purple-700 border border-purple-200/60 dark:bg-purple-500/20 dark:text-purple-300 dark:border-purple-500/30 text-[8px] font-bold">
-                    AUTO
-                  </span>
-                </div>
-                <div className="text-[10px] text-slate-500 dark:text-slate-400 truncate">Algorithmic DCA</div>
-              </div>
-            </button>
-
-            {/* Feature 11: Predictions */}
-            <button
-              id="feature-predictions"
-              onClick={onOpenPolymarket}
-              className="flex items-center gap-3 p-3 rounded-2xl bg-white dark:bg-[#0D101C] border border-slate-200 dark:border-white/[0.06] hover:border-purple-300 dark:hover:border-purple-500/40 hover:bg-purple-50/40 dark:hover:bg-[#13182B] active:scale-[0.99] transition-all group text-left shadow-2xs"
-            >
-              <div className="w-9 h-9 rounded-xl bg-purple-100 border border-purple-200 text-purple-700 dark:bg-purple-950/70 dark:border-purple-500/30 dark:text-purple-300 flex items-center justify-center group-hover:scale-105 group-hover:bg-purple-200/80 dark:group-hover:bg-purple-900/60 transition-all flex-shrink-0">
-                <Sparkles className="w-4 h-4" />
-              </div>
-              <div className="min-w-0">
-                <div className="flex items-center gap-1">
-                  <span className="text-xs font-bold text-slate-900 dark:text-white group-hover:text-purple-600 dark:group-hover:text-purple-300 transition-colors">
-                    Predictions
-                  </span>
-                  <span className="px-1 py-0.2 rounded bg-purple-100 text-purple-700 border border-purple-200/60 dark:bg-purple-500/20 dark:text-purple-300 dark:border-purple-500/30 text-[8px] font-bold">
-                    HOT
-                  </span>
-                </div>
-                <div className="text-[10px] text-slate-500 dark:text-slate-400 truncate">Polymarket odds</div>
-              </div>
-            </button>
-
-            {/* Feature 12: More */}
-            <button
-              id="feature-more"
-              onClick={onOpenMore}
-              className="flex items-center gap-3 p-3 rounded-2xl bg-white dark:bg-[#0D101C] border border-slate-200 dark:border-white/[0.06] hover:border-purple-300 dark:hover:border-purple-500/40 hover:bg-purple-50/40 dark:hover:bg-[#13182B] active:scale-[0.99] transition-all group text-left shadow-2xs"
-            >
-              <div className="w-9 h-9 rounded-xl bg-purple-100 border border-purple-200 text-purple-700 dark:bg-purple-950/70 dark:border-purple-500/30 dark:text-purple-300 flex items-center justify-center group-hover:scale-105 group-hover:bg-purple-200/80 dark:group-hover:bg-purple-900/60 transition-all flex-shrink-0">
-                <LayoutGrid className="w-4 h-4" />
-              </div>
-              <div className="min-w-0">
-                <div className="text-xs font-bold text-slate-900 dark:text-white group-hover:text-purple-600 dark:group-hover:text-purple-300 transition-colors">
-                  More
-                </div>
-                <div className="text-[10px] text-slate-500 dark:text-slate-400 truncate">OTC, Alerts & Hub</div>
-              </div>
-            </button>
+              )}
+            </section>
           </div>
-        )}
-      </section>
+
+
+
 
       {/* Featured Products: AI Auto Trader & Polymarket */}
       <section id="home-featured-products" className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 mb-5">
