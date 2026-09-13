@@ -1217,6 +1217,7 @@ export default function App() {
               onOpenSettings={(cat) => handleOpenSettings(cat)}
               onOpenSupport={() => navigateTab('support')}
               isLoading={tabLoading['more']}
+              marketPairs={marketPairs}
             />
           )}
 
@@ -1412,6 +1413,10 @@ export default function App() {
         onNavigateAnalytics={() => {
           setIsMoreOpen(false);
           navigateTab('analytics');
+        }}
+        onNavigateMore={() => {
+          setIsMoreOpen(false);
+          navigateTab('more');
         }}
         onOpenOTC={() => setIsOtcOpen(true)}
         onOpenRewards={() => setIsRewardsOpen(true)}

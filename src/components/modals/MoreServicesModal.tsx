@@ -17,6 +17,7 @@ import {
   Clock,
   Sparkles,
   Settings,
+  Calculator,
 } from 'lucide-react';
 import { OKNexusLogo } from '../common/OKNexusLogo';
 
@@ -34,6 +35,7 @@ interface MoreServicesModalProps {
   onOpenSupport: () => void;
   onNavigateExplore?: () => void;
   onNavigateAnalytics?: () => void;
+  onNavigateMore?: () => void;
 }
 
 interface ServiceItem {
@@ -62,6 +64,7 @@ export const MoreServicesModal: React.FC<MoreServicesModalProps> = ({
   onOpenSupport,
   onNavigateExplore,
   onNavigateAnalytics,
+  onNavigateMore,
 }) => {
   const [filter, setFilter] = useState<'all' | 'active' | 'upcoming'>('all');
   const [comingSoonToast, setComingSoonToast] = useState<string | null>(null);
@@ -76,6 +79,22 @@ export const MoreServicesModal: React.FC<MoreServicesModalProps> = ({
   };
 
   const services: ServiceItem[] = [
+    {
+      id: 'crypto_converter',
+      title: 'Crypto & Fiat Converter',
+      subtitle: 'Calculate live exchange rates between Bitcoin, Solana, Ethereum, and 12+ fiat currencies.',
+      icon: Calculator,
+      status: 'Active',
+      category: 'active',
+      iconColor: 'text-purple-600 dark:text-purple-400',
+      iconBg: 'bg-purple-100 dark:bg-purple-950/60 border-purple-200 dark:border-purple-500/30',
+      action: () => {
+        onClose();
+        if (onNavigateMore) {
+          onNavigateMore();
+        }
+      },
+    },
     {
       id: 'analytics',
       title: 'Portfolio Analytics',

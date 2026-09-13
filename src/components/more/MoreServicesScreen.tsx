@@ -28,8 +28,10 @@ import {
   CheckCircle2,
   ChevronRight,
   LayoutGrid,
+  Calculator,
 } from 'lucide-react';
-import { ThemeMode } from '../../types';
+import { ThemeMode, MarketPair } from '../../types';
+import { CryptoConverterCalculator } from './CryptoConverterCalculator';
 
 export interface MoreServicesScreenProps {
   theme?: ThemeMode;
@@ -58,6 +60,7 @@ export interface MoreServicesScreenProps {
   onOpenSettings: (tab?: any) => void;
   onOpenSupport: () => void;
   isLoading?: boolean;
+  marketPairs?: MarketPair[];
 }
 
 interface ServiceCardItem {
@@ -100,14 +103,36 @@ export const MoreServicesScreen: React.FC<MoreServicesScreenProps> = ({
   onOpenSettings,
   onOpenSupport,
   isLoading = false,
+  marketPairs,
 }) => {
   const [searchQuery, setSearchQuery] = useState('');
   const [activeCategory, setActiveCategory] = useState<string>('all');
+
+  const scrollToConverter = () => {
+    const el = document.getElementById('crypto-converter-calculator');
+    if (el) {
+      el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      el.classList.add('ring-4', 'ring-purple-500/50');
+      setTimeout(() => el.classList.remove('ring-4', 'ring-purple-500/50'), 2000);
+    }
+  };
 
   // Comprehensive list of OKNexus services & tools
   const services: ServiceCardItem[] = useMemo(
     () => [
       // TRADING & MARKETS
+      {
+        id: 'crypto-converter',
+        title: 'Crypto & Fiat Converter',
+        category: 'trading',
+        description: 'Instant multi-currency calculator between Bitcoin, Ethereum, Solana, and 12+ world fiat currencies with live market feeds.',
+        icon: Calculator,
+        iconColor: 'text-purple-600 dark:text-purple-400',
+        iconBg: 'bg-purple-100 dark:bg-purple-950/60 border-purple-200 dark:border-purple-500/30',
+        badge: 'LIVE RATES',
+        badgeType: 'hot',
+        action: scrollToConverter,
+      },
       {
         id: 'spot-trading',
         title: 'Spot Exchange',
@@ -546,6 +571,14 @@ export const MoreServicesScreen: React.FC<MoreServicesScreenProps> = ({
             </p>
           </button>
         </div>
+
+        {/* Dedicated Crypto Converter Calculator Tool */}
+        <CryptoConverterCalculator
+          marketPairs={marketPairs}
+          onNavigateTrade={onNavigateTrade}
+          onNavigateP2P={onNavigateP2P}
+          onOpenConvert={onOpenConvert}
+        />
 
         {/* Search & Category Filter Section */}
         <div className="space-y-3">
