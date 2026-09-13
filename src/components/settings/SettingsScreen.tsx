@@ -428,33 +428,74 @@ export const SettingsScreen: React.FC<SettingsScreenProps> = ({
           </div>
         </div>
 
-        {/* Mobile Category Horizontal Scroll Bar */}
-        <div className="md:hidden flex items-center gap-2 overflow-x-auto pb-3 mb-4 no-scrollbar">
-          {categories.map((cat) => {
-            const Icon = cat.icon;
-            const isActive = activeCategory === cat.id;
-            return (
-              <button
-                key={cat.id}
-                onClick={() => setActiveCategory(cat.id)}
-                className={`px-3.5 py-2 rounded-xl text-xs font-bold flex items-center gap-1.5 whitespace-nowrap transition-all shrink-0 ${
-                  isActive
-                    ? 'bg-[#8B5CF6] text-white shadow-xs'
-                    : 'bg-white dark:bg-[#141B24] border border-[#D7E0EB] dark:border-[#242E3B] text-slate-600 dark:text-slate-300'
-                }`}
-              >
-                <Icon className="w-3.5 h-3.5" />
-                <span>{cat.label}</span>
-                {cat.badge && (
-                  <span className={`text-[10px] px-1.5 py-0.2 rounded-md ${
-                    isActive ? 'bg-white/20 text-white' : 'bg-[#8B5CF6]/10 text-[#8B5CF6]'
-                  }`}>
-                    {cat.badge}
-                  </span>
-                )}
-              </button>
-            );
-          })}
+        {/* Mobile Category Vertical List Menu (NO horizontal slider) */}
+        <div className="md:hidden mb-5">
+          <div className="rounded-2xl bg-white dark:bg-[#0E141B] border border-[#D7E0EB] dark:border-[#242E3B] p-2 shadow-xs space-y-1">
+            <div className="px-3 py-2 flex items-center justify-between border-b border-slate-100 dark:border-white/[0.05]">
+              <span className="text-[11px] font-extrabold uppercase tracking-wider text-slate-500 dark:text-slate-400">
+                Settings Categories
+              </span>
+              <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-purple-500/10 text-purple-600 dark:text-purple-400">
+                Active: {categories.find((c) => c.id === activeCategory)?.label || 'Options'}
+              </span>
+            </div>
+            <div className="space-y-1 pt-1">
+              {filteredCategories.map((cat) => {
+                const Icon = cat.icon;
+                const isActive = activeCategory === cat.id;
+                return (
+                  <button
+                    key={cat.id}
+                    type="button"
+                    onClick={() => setActiveCategory(cat.id)}
+                    className={`w-full flex items-center justify-between p-2.5 rounded-xl text-left transition-all ${
+                      isActive
+                        ? 'bg-gradient-to-r from-purple-600 to-indigo-600 text-white shadow-xs font-bold'
+                        : 'text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-[#141B24]'
+                    }`}
+                  >
+                    <div className="flex items-center gap-2.5 min-w-0">
+                      <div
+                        className={`w-8 h-8 rounded-lg flex items-center justify-center shrink-0 ${
+                          isActive
+                            ? 'bg-white/20 text-white'
+                            : 'bg-slate-100 dark:bg-white/[0.06] text-slate-500 dark:text-slate-400'
+                        }`}
+                      >
+                        <Icon className="w-4 h-4" />
+                      </div>
+                      <div className="min-w-0">
+                        <div className="text-xs font-bold truncate leading-tight">{cat.label}</div>
+                        <div
+                          className={`text-[10px] truncate ${
+                            isActive ? 'text-white/80' : 'text-slate-400 dark:text-slate-500'
+                          }`}
+                        >
+                          {cat.description}
+                        </div>
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-1.5 shrink-0 ml-2">
+                      {cat.badge && (
+                        <span
+                          className={`text-[10px] font-mono font-bold px-1.5 py-0.5 rounded-md ${
+                            isActive
+                              ? 'bg-white/20 text-white'
+                              : 'bg-purple-500/10 text-purple-600 dark:text-purple-400 border border-purple-500/20'
+                          }`}
+                        >
+                          {cat.badge}
+                        </span>
+                      )}
+                      <ChevronRight
+                        className={`w-3.5 h-3.5 ${isActive ? 'text-white' : 'text-slate-400'}`}
+                      />
+                    </div>
+                  </button>
+                );
+              })}
+            </div>
+          </div>
         </div>
 
         {/* Desktop 2-Column Layout */}
