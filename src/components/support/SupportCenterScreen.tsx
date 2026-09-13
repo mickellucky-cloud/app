@@ -353,8 +353,8 @@ export const SupportCenterScreen: React.FC<SupportCenterScreenProps> = ({
       id="support-center-screen"
       className="min-h-screen bg-slate-50 dark:bg-[#07090E] text-[#0F172A] dark:text-[#EDF1F5] pb-24 transition-colors"
     >
-      {/* Header Bar */}
-      <header className="sticky top-0 z-30 bg-white/90 dark:bg-[#0A0E13]/90 backdrop-blur-md border-b border-[#D7E0EB] dark:border-[#1E2633] px-4 py-3 sm:px-6">
+      {/* Header Bar (Desktop only, MobileTopBar handles mobile) */}
+      <header className="hidden md:block sticky top-0 z-30 bg-white/90 dark:bg-[#0A0E13]/90 backdrop-blur-md border-b border-[#D7E0EB] dark:border-[#1E2633] px-4 py-3 sm:px-6">
         <div className="max-w-6xl mx-auto flex items-center justify-between">
           <div className="flex items-center gap-3">
             <button

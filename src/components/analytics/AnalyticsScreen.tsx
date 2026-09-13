@@ -163,12 +163,12 @@ export const AnalyticsScreen: React.FC<AnalyticsScreenProps> = ({
               id="analytics-back-button"
               onClick={onBack}
               aria-label="Go back"
-              className="p-2 rounded-xl bg-slate-100 dark:bg-white/5 border border-slate-200 dark:border-white/10 text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-200 dark:hover:bg-white/10 transition-colors shadow-2xs"
+              className="hidden md:flex p-2 rounded-xl bg-slate-100 dark:bg-white/5 border border-slate-200 dark:border-white/10 text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-200 dark:hover:bg-white/10 transition-colors shadow-2xs"
             >
               <ArrowLeft className="w-5 h-5" />
             </button>
           )}
-          <div>
+          <div className="hidden md:block">
             <div className="flex items-center gap-2">
               <h1 className="text-xl sm:text-2xl font-bold font-display text-slate-900 dark:text-white tracking-tight">
                 Portfolio & Trade Analytics

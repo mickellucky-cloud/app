@@ -52,8 +52,8 @@ export const EarnScreen: React.FC<EarnScreenProps> = ({
 
   return (
     <div id="earn-screen" className="pb-32 md:pb-12 pt-3 px-4 sm:px-6 lg:px-8 max-w-md md:max-w-4xl lg:max-w-7xl mx-auto min-h-screen text-slate-900 dark:text-slate-100 bg-white dark:bg-[#07090E] transition-colors">
-      {/* Header */}
-      <header className="flex items-center justify-between py-2 mb-4">
+      {/* Header (Desktop only - MobileTopBar handles mobile view) */}
+      <header className="hidden md:flex items-center justify-between py-2 mb-4">
         <div className="flex items-center gap-3">
           <div className="w-8 h-8 rounded-xl bg-amber-500/15 border border-amber-500/30 flex items-center justify-center text-amber-500 dark:text-amber-400 font-bold shadow-xs">
             <Percent className="w-4 h-4" />
@@ -63,7 +63,7 @@ export const EarnScreen: React.FC<EarnScreenProps> = ({
             <p className="text-xs text-slate-500 dark:text-slate-400 hidden sm:block">Put your crypto to work with flexible savings, fixed staking, and launchpools</p>
           </div>
         </div>
-        <div className="flex items-center gap-2">
+        <div className="hidden md:flex items-center gap-2">
           <button className="w-9 h-9 rounded-full bg-slate-100 dark:bg-slate-900/80 border border-slate-200 dark:border-white/10 flex items-center justify-center text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white transition-colors">
             <Search className="w-4 h-4" />
           </button>
