@@ -19,6 +19,7 @@ import {
   ChevronRight,
 } from 'lucide-react';
 import { AssetsSkeleton } from '../skeletons/AssetsSkeleton';
+import { TotalAssetsArea } from '../home/TotalAssetsArea';
 
 interface AssetsScreenProps {
   balances: {
@@ -122,82 +123,18 @@ export const AssetsScreen: React.FC<AssetsScreenProps> = ({
 
       {/* Portfolio Card & Quick Actions (Responsive Layout) */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 mb-5">
-        {/* Portfolio Card */}
-        <section
-          id="assets-portfolio-card"
-          className="lg:col-span-8 relative overflow-hidden rounded-2xl bg-gradient-to-br from-slate-50 via-white to-purple-50/30 dark:bg-gradient-to-br dark:from-[#121624] dark:via-[#0E121E] dark:to-[#0A0D16] border border-purple-200 dark:border-purple-500/20 p-5 shadow-xs dark:shadow-[0_8px_32px_rgba(0,0,0,0.4)] flex flex-col justify-between"
-        >
-          <div className="absolute -top-10 -right-10 w-52 h-52 rounded-full bg-purple-500/10 dark:bg-purple-600/15 blur-3xl pointer-events-none" />
-
-          <div className="relative z-10 flex items-start justify-between mb-4">
-            <div>
-              <div className="flex items-center gap-2 mb-1.5 text-slate-500 dark:text-slate-400">
-                <span className="text-xs font-medium uppercase tracking-wider">Total Net Worth</span>
-                <span className="text-[10px] px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200 dark:bg-emerald-500/15 dark:text-emerald-400 dark:border-emerald-500/20 font-mono-num font-semibold">
-                  {showBalances ? `+${balances.pnl24hPct}% (24h)` : '•••'}
-                </span>
-              </div>
-
-              <div className="flex items-baseline gap-3">
-                <div className="font-mono-num text-3xl sm:text-4xl font-extrabold text-slate-900 dark:text-white tracking-tight">
-                  {showBalances ? `$${balances.totalAssets.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}` : '••••••••'}
-                </div>
-                <div className="font-mono-num text-xs sm:text-sm text-slate-500 dark:text-slate-400 font-medium">
-                  {showBalances ? `≈ ${(balances.totalAssets / 1.0).toFixed(2)} USDT` : '•••'}
-                </div>
-              </div>
-            </div>
-
-            <OKNexusBadge3D size={64} />
-          </div>
-
-          {/* Quick Action Buttons (Deposit, Withdraw, Send, Convert) - Never Truncated */}
-          <div id="assets-quick-actions" className="grid grid-cols-4 gap-2 pt-3.5 border-t border-slate-200 dark:border-white/[0.08]">
-            <button
-              id="assets-btn-deposit"
-              onClick={onOpenDeposit}
-              className="flex flex-col sm:flex-row items-center justify-center gap-1 sm:gap-2 py-2.5 px-1 rounded-xl bg-slate-100/90 hover:bg-[#8B5CF6]/10 border border-slate-200 hover:border-[#8B5CF6]/40 dark:bg-white/[0.04] dark:hover:bg-[#8B5CF6]/15 dark:border-white/[0.08] dark:hover:border-[#8B5CF6]/40 active:scale-95 transition-all group"
-            >
-              <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-lg bg-[#8B5CF6]/10 text-[#8B5CF6] dark:bg-[#8B5CF6]/20 dark:text-[#8B5CF6] flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
-                <ArrowDownLeft className="w-4 h-4" />
-              </div>
-              <span className="text-[11px] sm:text-xs font-bold text-slate-800 dark:text-slate-200 whitespace-nowrap">Deposit</span>
-            </button>
-
-            <button
-              id="assets-btn-withdraw"
-              onClick={onOpenWithdraw}
-              className="flex flex-col sm:flex-row items-center justify-center gap-1 sm:gap-2 py-2.5 px-1 rounded-xl bg-slate-100/90 hover:bg-[#8B5CF6]/10 border border-slate-200 hover:border-[#8B5CF6]/40 dark:bg-white/[0.04] dark:hover:bg-[#8B5CF6]/15 dark:border-white/[0.08] dark:hover:border-[#8B5CF6]/40 active:scale-95 transition-all group"
-            >
-              <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-lg bg-[#8B5CF6]/10 text-[#8B5CF6] dark:bg-[#8B5CF6]/20 dark:text-[#8B5CF6] flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
-                <ArrowUpRight className="w-4 h-4" />
-              </div>
-              <span className="text-[11px] sm:text-xs font-bold text-slate-800 dark:text-slate-200 whitespace-nowrap">Withdraw</span>
-            </button>
-
-            <button
-              id="assets-btn-send"
-              onClick={onOpenSend}
-              className="flex flex-col sm:flex-row items-center justify-center gap-1 sm:gap-2 py-2.5 px-1 rounded-xl bg-slate-100/90 hover:bg-[#8B5CF6]/10 border border-slate-200 hover:border-[#8B5CF6]/40 dark:bg-white/[0.04] dark:hover:bg-[#8B5CF6]/15 dark:border-white/[0.08] dark:hover:border-[#8B5CF6]/40 active:scale-95 transition-all group"
-            >
-              <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-lg bg-[#8B5CF6]/10 text-[#8B5CF6] dark:bg-[#8B5CF6]/20 dark:text-[#8B5CF6] flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
-                <SendHorizontal className="w-4 h-4" />
-              </div>
-              <span className="text-[11px] sm:text-xs font-bold text-slate-800 dark:text-slate-200 whitespace-nowrap">Send</span>
-            </button>
-
-            <button
-              id="assets-btn-convert"
-              onClick={onOpenConvert}
-              className="flex flex-col sm:flex-row items-center justify-center gap-1 sm:gap-2 py-2.5 px-1 rounded-xl bg-slate-100/90 hover:bg-[#8B5CF6]/10 border border-slate-200 hover:border-[#8B5CF6]/40 dark:bg-white/[0.04] dark:hover:bg-[#8B5CF6]/15 dark:border-white/[0.08] dark:hover:border-[#8B5CF6]/40 active:scale-95 transition-all group"
-            >
-              <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-lg bg-[#8B5CF6]/10 text-[#8B5CF6] dark:bg-[#8B5CF6]/20 dark:text-[#8B5CF6] flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
-                <Repeat className="w-4 h-4" />
-              </div>
-              <span className="text-[11px] sm:text-xs font-bold text-slate-800 dark:text-slate-200 whitespace-nowrap">Convert</span>
-            </button>
-          </div>
-        </section>
+        {/* Upgraded Portfolio Card & Quick Actions with Live Switcher, Animations & Micro-interactions */}
+        <TotalAssetsArea
+          balances={balances}
+          showBalances={showBalances}
+          onToggleShowBalances={onToggleShowBalances}
+          onOpenDeposit={onOpenDeposit}
+          onOpenWithdraw={onOpenWithdraw}
+          onOpenSend={onOpenSend}
+          onOpenConvert={onOpenConvert}
+          variant="assets"
+          className="lg:col-span-8"
+        />
 
         {/* Security & Proof of Reserves Banner (Desktop & Tablet) */}
         <section className="lg:col-span-4 rounded-2xl bg-slate-50 dark:bg-[#0C0F1A] border border-slate-200 dark:border-white/[0.08] p-5 flex flex-col justify-between shadow-xs">

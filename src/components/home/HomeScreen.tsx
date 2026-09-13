@@ -7,6 +7,7 @@ import { MarketListSkeleton } from './MarketListSkeleton';
 import { HomeSkeleton } from '../skeletons/HomeSkeleton';
 import { CryptoNewsSection } from './CryptoNewsSection';
 import { PromotionalBannerCarousel } from './PromotionalBannerCarousel';
+import { TotalAssetsArea } from './TotalAssetsArea';
 import { MarketPair, RecentActivityItem, ThemeMode, AppNotification } from '../../types';
 import {
   Search,
@@ -42,8 +43,12 @@ import { NotificationsDropdown } from '../navigation/NotificationsDropdown';
 interface HomeScreenProps {
   balances: {
     totalAssets: number;
-    pnl24hUsd: number;
+    pnl24hUsd?: number;
     pnl24hPct: number;
+    spotUsd?: number;
+    fundingUsd?: number;
+    earnUsd?: number;
+    futuresUsd?: number;
   };
   marketPairs: MarketPair[];
   recentActivities: RecentActivityItem[];
@@ -247,107 +252,22 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 items-start">
         {/* Main Column */}
         <div className="lg:col-span-7 xl:col-span-8 space-y-4">
-          {/* Portfolio Card */}
-          <section
-            id="home-portfolio-card"
-            className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-white via-[#F8FAFC] to-[#F1F5F9] dark:from-[#141B24] dark:via-[#0E141B] dark:to-[#0A0E13] border border-[#D7E0EB] dark:border-[#242E3B] p-4 sm:p-5 shadow-[0_4px_20px_rgba(15,23,42,0.06)] dark:shadow-[0_8px_32px_rgba(0,0,0,0.5)] transition-colors"
-          >
-        {/* Ambient background glow */}
-        <div className="absolute -top-10 -right-10 w-44 h-44 rounded-full bg-[#8B5CF6]/10 dark:bg-[#8B5CF6]/15 blur-3xl pointer-events-none" />
-        <div className="absolute -bottom-10 -left-10 w-36 h-36 rounded-full bg-[#06B6D4]/10 dark:bg-[#06B6D4]/10 blur-2xl pointer-events-none" />
+          {/* Upgraded Total Assets Area with animations, live currency switcher, P&L sparklines, and asset breakdown */}
+          <TotalAssetsArea
+            balances={balances}
+            showBalances={showBalances}
+            onToggleShowBalances={onToggleShowBalances}
+            onOpenDeposit={onOpenDeposit}
+            onOpenWithdraw={onOpenWithdraw}
+            onOpenSend={onOpenSend}
+            onOpenConvert={onOpenConvert}
+            onNavigateAnalytics={onNavigateAnalytics}
+            onNavigateWallet={onNavigateWallet}
+            variant="home"
+            className="mb-4"
+          />
 
-        <div className="relative z-10 flex items-start justify-between">
-          <div>
-            <div className="flex items-center gap-2 mb-1.5 text-[#64748B] dark:text-[#8E98A6]">
-              <span className="text-xs font-semibold tracking-wide">Total Assets</span>
-              <button
-                onClick={onToggleShowBalances}
-                className="p-1 text-[#64748B] hover:text-[#0F172A] dark:text-[#8E98A6] dark:hover:text-[#EDF1F5] transition-colors"
-                aria-label="Toggle balance visibility"
-              >
-                {showBalances ? <Eye className="w-3.5 h-3.5" /> : <EyeOff className="w-3.5 h-3.5" />}
-              </button>
-            </div>
-
-            <div className="flex items-baseline gap-1.5 mb-2">
-              <h1 className="text-2xl font-bold font-display tracking-tight text-[#0F172A] dark:text-[#EDF1F5]">
-                {showBalances ? `$${balances.totalAssets.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}` : '••••••••'}
-              </h1>
-              <span className="text-xs font-semibold text-[#64748B] dark:text-[#8E98A6]">USD</span>
-            </div>
-
-            {/* 24h P&L Indicator */}
-            <div className="inline-flex items-center gap-2 px-2 py-1 rounded-lg bg-emerald-50 dark:bg-emerald-500/10 border border-emerald-200 dark:border-emerald-500/20">
-              <TrendingUp className="w-3.5 h-3.5 text-[#10B981]" />
-              <span className="font-mono-num text-xs font-bold text-[#10B981]">
-                +{balances.pnl24hPct}% (24h)
-              </span>
-              <Sparkline
-                data={[100, 104, 102, 108, 112, 115]}
-                isPositive={true}
-                width={36}
-                height={14}
-                strokeWidth={1.5}
-                showFill={false}
-              />
-            </div>
-          </div>
-
-          {/* 3D OKNexus glowing badge */}
-          <div className="flex-shrink-0">
-            <OKNexusBadge3D size={58} />
-          </div>
-        </div>
-      </section>
-
-      {/* Primary Financial Actions (Deposit | Withdraw | Send | Convert) */}
-      <section id="home-quick-actions" className="grid grid-cols-4 gap-2 sm:gap-3 mb-4">
-        <button
-          id="action-deposit"
-          onClick={onOpenDeposit}
-          className="flex flex-col items-center justify-center py-2.5 px-1 sm:px-2 rounded-2xl bg-white dark:bg-[#0E141B] border border-[#D7E0EB] dark:border-[#242E3B] hover:border-[#8B5CF6]/50 dark:hover:bg-[#141B24] active:scale-95 transition-all group shadow-xs"
-        >
-          <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-[#8B5CF6]/10 border border-[#8B5CF6]/20 text-[#8B5CF6] dark:bg-[#141B24] dark:border-[#8B5CF6]/30 dark:text-[#8B5CF6] flex items-center justify-center group-hover:scale-105 transition-transform">
-            <PlusSquare className="w-4 h-4" />
-          </div>
-          <span className="text-[11px] sm:text-xs font-semibold text-[#0F172A] dark:text-[#EDF1F5] mt-1.5 truncate">Deposit</span>
-        </button>
-
-        <button
-          id="action-withdraw"
-          onClick={onOpenWithdraw}
-          className="flex flex-col items-center justify-center py-2.5 px-1 sm:px-2 rounded-2xl bg-white dark:bg-[#0E141B] border border-[#D7E0EB] dark:border-[#242E3B] hover:border-[#8B5CF6]/50 dark:hover:bg-[#141B24] active:scale-95 transition-all group shadow-xs"
-        >
-          <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-[#8B5CF6]/10 border border-[#8B5CF6]/20 text-[#8B5CF6] dark:bg-[#141B24] dark:border-[#8B5CF6]/30 dark:text-[#8B5CF6] flex items-center justify-center group-hover:scale-105 transition-transform">
-            <ArrowUpRight className="w-4 h-4" />
-          </div>
-          <span className="text-[11px] sm:text-xs font-semibold text-[#0F172A] dark:text-[#EDF1F5] mt-1.5 truncate">Withdraw</span>
-        </button>
-
-        <button
-          id="action-send"
-          onClick={onOpenSend}
-          className="flex flex-col items-center justify-center py-2.5 px-1 sm:px-2 rounded-2xl bg-white dark:bg-[#0E141B] border border-[#D7E0EB] dark:border-[#242E3B] hover:border-[#8B5CF6]/50 dark:hover:bg-[#141B24] active:scale-95 transition-all group shadow-xs"
-        >
-          <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-[#8B5CF6]/10 border border-[#8B5CF6]/20 text-[#8B5CF6] dark:bg-[#141B24] dark:border-[#8B5CF6]/30 dark:text-[#8B5CF6] flex items-center justify-center group-hover:scale-105 transition-transform">
-            <Send className="w-4 h-4" />
-          </div>
-          <span className="text-[11px] sm:text-xs font-semibold text-[#0F172A] dark:text-[#EDF1F5] mt-1.5 truncate">Send</span>
-        </button>
-
-        <button
-          id="action-convert"
-          onClick={onOpenConvert}
-          className="flex flex-col items-center justify-center py-2.5 px-1 sm:px-2 rounded-2xl bg-white dark:bg-[#0E141B] border border-[#D7E0EB] dark:border-[#242E3B] hover:border-[#8B5CF6]/50 dark:hover:bg-[#141B24] active:scale-95 transition-all group shadow-xs"
-        >
-          <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-[#8B5CF6]/10 border border-[#8B5CF6]/20 text-[#8B5CF6] dark:bg-[#141B24] dark:border-[#8B5CF6]/30 dark:text-[#8B5CF6] flex items-center justify-center group-hover:scale-105 transition-transform">
-            <Repeat className="w-4 h-4" />
-          </div>
-          <span className="text-[11px] sm:text-xs font-semibold text-[#0F172A] dark:text-[#EDF1F5] mt-1.5 truncate">Convert</span>
-        </button>
-      </section>
-
-      {/* Promotional / Advertisement Slider & Announcements */}
+          {/* Promotional / Advertisement Slider & Announcements */}
       <section id="home-promotional-section" className="mb-4">
         <PromotionalBannerCarousel
           onNavigateP2P={onNavigateP2P}
