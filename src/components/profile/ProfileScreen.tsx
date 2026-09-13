@@ -337,27 +337,30 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({
           </div>
         )}
 
-        {/* User Hero Banner - Upgraded Luxury Exchange Profile Card */}
+        {/* User Hero Banner - Exchange-Grade Redesigned Profile Card */}
         <section
           id="profile-hero-card"
-          className={`mb-6 rounded-3xl bg-gradient-to-br from-purple-900/20 via-white to-indigo-900/10 dark:from-purple-950/60 dark:via-[#0D121B] dark:to-indigo-950/40 border border-purple-500/25 dark:border-purple-500/20 shadow-sm relative overflow-hidden p-5 sm:p-6 ${
+          className={`mb-6 rounded-3xl bg-white dark:bg-[#0B0F19] border border-slate-200/90 dark:border-white/[0.08] shadow-sm relative overflow-hidden p-5 sm:p-7 ${
             mobileDrillDownActive ? 'hidden lg:block' : 'block'
           }`}
         >
-          {/* Subtle Ambient Glow */}
-          <div className="absolute top-0 right-0 w-80 h-80 bg-purple-500/10 dark:bg-purple-600/10 rounded-full blur-3xl pointer-events-none -mr-20 -mt-20" />
-          <div className="absolute bottom-0 left-1/3 w-60 h-60 bg-indigo-500/10 dark:bg-indigo-600/10 rounded-full blur-3xl pointer-events-none -mb-20" />
+          {/* Subtle Top Accent Hairline */}
+          <div className="absolute inset-x-0 top-0 h-[2px] bg-gradient-to-r from-transparent via-purple-500/60 to-transparent" />
+          {/* Ambient Background Glows */}
+          <div className="absolute top-0 right-0 w-80 h-80 bg-purple-500/[0.06] dark:bg-purple-600/[0.08] rounded-full blur-3xl pointer-events-none -mr-20 -mt-20" />
+          <div className="absolute bottom-0 left-1/4 w-60 h-60 bg-indigo-500/[0.04] dark:bg-indigo-600/[0.06] rounded-full blur-3xl pointer-events-none -mb-20" />
 
           <div className="relative z-10 flex flex-col lg:flex-row lg:items-center justify-between gap-6">
             {/* Left: Avatar and Identity */}
-            <div className="flex items-center gap-4 sm:gap-5">
-              {/* Avatar with gradient halo and camera trigger */}
-              <div className="relative group shrink-0">
+            <div className="flex flex-col sm:flex-row sm:items-center gap-4 sm:gap-6 min-w-0">
+              {/* Avatar with Gradient Squircle Ring and Camera Trigger */}
+              <div className="relative shrink-0 self-start sm:self-auto">
                 <div
-                  className="w-18 h-18 sm:w-22 sm:h-22 rounded-2xl bg-gradient-to-tr from-purple-600 via-indigo-500 to-amber-400 p-[2.5px] shadow-lg cursor-pointer hover:scale-102 active:scale-98 transition-all"
+                  className="w-20 h-20 sm:w-24 sm:h-24 rounded-2xl p-[2.5px] bg-gradient-to-tr from-purple-600 via-indigo-500 to-amber-400 shadow-md cursor-pointer hover:scale-[1.02] active:scale-[0.98] transition-transform"
                   onClick={() => setIsAvatarPickerOpen(!isAvatarPickerOpen)}
+                  title="Click to customize avatar"
                 >
-                  <div className="w-full h-full rounded-[14px] bg-white dark:bg-[#0A0E13] overflow-hidden flex items-center justify-center relative">
+                  <div className="w-full h-full rounded-[13px] bg-slate-100 dark:bg-[#0A0D16] overflow-hidden flex items-center justify-center relative">
                     {userAvatar ? (
                       <img
                         src={userAvatar}
@@ -366,54 +369,60 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({
                         referrerPolicy="no-referrer"
                       />
                     ) : (
-                      <span className="font-black text-2xl sm:text-3xl text-purple-600">
+                      <span className="font-black text-2xl sm:text-3xl text-purple-600 dark:text-purple-400">
                         {username.substring(0, 2).toUpperCase()}
                       </span>
                     )}
                     {/* Live Online Badge */}
-                    <div className="absolute top-1.5 right-1.5 w-2.5 h-2.5 rounded-full bg-emerald-500 ring-2 ring-white dark:ring-[#0A0E13] animate-pulse" />
+                    <div className="absolute top-1.5 right-1.5 w-3 h-3 rounded-full bg-emerald-500 ring-2 ring-white dark:ring-[#0A0D16] flex items-center justify-center">
+                      <span className="w-1.5 h-1.5 rounded-full bg-white animate-ping opacity-75" />
+                    </div>
                   </div>
                 </div>
+
+                {/* Camera Overlay Button */}
                 <button
                   type="button"
                   onClick={() => setIsAvatarPickerOpen(!isAvatarPickerOpen)}
-                  className="absolute -bottom-1 -right-1 w-7 h-7 rounded-xl bg-purple-600 text-white flex items-center justify-center shadow-md hover:bg-purple-500 transition-all active:scale-90"
+                  className="absolute -bottom-1 -right-1 w-8 h-8 rounded-xl bg-purple-600 hover:bg-purple-500 text-white flex items-center justify-center shadow-lg ring-2 ring-white dark:ring-[#0B0F19] transition-all hover:scale-110 active:scale-90"
                   title="Change Avatar"
+                  aria-label="Change Avatar"
                 >
                   <Camera className="w-4 h-4" />
                 </button>
               </div>
 
-              {/* User Details */}
-              <div className="min-w-0">
+              {/* User Identity, Badges & Meta Details */}
+              <div className="min-w-0 flex-1 space-y-2.5">
+                {/* 1. Username & Inline Edit */}
                 {isEditingUsername ? (
-                  <div className="flex items-center gap-1.5 mb-1.5">
+                  <div className="flex items-center gap-2 flex-wrap">
                     <input
                       type="text"
                       value={tempUsername}
                       onChange={(e) => setTempUsername(e.target.value)}
                       placeholder="Username"
-                      className="px-3 py-1.5 rounded-xl text-xs font-bold bg-white dark:bg-[#0A0E13] border border-purple-500 text-slate-900 dark:text-white w-44 focus:outline-none focus:ring-2 focus:ring-purple-500/40"
+                      className="px-3 py-1.5 rounded-xl text-sm font-bold bg-slate-50 dark:bg-[#0A0D16] border border-purple-500 text-slate-900 dark:text-white w-48 focus:outline-none focus:ring-2 focus:ring-purple-500/40"
                       autoFocus
                       maxLength={25}
                     />
                     <button
                       type="button"
                       onClick={handleSaveUsername}
-                      className="px-3 py-1.5 rounded-xl bg-purple-600 text-white text-xs font-bold hover:bg-purple-500 transition-colors"
+                      className="px-3 py-1.5 rounded-xl bg-purple-600 text-white text-xs font-bold hover:bg-purple-500 transition-colors shadow-2xs"
                     >
                       Save
                     </button>
                     <button
                       type="button"
                       onClick={() => setIsEditingUsername(false)}
-                      className="text-xs text-slate-400 hover:text-slate-600 p-1.5 rounded-lg"
+                      className="text-xs text-slate-500 hover:text-slate-700 dark:hover:text-slate-300 px-2 py-1.5 rounded-lg"
                     >
-                      ✕
+                      Cancel
                     </button>
                   </div>
                 ) : (
-                  <div className="flex items-center gap-2 flex-wrap mb-1">
+                  <div className="flex items-center gap-2 flex-wrap">
                     <h2 className="font-black text-xl sm:text-2xl text-slate-900 dark:text-white tracking-tight">
                       @{username}
                     </h2>
@@ -423,65 +432,79 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({
                         setTempUsername(username);
                         setIsEditingUsername(true);
                       }}
-                      className="text-slate-400 hover:text-purple-600 dark:hover:text-purple-400 transition-colors p-1"
+                      className="p-1 rounded-lg text-slate-400 hover:text-purple-600 dark:hover:text-purple-400 hover:bg-slate-100 dark:hover:bg-white/[0.06] transition-colors"
                       title="Edit Username"
+                      aria-label="Edit Username"
                     >
                       <Edit2 className="w-3.5 h-3.5" />
                     </button>
-                    <span className="px-2.5 py-0.5 rounded-full bg-purple-500/15 text-purple-700 dark:text-purple-300 text-[10px] font-extrabold border border-purple-500/30 flex items-center gap-1">
-                      <Crown className="w-3 h-3 text-amber-500" />
-                      <span>VIP TIER 2</span>
-                    </span>
-                    <span className="px-2.5 py-0.5 rounded-full bg-emerald-500/15 text-emerald-700 dark:text-emerald-400 text-[10px] font-bold border border-emerald-500/30 flex items-center gap-1">
-                      <CheckCircle2 className="w-3 h-3 text-emerald-500" />
-                      <span>KYC Verified</span>
-                    </span>
                   </div>
                 )}
 
-                <div className="flex items-center gap-2 text-xs text-slate-600 dark:text-slate-300 font-medium">
-                  <span>{userEmail}</span>
-                  <span className="text-slate-300 dark:text-slate-700">•</span>
-                  <span className="text-[11px] text-emerald-600 dark:text-emerald-400 flex items-center gap-1">
-                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 inline-block" />
-                    Account Active
+                {/* 2. Distinct Badges Row (VIP Tier, KYC Verified, Account Active) */}
+                <div className="flex items-center gap-2 flex-wrap">
+                  {/* VIP Tier Badge */}
+                  <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-bold bg-purple-500/10 text-purple-700 dark:text-purple-300 border border-purple-500/25 whitespace-nowrap shadow-2xs">
+                    <Crown className="w-3.5 h-3.5 text-amber-500 shrink-0" />
+                    <span>VIP TIER 2</span>
+                  </span>
+
+                  {/* KYC Verified Badge */}
+                  <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-bold bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border border-emerald-500/25 whitespace-nowrap shadow-2xs">
+                    <CheckCircle2 className="w-3.5 h-3.5 text-emerald-500 shrink-0" />
+                    <span>KYC Verified</span>
+                  </span>
+
+                  {/* Account Status Badge (Strict whitespace-nowrap prevents line splitting) */}
+                  <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border border-emerald-500/20 whitespace-nowrap shadow-2xs">
+                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse shrink-0" />
+                    <span>Account Active</span>
                   </span>
                 </div>
 
-                {/* UID, Joined Date & Security Badge */}
-                <div className="flex items-center gap-2.5 text-[11px] text-slate-500 dark:text-slate-400 font-mono mt-2 flex-wrap">
-                  <div className="flex items-center gap-1 bg-slate-100 dark:bg-white/[0.05] px-2 py-0.5 rounded-lg">
+                {/* 3. Metadata Row (Email, UID Copy Button & Membership) */}
+                <div className="flex items-center gap-2 sm:gap-3 text-xs text-slate-600 dark:text-slate-300 font-medium flex-wrap pt-0.5">
+                  <span className="font-sans truncate max-w-[200px] sm:max-w-none text-slate-700 dark:text-slate-300">
+                    {userEmail}
+                  </span>
+
+                  <span className="text-slate-300 dark:text-slate-700 select-none">•</span>
+
+                  {/* Interactive Copyable UID Pill */}
+                  <button
+                    type="button"
+                    onClick={handleCopyUid}
+                    className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-xl bg-slate-100 hover:bg-slate-200/80 dark:bg-white/[0.06] dark:hover:bg-white/[0.1] border border-slate-200/80 dark:border-white/10 text-xs font-mono font-semibold text-slate-700 dark:text-slate-200 active:scale-95 transition-all group"
+                    title="Click to copy UID"
+                  >
                     <span>UID: {uid}</span>
-                    <button
-                      type="button"
-                      onClick={handleCopyUid}
-                      className="text-purple-600 dark:text-purple-400 hover:opacity-80 inline-flex items-center ml-1"
-                      title="Copy UID"
-                    >
-                      {copiedUid ? (
-                        <CheckCheck className="w-3 h-3 text-emerald-500" />
-                      ) : (
-                        <Copy className="w-3 h-3" />
-                      )}
-                    </button>
-                  </div>
-                  <span className="text-slate-300 dark:text-slate-700 hidden sm:inline">•</span>
-                  <span className="hidden sm:inline font-sans">Member since Oct 2023</span>
+                    {copiedUid ? (
+                      <CheckCheck className="w-3.5 h-3.5 text-emerald-500 shrink-0" />
+                    ) : (
+                      <Copy className="w-3.5 h-3.5 text-slate-400 group-hover:text-purple-600 dark:group-hover:text-purple-400 transition-colors shrink-0" />
+                    )}
+                  </button>
+
+                  <span className="text-slate-300 dark:text-slate-700 select-none hidden sm:inline">•</span>
+
+                  <span className="text-[11px] text-slate-500 dark:text-slate-400 font-sans hidden sm:inline">
+                    Member since Oct 2023
+                  </span>
                 </div>
               </div>
             </div>
 
-            {/* Right: Security & Quick Action Strip */}
-            <div className="flex flex-col sm:flex-row lg:flex-col items-start sm:items-center lg:items-end justify-between gap-3 pt-3 sm:pt-0 border-t sm:border-t-0 border-slate-200 dark:border-white/10 shrink-0">
-              {/* Security Health Ring */}
-              <div className="p-3 rounded-2xl bg-white/80 dark:bg-[#0A0E13]/80 border border-slate-200 dark:border-white/10 w-full sm:w-auto shadow-2xs">
+            {/* Right: Security Health & Fast Actions */}
+            <div className="flex flex-col sm:flex-row lg:flex-col items-stretch sm:items-center lg:items-end justify-between gap-3 pt-3 lg:pt-0 border-t lg:border-t-0 border-slate-200/80 dark:border-white/[0.08] shrink-0">
+              {/* Security Health Box */}
+              <div className="p-3 sm:p-3.5 rounded-2xl bg-slate-50 dark:bg-[#0E1322] border border-slate-200/80 dark:border-white/[0.08] w-full sm:w-auto min-w-[210px] shadow-2xs">
                 <div className="flex items-center justify-between gap-4 text-xs">
-                  <div className="flex items-center gap-2">
-                    <div className="w-7 h-7 rounded-xl bg-emerald-500/15 border border-emerald-500/30 flex items-center justify-center text-emerald-600 dark:text-emerald-400">
+                  <div className="flex items-center gap-2.5">
+                    <div className="w-8 h-8 rounded-xl bg-emerald-500/15 border border-emerald-500/30 flex items-center justify-center text-emerald-600 dark:text-emerald-400 shrink-0">
                       <ShieldCheck className="w-4 h-4" />
                     </div>
                     <div>
-                      <div className="text-[11px] font-bold text-slate-900 dark:text-white">Security Rating</div>
+                      <div className="text-xs font-bold text-slate-900 dark:text-white">Security Rating</div>
                       <div className="text-[10px] text-slate-500 dark:text-slate-400">Elite 2FA Protected</div>
                     </div>
                   </div>
@@ -490,7 +513,7 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({
                   </div>
                 </div>
                 {/* Progress bar */}
-                <div className="w-full bg-slate-100 dark:bg-white/10 h-1.5 rounded-full overflow-hidden mt-2">
+                <div className="w-full bg-slate-200 dark:bg-white/10 h-1.5 rounded-full overflow-hidden mt-2.5">
                   <div className="bg-gradient-to-r from-purple-500 to-emerald-400 h-full rounded-full" style={{ width: '95%' }} />
                 </div>
               </div>
@@ -500,7 +523,7 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({
                 <button
                   type="button"
                   onClick={() => setIsAvatarPickerOpen(!isAvatarPickerOpen)}
-                  className="flex-1 sm:flex-initial px-3 py-2 rounded-xl bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-300 border border-purple-200 dark:border-purple-800/40 text-xs font-bold flex items-center justify-center gap-1.5 hover:bg-purple-200 dark:hover:bg-purple-900/50 transition-colors shadow-2xs"
+                  className="flex-1 sm:flex-initial px-3.5 py-2 rounded-xl bg-purple-50 hover:bg-purple-100 dark:bg-purple-900/30 dark:hover:bg-purple-900/50 text-purple-700 dark:text-purple-300 border border-purple-200 dark:border-purple-800/40 text-xs font-bold flex items-center justify-center gap-1.5 transition-colors shadow-2xs"
                 >
                   <Palette className="w-3.5 h-3.5" />
                   <span>{isAvatarPickerOpen ? 'Close Picker' : 'Change Avatar'}</span>
@@ -509,7 +532,7 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({
                   <button
                     type="button"
                     onClick={() => onOpenSettings()}
-                    className="flex-1 sm:flex-initial px-3 py-2 rounded-xl bg-slate-100 dark:bg-white/[0.06] text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-white/10 text-xs font-bold flex items-center justify-center gap-1.5 hover:bg-slate-200 dark:hover:bg-white/10 transition-colors shadow-2xs"
+                    className="flex-1 sm:flex-initial px-3.5 py-2 rounded-xl bg-slate-100 hover:bg-slate-200/80 dark:bg-white/[0.06] dark:hover:bg-white/10 text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-white/10 text-xs font-bold flex items-center justify-center gap-1.5 transition-colors shadow-2xs"
                   >
                     <Settings className="w-3.5 h-3.5 text-purple-600 dark:text-purple-400" />
                     <span>Settings</span>
@@ -520,26 +543,26 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({
           </div>
 
           {/* Quick Metrics Bar */}
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 mt-5 pt-4 border-t border-slate-200/80 dark:border-white/10">
-            <div className="p-2.5 rounded-xl bg-white/60 dark:bg-white/[0.02] border border-slate-200/60 dark:border-white/[0.06]">
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 mt-5 pt-4 border-t border-slate-200/80 dark:border-white/[0.08]">
+            <div className="p-3 rounded-2xl bg-slate-50 dark:bg-[#0E1322] border border-slate-200/80 dark:border-white/[0.08] shadow-2xs">
               <div className="text-[10px] font-semibold text-slate-500 dark:text-slate-400">30d Trading Volume</div>
-              <div className="text-xs font-bold text-slate-900 dark:text-white font-mono mt-0.5">$148,250 USDT</div>
+              <div className="text-xs font-bold text-slate-900 dark:text-white font-mono mt-1">$148,250 USDT</div>
             </div>
-            <div className="p-2.5 rounded-xl bg-white/60 dark:bg-white/[0.02] border border-slate-200/60 dark:border-white/[0.06]">
+            <div className="p-3 rounded-2xl bg-slate-50 dark:bg-[#0E1322] border border-slate-200/80 dark:border-white/[0.08] shadow-2xs">
               <div className="text-[10px] font-semibold text-slate-500 dark:text-slate-400">P2P Rating</div>
-              <div className="text-xs font-bold text-emerald-600 dark:text-emerald-400 font-mono mt-0.5 flex items-center gap-1">
-                <Star className="w-3 h-3 fill-emerald-500 text-emerald-500" />
+              <div className="text-xs font-bold text-emerald-600 dark:text-emerald-400 font-mono mt-1 flex items-center gap-1">
+                <Star className="w-3 h-3 fill-emerald-500 text-emerald-500 shrink-0" />
                 <span>99.4% (348 trades)</span>
               </div>
             </div>
-            <div className="p-2.5 rounded-xl bg-white/60 dark:bg-white/[0.02] border border-slate-200/60 dark:border-white/[0.06]">
+            <div className="p-3 rounded-2xl bg-slate-50 dark:bg-[#0E1322] border border-slate-200/80 dark:border-white/[0.08] shadow-2xs">
               <div className="text-[10px] font-semibold text-slate-500 dark:text-slate-400">Trading Fee Tier</div>
-              <div className="text-xs font-bold text-purple-600 dark:text-purple-400 font-mono mt-0.5">0.06% / 0.08%</div>
+              <div className="text-xs font-bold text-purple-600 dark:text-purple-400 font-mono mt-1">Maker 0.06% / Taker 0.08%</div>
             </div>
-            <div className="p-2.5 rounded-xl bg-white/60 dark:bg-white/[0.02] border border-slate-200/60 dark:border-white/[0.06]">
+            <div className="p-3 rounded-2xl bg-slate-50 dark:bg-[#0E1322] border border-slate-200/80 dark:border-white/[0.08] shadow-2xs">
               <div className="text-[10px] font-semibold text-slate-500 dark:text-slate-400">Account Safety</div>
-              <div className="text-xs font-bold text-emerald-600 dark:text-emerald-400 font-mono mt-0.5 flex items-center gap-1">
-                <ShieldCheck className="w-3 h-3 text-emerald-500" />
+              <div className="text-xs font-bold text-emerald-600 dark:text-emerald-400 font-mono mt-1 flex items-center gap-1">
+                <ShieldCheck className="w-3 h-3 text-emerald-500 shrink-0" />
                 <span>Optimal (2FA ON)</span>
               </div>
             </div>
