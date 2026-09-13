@@ -26,6 +26,7 @@ import { P2PScreen } from './components/p2p/P2PScreen';
 import { AnalyticsScreen } from './components/analytics/AnalyticsScreen';
 import { ExploreScreen } from './components/explore/ExploreScreen';
 import { ProfileScreen } from './components/profile/ProfileScreen';
+import { SupportCenterScreen } from './components/support/SupportCenterScreen';
 
 // Navigation
 import { BottomNav } from './components/navigation/BottomNav';
@@ -59,11 +60,12 @@ import { ApiManagementModal } from './components/modals/ApiManagementModal';
 import { PairSelectorModal } from './components/modals/PairSelectorModal';
 import { AiTraderModal } from './components/modals/AiTraderModal';
 import { PolymarketModal } from './components/modals/PolymarketModal';
-import { NotificationsModal } from './components/modals/NotificationsModal';
-import { ProfileModal } from './components/modals/ProfileModal';
+import { MobileNotificationsSheet } from './components/navigation/MobileNotificationsSheet';
+import { SettingsScreen, SettingsCategory } from './components/settings/SettingsScreen';
 import { GlobalSearchModal } from './components/modals/GlobalSearchModal';
 import { PriceAlertsModal } from './components/modals/PriceAlertsModal';
 import { CustomerSupportModal } from './components/support/CustomerSupportModal';
+import { ScanToPayModal } from './components/modals/ScanToPayModal';
 
 export default function App() {
   // Authentication State
@@ -91,6 +93,8 @@ export default function App() {
     analytics: false,
     p2p: false,
     profile: false,
+    settings: false,
+    support: false,
   });
 
   useEffect(() => {
@@ -138,15 +142,78 @@ export default function App() {
     safeStorage.setItem('oknexus_avatar', newAvatar);
   };
 
+  // Route URL Mapping for Dedicated Pages
+  const ROUTE_MAP: Record<string, MainTab | 'p2p'> = {
+    '/': 'home',
+    '/home': 'home',
+    '/market': 'market',
+    '/markets': 'market',
+    '/trade': 'trade',
+    '/earn': 'earn',
+    '/assets': 'assets',
+    '/explore': 'explore',
+    '/analytics': 'analytics',
+    '/p2p': 'p2p',
+    '/profile': 'profile',
+    '/settings': 'settings',
+    '/support': 'support',
+  };
+
+  const getInitialTab = (): MainTab | 'p2p' => {
+    if (typeof window === 'undefined') return 'home';
+    const path = window.location.pathname.toLowerCase().replace(/\/$/, '') || '/';
+    if (ROUTE_MAP[path]) return ROUTE_MAP[path];
+    const hash = window.location.hash.toLowerCase().replace('#', '').replace('/', '');
+    if (hash && (ROUTE_MAP['/' + hash] || ROUTE_MAP[hash])) {
+      return ROUTE_MAP['/' + hash] || ROUTE_MAP[hash];
+    }
+    return 'home';
+  };
+
   // Navigation State
-  const [activeTab, setActiveTab] = useState<MainTab | 'p2p'>('home');
+  const [activeTab, setActiveTab] = useState<MainTab | 'p2p'>(getInitialTab);
   const [previousTab, setPreviousTab] = useState<MainTab | 'p2p'>('home');
   const [isLeftNavCollapsed, setIsLeftNavCollapsed] = useState<boolean>(false);
 
-  const navigateTab = (targetTab: MainTab | 'p2p') => {
+  // Sync browser popstate (back/forward navigation)
+  useEffect(() => {
+    const handlePopState = () => {
+      const path = window.location.pathname.toLowerCase().replace(/\/$/, '') || '/';
+      const target = ROUTE_MAP[path] || (window.location.hash.replace('#', '').replace('/', '') as MainTab) || 'home';
+      setActiveTab(target);
+    };
+    window.addEventListener('popstate', handlePopState);
+    return () => window.removeEventListener('popstate', handlePopState);
+  }, []);
+
+  const navigateTab = (targetTab: MainTab | 'p2p', updateHistory = true) => {
     if (activeTab === targetTab) return;
     setPreviousTab(activeTab);
     setActiveTab(targetTab);
+
+    if (updateHistory && typeof window !== 'undefined') {
+      const newPath = targetTab === 'home' ? '/' : `/${targetTab}`;
+      if (window.location.pathname !== newPath) {
+        window.history.pushState({ tab: targetTab }, '', newPath);
+      }
+      const titleMap: Record<string, string> = {
+        home: 'OK Nexus | Smart Crypto Exchange',
+        profile: 'OK Nexus | User Profile & Verification',
+        settings: 'OK Nexus | System & Security Settings',
+        support: 'OK Nexus | 24/7 VIP Customer Support',
+        market: 'OK Nexus | Markets',
+        trade: 'OK Nexus | Spot Trading',
+        earn: 'OK Nexus | Earn & Yield',
+        assets: 'OK Nexus | Assets & Portfolio',
+        p2p: 'OK Nexus | P2P Trading',
+        explore: 'OK Nexus | Explore Web3',
+        analytics: 'OK Nexus | Portfolio Analytics',
+      };
+      if (titleMap[targetTab]) {
+        document.title = titleMap[targetTab];
+      }
+    }
+
     // Trigger skeleton loading state on page transition
     setTabLoading((prev) => ({ ...prev, [targetTab]: true }));
     setTimeout(() => {
@@ -200,22 +267,50 @@ export default function App() {
   const [isAiTraderOpen, setIsAiTraderOpen] = useState(false);
   const [isPolymarketOpen, setIsPolymarketOpen] = useState(false);
   const [isNotificationsOpen, setIsNotificationsOpen] = useState(false);
-  const [isProfileOpen, setIsProfileOpen] = useState(false);
-  const [profileInitialTab, setProfileInitialTab] = useState<'profile' | 'system_settings'>('profile');
+  const [settingsInitialCategory, setSettingsInitialCategory] = useState<SettingsCategory>('account');
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [isPriceAlertsOpen, setIsPriceAlertsOpen] = useState(false);
   const [alertTargetPair, setAlertTargetPair] = useState<MarketPair | undefined>(undefined);
   const [isSupportOpen, setIsSupportOpen] = useState(false);
+  const [isScanToPayOpen, setIsScanToPayOpen] = useState(false);
 
-  const handleOpenProfile = (tab: 'profile' | 'system_settings' = 'profile') => {
-    setProfileInitialTab(tab);
-    if (typeof window !== 'undefined' && window.innerWidth < 768) {
-      setPreviousTab(activeTab === 'profile' ? 'home' : activeTab);
-      navigateTab('profile');
-      setIsProfileOpen(false);
-    } else {
-      setIsProfileOpen(true);
-    }
+  const handleConfirmScanPayment = (amount: number, recipient: string) => {
+    setBalances((b) => ({
+      ...b,
+      totalAssets: Math.max(0, b.totalAssets - amount),
+      spotUsd: Math.max(0, b.spotUsd - amount),
+    }));
+    setRecentActivities((act) => [
+      {
+        id: `act-${Date.now()}`,
+        type: 'withdraw',
+        title: `Scan & Pay: ${recipient}`,
+        subtitle: 'OKNexus Pay • 0% fee',
+        amount: `-${amount.toFixed(2)} USDT`,
+        time: 'Just now',
+      },
+      ...act,
+    ]);
+    setToasts((prev) => [
+      {
+        id: `toast-${Date.now()}`,
+        title: 'Payment Sent Successfully! ⚡',
+        message: `${amount.toFixed(2)} USDT transferred to ${recipient}`,
+        type: 'success',
+        timestamp: 'Just now',
+      },
+      ...prev,
+    ]);
+  };
+
+  // Dedicated Page Navigators (Profile and Settings have their own dedicated page views)
+  const handleOpenProfile = () => {
+    navigateTab('profile');
+  };
+
+  const handleOpenSettings = (category: SettingsCategory = 'account') => {
+    setSettingsInitialCategory(category);
+    navigateTab('settings');
   };
 
   // Check if any modal / overlay is currently active
@@ -234,10 +329,10 @@ export default function App() {
     isAiTraderOpen ||
     isPolymarketOpen ||
     isNotificationsOpen ||
-    isProfileOpen ||
     isSearchOpen ||
     isPriceAlertsOpen ||
-    isSupportOpen;
+    isSupportOpen ||
+    isScanToPayOpen;
 
   // Price Alerts & Toasts State
   const [priceAlerts, setPriceAlerts] = useState<PriceAlert[]>(INITIAL_PRICE_ALERTS);
@@ -815,8 +910,9 @@ export default function App() {
         onOpenAiTrader={() => setIsAiTraderOpen(true)}
         onOpenPolymarket={() => setIsPolymarketOpen(true)}
         onOpenRewards={() => setIsRewardsOpen(true)}
-        onOpenSupport={() => setIsSupportOpen(true)}
+        onOpenSupport={() => navigateTab('support')}
         onOpenProfile={handleOpenProfile}
+        onOpenSettings={handleOpenSettings}
         userEmail={userEmail}
         username={username}
         userAvatar={userAvatar}
@@ -835,8 +931,14 @@ export default function App() {
             onOpenDeposit={() => setIsDepositOpen(true)}
             onOpenNotifications={() => setIsNotificationsOpen(true)}
             unreadNotificationsCount={unreadNotificationsCount}
-            onOpenSupport={() => setIsSupportOpen(true)}
+            notifications={notifications}
+            onMarkNotificationAsRead={handleMarkNotificationAsRead}
+            onMarkAllNotificationsAsRead={handleMarkAllNotificationsAsRead}
+            onOpenPriceAlerts={() => handleOpenPriceAlerts()}
+            activeAlertsCount={totalActiveAlerts}
+            onOpenSupport={() => navigateTab('support')}
             onOpenProfile={handleOpenProfile}
+            onOpenSettings={handleOpenSettings}
             userEmail={userEmail}
             username={username}
             userAvatar={userAvatar}
@@ -862,7 +964,11 @@ export default function App() {
               onOpenSearch={() => setIsSearchOpen(true)}
               onOpenNotifications={() => setIsNotificationsOpen(true)}
               unreadNotificationsCount={unreadNotificationsCount}
+              notifications={notifications}
+              onMarkNotificationAsRead={handleMarkNotificationAsRead}
+              onMarkAllNotificationsAsRead={handleMarkAllNotificationsAsRead}
               onOpenProfile={handleOpenProfile}
+              onOpenScanToPay={() => setIsScanToPayOpen(true)}
               onOpenAiTrader={() => setIsAiTraderOpen(true)}
               onOpenPolymarket={() => setIsPolymarketOpen(true)}
               onOpenPriceAlerts={() => handleOpenPriceAlerts()}
@@ -877,7 +983,7 @@ export default function App() {
               onNavigateAnalytics={() => navigateTab('analytics')}
               onOpenBuySell={() => setIsBuySellOpen(true)}
               onOpenMore={() => setIsMoreOpen(true)}
-              onOpenSupport={() => setIsSupportOpen(true)}
+              onOpenSupport={() => navigateTab('support')}
               isLoading={isHomeLoading || tabLoading['home']}
               theme={theme}
               onToggleTheme={handleToggleTheme}
@@ -995,12 +1101,45 @@ export default function App() {
               onSignOut={handleSignOut}
               theme={theme}
               onToggleTheme={handleToggleTheme}
-              onOpenSupport={() => setIsSupportOpen(true)}
+              onOpenSupport={() => navigateTab('support')}
               onOpenAnalytics={() => navigateTab('analytics')}
               onOpenApiManagement={() => setIsApiManagementOpen(true)}
+              onOpenSettings={(cat) => handleOpenSettings(cat)}
               onBack={() => navigateTab(previousTab === 'profile' ? 'home' : previousTab)}
-              initialSubView={profileInitialTab}
               isLoading={tabLoading['profile']}
+            />
+          )}
+
+          {activeTab === 'settings' && (
+            <SettingsScreen
+              userEmail={userEmail}
+              uid="8829410"
+              username={username}
+              onUpdateUsername={handleUpdateUsername}
+              userAvatar={userAvatar}
+              theme={theme}
+              onToggleTheme={handleToggleTheme}
+              onOpenSupport={() => navigateTab('support')}
+              onOpenProfile={handleOpenProfile}
+              onBack={() => navigateTab(previousTab === 'settings' ? 'home' : previousTab)}
+              initialCategory={settingsInitialCategory}
+              isLoading={tabLoading['settings']}
+            />
+          )}
+
+          {activeTab === 'support' && (
+            <SupportCenterScreen
+              onBack={() => navigateTab(previousTab === 'support' ? 'home' : previousTab)}
+              onOpenDeposit={() => setIsDepositOpen(true)}
+              onOpenWithdraw={() => setIsWithdrawOpen(true)}
+              onOpenTrade={() => navigateTab('trade')}
+              onOpenP2P={() => navigateTab('p2p')}
+              onOpenAiTrader={() => setIsAiTraderOpen(true)}
+              onOpenSecurity={() => handleOpenSettings('security')}
+              userEmail={userEmail}
+              theme={theme}
+              onToggleTheme={handleToggleTheme}
+              isLoading={tabLoading['support']}
             />
           )}
         </main>
@@ -1100,7 +1239,8 @@ export default function App() {
         onClose={() => setIsPolymarketOpen(false)}
       />
 
-      <NotificationsModal
+      {/* Mobile Notifications Bottom Sheet */}
+      <MobileNotificationsSheet
         isOpen={isNotificationsOpen}
         onClose={() => setIsNotificationsOpen(false)}
         notifications={notifications}
@@ -1109,27 +1249,6 @@ export default function App() {
         onOpenPriceAlerts={() => handleOpenPriceAlerts()}
         activeAlertsCount={totalActiveAlerts}
       />
-
-      {typeof window !== 'undefined' && window.innerWidth >= 768 && (
-        <ProfileModal
-          isOpen={isProfileOpen}
-          onClose={() => setIsProfileOpen(false)}
-          initialTab={profileInitialTab}
-          userEmail={userEmail}
-          username={username}
-          onUpdateUsername={handleUpdateUsername}
-          userAvatar={userAvatar}
-          onUpdateAvatar={handleUpdateAvatar}
-          onSignOut={handleSignOut}
-          onOpenSupport={() => setIsSupportOpen(true)}
-          onOpenAnalytics={() => {
-            setIsProfileOpen(false);
-            navigateTab('analytics');
-          }}
-          theme={theme}
-          onToggleTheme={handleToggleTheme}
-        />
-      )}
 
       {/* Instant Buy / Sell Modal */}
       <BuySellModal
@@ -1186,8 +1305,18 @@ export default function App() {
         onOpenReferrals={() => setIsReferralsOpen(true)}
         onOpenApiManagement={() => setIsApiManagementOpen(true)}
         onOpenPriceAlerts={() => handleOpenPriceAlerts()}
-        onOpenSettings={(tab) => handleOpenProfile(tab || 'system_settings')}
-        onOpenSupport={() => setIsSupportOpen(true)}
+        onOpenSettings={(cat) => {
+          setIsMoreOpen(false);
+          handleOpenSettings(cat || 'account');
+        }}
+        onOpenProfile={() => {
+          setIsMoreOpen(false);
+          handleOpenProfile();
+        }}
+        onOpenSupport={() => {
+          setIsMoreOpen(false);
+          navigateTab('support');
+        }}
         onSignOut={handleSignOut}
       />
 
@@ -1245,6 +1374,15 @@ export default function App() {
         onSimulatePriceMove={handleSimulatePriceMove}
       />
 
+      {/* Instant Scan to Pay Modal */}
+      <ScanToPayModal
+        isOpen={isScanToPayOpen}
+        onClose={() => setIsScanToPayOpen(false)}
+        availableUsdt={balances.spotUsd}
+        username={username}
+        onConfirmPayment={handleConfirmScanPayment}
+      />
+
       {/* 24/7 AI VIP Customer Support Modal */}
       <CustomerSupportModal
         isOpen={isSupportOpen}
@@ -1275,7 +1413,7 @@ export default function App() {
         }}
         onOpenSecurity={() => {
           setIsSupportOpen(false);
-          handleOpenProfile('profile');
+          handleOpenSettings('security');
         }}
         onOpenEarn={() => {
           setIsSupportOpen(false);

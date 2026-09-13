@@ -1,5 +1,5 @@
-import React from 'react';
-import { MarketPair, ThemeMode } from '../../types';
+import React, { useState } from 'react';
+import { MarketPair, ThemeMode, AppNotification } from '../../types';
 import {
   Search,
   Bell,
@@ -8,16 +8,21 @@ import {
   ShieldCheck,
   Settings,
 } from 'lucide-react';
+import { NotificationsDropdown } from './NotificationsDropdown';
 
 interface DesktopTopBarProps {
   onOpenSearch: () => void;
   onOpenDeposit: () => void;
-  onOpenNotifications: () => void;
+  onOpenNotifications?: () => void;
   unreadNotificationsCount?: number;
+  notifications?: AppNotification[];
+  onMarkNotificationAsRead?: (id: string) => void;
+  onMarkAllNotificationsAsRead?: () => void;
   onOpenPriceAlerts?: () => void;
   activeAlertsCount?: number;
   onOpenSupport: () => void;
   onOpenProfile: (tab?: 'profile' | 'system_settings') => void;
+  onOpenSettings?: () => void;
   userEmail: string;
   username?: string;
   userAvatar?: string;
@@ -31,8 +36,14 @@ export const DesktopTopBar: React.FC<DesktopTopBarProps> = ({
   onOpenDeposit,
   onOpenNotifications,
   unreadNotificationsCount = 0,
+  notifications = [],
+  onMarkNotificationAsRead,
+  onMarkAllNotificationsAsRead,
+  onOpenPriceAlerts,
+  activeAlertsCount = 0,
   onOpenSupport,
   onOpenProfile,
+  onOpenSettings,
   userEmail,
   username = 'Mickel_Lucky',
   userAvatar = '',
@@ -40,6 +51,12 @@ export const DesktopTopBar: React.FC<DesktopTopBarProps> = ({
   theme = 'dark',
   onToggleTheme,
 }) => {
+  const [isNotificationsDropdownOpen, setIsNotificationsDropdownOpen] = useState(false);
+
+  const toggleNotifications = () => {
+    setIsNotificationsDropdownOpen((prev) => !prev);
+  };
+
   return (
     <header
       id="desktop-top-utility-bar"
@@ -90,20 +107,40 @@ export const DesktopTopBar: React.FC<DesktopTopBarProps> = ({
           <span>Deposit</span>
         </button>
 
-        {/* Single Unified Notifications Button (No duplicate bell) */}
-        <button
-          onClick={onOpenNotifications}
-          className="relative p-2 rounded-xl bg-slate-100 hover:bg-slate-200/80 border border-slate-200 text-slate-600 hover:text-slate-900 dark:bg-[#0D111A] dark:hover:bg-[#121724] dark:border-white/[0.07] dark:text-slate-300 dark:hover:text-white transition-all"
-          title="Notifications & Alerts"
-          aria-label="Notifications and Alerts"
-        >
-          <Bell className="w-4 h-4" />
-          {unreadNotificationsCount > 0 && (
-            <span className="absolute -top-1 -right-1 min-w-4 h-4 px-1 rounded-full bg-purple-600 text-white font-bold text-[9px] flex items-center justify-center shadow-[0_0_8px_rgba(168,85,247,0.8)]">
-              {unreadNotificationsCount}
-            </span>
-          )}
-        </button>
+        {/* Unified Notifications Dropdown Anchor */}
+        <div className="relative">
+          <button
+            id="desktop-notifications-trigger"
+            onClick={toggleNotifications}
+            className={`relative p-2 rounded-xl border transition-all ${
+              isNotificationsDropdownOpen
+                ? 'bg-[#8B5CF6]/15 border-[#8B5CF6] text-[#8B5CF6] shadow-xs'
+                : 'bg-slate-100 hover:bg-slate-200/80 border-slate-200 text-slate-600 hover:text-slate-900 dark:bg-[#0D111A] dark:hover:bg-[#121724] dark:border-white/[0.07] dark:text-slate-300 dark:hover:text-white'
+            }`}
+            title="Notifications & Alerts"
+            aria-label="Notifications and Alerts"
+            aria-expanded={isNotificationsDropdownOpen}
+          >
+            <Bell className="w-4 h-4" />
+            {unreadNotificationsCount > 0 && (
+              <span className="absolute -top-1 -right-1 min-w-4 h-4 px-1 rounded-full bg-purple-600 text-white font-bold text-[9px] flex items-center justify-center shadow-[0_0_8px_rgba(168,85,247,0.8)]">
+                {unreadNotificationsCount > 9 ? '9+' : unreadNotificationsCount}
+              </span>
+            )}
+          </button>
+
+          {/* Anchored Dropdown Panel */}
+          <NotificationsDropdown
+            isOpen={isNotificationsDropdownOpen}
+            onClose={() => setIsNotificationsDropdownOpen(false)}
+            notifications={notifications}
+            onMarkAsRead={(id) => onMarkNotificationAsRead?.(id)}
+            onMarkAllAsRead={() => onMarkAllNotificationsAsRead?.()}
+            onOpenPriceAlerts={onOpenPriceAlerts}
+            activeAlertsCount={activeAlertsCount}
+            align="right"
+          />
+        </div>
 
         {/* 24/7 AI Concierge */}
         <button
@@ -118,19 +155,20 @@ export const DesktopTopBar: React.FC<DesktopTopBarProps> = ({
         {/* System Settings & Preferences */}
         <button
           id="desktop-settings-trigger-btn"
-          onClick={() => onOpenProfile('system_settings')}
+          onClick={() => (onOpenSettings ? onOpenSettings() : onOpenProfile('system_settings'))}
           className="p-2 rounded-xl bg-slate-100 hover:bg-slate-200/80 border border-slate-200 text-slate-600 hover:text-slate-900 dark:bg-[#0D111A] dark:hover:bg-[#121724] dark:border-white/[0.07] dark:text-slate-300 dark:hover:text-white transition-all"
-          title="System Settings & Theme"
-          aria-label="System Settings & Theme"
+          title="System Settings & Security"
+          aria-label="System Settings & Security"
         >
           <Settings className="w-4 h-4 text-slate-600 dark:text-slate-300" />
         </button>
 
         {/* User Avatar & Identity */}
         <button
+          id="desktop-profile-trigger-btn"
           onClick={() => onOpenProfile('profile')}
           className="flex items-center gap-2 pl-1.5 pr-2 py-1 rounded-xl bg-slate-100 hover:bg-slate-200/80 border border-slate-200 dark:bg-[#0D111A] dark:hover:bg-[#121724] dark:border-white/[0.07] transition-all ml-1"
-          title={`@${username} • Profile & Settings`}
+          title={`@${username} • Profile & Verification`}
         >
           <div className="w-7 h-7 rounded-full overflow-hidden bg-gradient-to-tr from-purple-600 to-amber-400 p-[1.5px] shadow-sm flex-shrink-0">
             <div className="w-full h-full rounded-full bg-white dark:bg-slate-950 flex items-center justify-center overflow-hidden">

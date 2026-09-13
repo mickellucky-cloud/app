@@ -4,9 +4,10 @@ import { CoinIcon } from '../common/CoinIcon';
 import { Sparkline } from '../common/Sparkline';
 import { FeatureGridSkeleton } from './FeatureGridSkeleton';
 import { MarketListSkeleton } from './MarketListSkeleton';
+import { HomeSkeleton } from '../skeletons/HomeSkeleton';
 import { CryptoNewsSection } from './CryptoNewsSection';
 import { PromotionalBannerCarousel } from './PromotionalBannerCarousel';
-import { MarketPair, RecentActivityItem, ThemeMode } from '../../types';
+import { MarketPair, RecentActivityItem, ThemeMode, AppNotification } from '../../types';
 import {
   Search,
   Bell,
@@ -36,6 +37,7 @@ import {
   LineChart,
   ScanLine,
 } from 'lucide-react';
+import { NotificationsDropdown } from '../navigation/NotificationsDropdown';
 
 interface HomeScreenProps {
   balances: {
@@ -52,8 +54,11 @@ interface HomeScreenProps {
   onOpenSend: () => void;
   onOpenConvert: () => void;
   onOpenSearch: () => void;
-  onOpenNotifications: () => void;
+  onOpenNotifications?: () => void;
   unreadNotificationsCount?: number;
+  notifications?: AppNotification[];
+  onMarkNotificationAsRead?: (id: string) => void;
+  onMarkAllNotificationsAsRead?: () => void;
   onOpenProfile: () => void;
   onOpenScanToPay?: () => void;
   onOpenAiTrader: () => void;
@@ -91,6 +96,9 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
   onOpenSearch,
   onOpenNotifications,
   unreadNotificationsCount = 0,
+  notifications = [],
+  onMarkNotificationAsRead,
+  onMarkAllNotificationsAsRead,
   onOpenProfile,
   onOpenScanToPay,
   onOpenAiTrader,
@@ -115,6 +123,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
   userAvatar = '',
 }) => {
   const [marketTab, setMarketTab] = useState<'hot' | 'gainers' | 'new' | 'losers'>('hot');
+  const [isNotificationsDropdownOpen, setIsNotificationsDropdownOpen] = useState(false);
 
   const favoritePairsList = React.useMemo(
     () => marketPairs.filter((p) => p.isFavorite),
@@ -131,15 +140,19 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
     })
     .slice(0, 4);
 
+  if (isLoading) {
+    return <HomeSkeleton />;
+  }
+
   return (
     <div id="home-screen" className="pb-28 md:pb-12 pt-3 px-3 sm:px-6 lg:px-8 max-w-md md:max-w-4xl lg:max-w-7xl mx-auto min-h-screen text-[#0F172A] dark:text-[#EDF1F5] bg-white dark:bg-[#0A0E13] transition-colors">
       {/* Top Header - Shown on mobile, hidden on tablet/desktop where DesktopTopNav is present */}
       <header className="flex md:hidden items-center justify-between py-2 mb-3 gap-1.5 sm:gap-2 w-full min-w-0">
-        {/* Left: Profile Icon & Username (replaces OKNexus logo per user requirement) */}
+        {/* Left: Only Profile Icon (username and VIP level removed per user request) */}
         <button
           id="home-mobile-profile-btn"
           onClick={onOpenProfile}
-          className="flex items-center gap-2 active:scale-95 transition-transform shrink-0"
+          className="active:scale-95 transition-transform shrink-0"
           aria-label="User profile and settings"
           title={`@${username} • Profile & Settings`}
         >
@@ -154,15 +167,9 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
               )}
             </div>
           </div>
-          <div className="hidden min-[360px]:flex flex-col text-left">
-            <span className="text-xs font-bold text-[#0F172A] dark:text-[#EDF1F5] leading-tight max-w-[90px] truncate">
-              @{username}
-            </span>
-            <span className="text-[10px] text-[#10B981] font-semibold leading-none">VIP 2</span>
-          </div>
         </button>
 
-        {/* Right: Search, Scan to Pay, Notifications, Support */}
+        {/* Right: Search, Scan to Pay, Notifications Dropdown, Support */}
         <div className="flex items-center gap-1 sm:gap-1.5 shrink-0">
           <button
             id="home-search-btn"
@@ -185,24 +192,41 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
             </button>
           )}
 
-          <button
-            id="home-notifications-btn"
-            onClick={onOpenNotifications}
-            className={`relative w-7 h-7 sm:w-8 sm:h-8 rounded-full border flex items-center justify-center active:scale-95 transition-all shrink-0 ${
-              unreadNotificationsCount > 0
-                ? 'bg-[#8B5CF6]/10 border-[#8B5CF6]/40 text-[#8B5CF6] dark:bg-[#8B5CF6]/20 dark:border-[#8B5CF6]/40 dark:text-[#EDF1F5] shadow-xs'
-                : 'bg-[#F8FAFC] dark:bg-[#141B24] border-[#D7E0EB] dark:border-[#242E3B] text-[#475569] dark:text-[#EDF1F5] hover:text-[#0F172A] dark:hover:text-white'
-            }`}
-            aria-label="Notifications"
-            title={unreadNotificationsCount > 0 ? `${unreadNotificationsCount} unread notifications` : 'Notifications'}
-          >
-            <Bell className={`w-3.5 h-3.5 transition-colors ${unreadNotificationsCount > 0 ? 'text-[#8B5CF6]' : 'text-[#64748B] dark:text-[#8E98A6]'}`} />
-            {unreadNotificationsCount > 0 && (
-              <span className="absolute -top-1 -right-1 min-w-[14px] h-[14px] px-1 rounded-full bg-gradient-to-r from-[#8B5CF6] to-[#EC4899] text-white text-[7.5px] font-mono-num font-bold flex items-center justify-center border border-white dark:border-[#0A0E13] shadow-[0_0_8px_rgba(139,92,246,0.6)] animate-in zoom-in-75">
-                {unreadNotificationsCount > 9 ? '9+' : unreadNotificationsCount}
-              </span>
-            )}
-          </button>
+          {/* Unified Notifications Dropdown Anchor */}
+          <div className="relative">
+            <button
+              id="home-notifications-btn"
+              onClick={() => setIsNotificationsDropdownOpen((prev) => !prev)}
+              className={`relative w-7 h-7 sm:w-8 sm:h-8 rounded-full border flex items-center justify-center active:scale-95 transition-all shrink-0 ${
+                unreadNotificationsCount > 0 || isNotificationsDropdownOpen
+                  ? 'bg-[#8B5CF6]/10 border-[#8B5CF6]/40 text-[#8B5CF6] dark:bg-[#8B5CF6]/20 dark:border-[#8B5CF6]/40 dark:text-[#EDF1F5] shadow-xs'
+                  : 'bg-[#F8FAFC] dark:bg-[#141B24] border-[#D7E0EB] dark:border-[#242E3B] text-[#475569] dark:text-[#EDF1F5] hover:text-[#0F172A] dark:hover:text-white'
+              }`}
+              aria-label="Notifications"
+              aria-expanded={isNotificationsDropdownOpen}
+              title={unreadNotificationsCount > 0 ? `${unreadNotificationsCount} unread notifications` : 'Notifications'}
+            >
+              <Bell className={`w-3.5 h-3.5 transition-colors ${unreadNotificationsCount > 0 || isNotificationsDropdownOpen ? 'text-[#8B5CF6]' : 'text-[#64748B] dark:text-[#8E98A6]'}`} />
+              {unreadNotificationsCount > 0 && (
+                <span className="absolute -top-1 -right-1 min-w-[14px] h-[14px] px-1 rounded-full bg-gradient-to-r from-[#8B5CF6] to-[#EC4899] text-white text-[7.5px] font-mono-num font-bold flex items-center justify-center border border-white dark:border-[#0A0E13] shadow-[0_0_8px_rgba(139,92,246,0.6)] animate-in zoom-in-75">
+                  {unreadNotificationsCount > 9 ? '9+' : unreadNotificationsCount}
+                </span>
+              )}
+            </button>
+
+            {/* Anchored Dropdown Panel */}
+            <NotificationsDropdown
+              isOpen={isNotificationsDropdownOpen}
+              onClose={() => setIsNotificationsDropdownOpen(false)}
+              notifications={notifications}
+              onMarkAsRead={(id) => onMarkNotificationAsRead?.(id)}
+              onMarkAllAsRead={() => onMarkAllNotificationsAsRead?.()}
+              onOpenPriceAlerts={onOpenPriceAlerts}
+              activeAlertsCount={activeAlertsCount}
+              align="right"
+              className="-right-10 sm:right-0"
+            />
+          </div>
 
           {onOpenSupport && (
             <button
@@ -276,51 +300,63 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
         </div>
       </section>
 
-      {/* Quick Actions (Deposit, Withdraw, Send, Convert) */}
-      <section id="home-quick-actions" className="grid grid-cols-4 gap-2 sm:gap-2.5 mb-4">
+      {/* Primary Financial Actions (Deposit | Withdraw | Send | Convert) */}
+      <section id="home-quick-actions" className="grid grid-cols-4 gap-2 sm:gap-3 mb-4">
         <button
           id="action-deposit"
           onClick={onOpenDeposit}
-          className="flex flex-col items-center justify-center py-2.5 px-2 rounded-2xl bg-white dark:bg-[#0E141B] border border-[#D7E0EB] dark:border-[#242E3B] hover:border-[#8B5CF6]/50 dark:hover:bg-[#141B24] active:scale-95 transition-all group shadow-xs"
+          className="flex flex-col items-center justify-center py-2.5 px-1 sm:px-2 rounded-2xl bg-white dark:bg-[#0E141B] border border-[#D7E0EB] dark:border-[#242E3B] hover:border-[#8B5CF6]/50 dark:hover:bg-[#141B24] active:scale-95 transition-all group shadow-xs"
         >
-          <div className="w-10 h-10 rounded-full bg-[#8B5CF6]/10 border border-[#8B5CF6]/20 text-[#8B5CF6] dark:bg-[#141B24] dark:border-[#8B5CF6]/30 dark:text-[#8B5CF6] flex items-center justify-center group-hover:scale-105 transition-transform">
+          <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-[#8B5CF6]/10 border border-[#8B5CF6]/20 text-[#8B5CF6] dark:bg-[#141B24] dark:border-[#8B5CF6]/30 dark:text-[#8B5CF6] flex items-center justify-center group-hover:scale-105 transition-transform">
             <PlusSquare className="w-4 h-4" />
           </div>
-          <span className="text-xs font-semibold text-[#0F172A] dark:text-[#EDF1F5] mt-1.5">Deposit</span>
+          <span className="text-[11px] sm:text-xs font-semibold text-[#0F172A] dark:text-[#EDF1F5] mt-1.5 truncate">Deposit</span>
         </button>
 
         <button
           id="action-withdraw"
           onClick={onOpenWithdraw}
-          className="flex flex-col items-center justify-center py-2.5 px-2 rounded-2xl bg-white dark:bg-[#0E141B] border border-[#D7E0EB] dark:border-[#242E3B] hover:border-[#8B5CF6]/50 dark:hover:bg-[#141B24] active:scale-95 transition-all group shadow-xs"
+          className="flex flex-col items-center justify-center py-2.5 px-1 sm:px-2 rounded-2xl bg-white dark:bg-[#0E141B] border border-[#D7E0EB] dark:border-[#242E3B] hover:border-[#8B5CF6]/50 dark:hover:bg-[#141B24] active:scale-95 transition-all group shadow-xs"
         >
-          <div className="w-10 h-10 rounded-full bg-[#8B5CF6]/10 border border-[#8B5CF6]/20 text-[#8B5CF6] dark:bg-[#141B24] dark:border-[#8B5CF6]/30 dark:text-[#8B5CF6] flex items-center justify-center group-hover:scale-105 transition-transform">
+          <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-[#8B5CF6]/10 border border-[#8B5CF6]/20 text-[#8B5CF6] dark:bg-[#141B24] dark:border-[#8B5CF6]/30 dark:text-[#8B5CF6] flex items-center justify-center group-hover:scale-105 transition-transform">
             <ArrowUpRight className="w-4 h-4" />
           </div>
-          <span className="text-xs font-semibold text-[#0F172A] dark:text-[#EDF1F5] mt-1.5">Withdraw</span>
+          <span className="text-[11px] sm:text-xs font-semibold text-[#0F172A] dark:text-[#EDF1F5] mt-1.5 truncate">Withdraw</span>
         </button>
 
         <button
           id="action-send"
           onClick={onOpenSend}
-          className="flex flex-col items-center justify-center py-2.5 px-2 rounded-2xl bg-white dark:bg-[#0E141B] border border-[#D7E0EB] dark:border-[#242E3B] hover:border-[#8B5CF6]/50 dark:hover:bg-[#141B24] active:scale-95 transition-all group shadow-xs"
+          className="flex flex-col items-center justify-center py-2.5 px-1 sm:px-2 rounded-2xl bg-white dark:bg-[#0E141B] border border-[#D7E0EB] dark:border-[#242E3B] hover:border-[#8B5CF6]/50 dark:hover:bg-[#141B24] active:scale-95 transition-all group shadow-xs"
         >
-          <div className="w-10 h-10 rounded-full bg-[#8B5CF6]/10 border border-[#8B5CF6]/20 text-[#8B5CF6] dark:bg-[#141B24] dark:border-[#8B5CF6]/30 dark:text-[#8B5CF6] flex items-center justify-center group-hover:scale-105 transition-transform">
+          <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-[#8B5CF6]/10 border border-[#8B5CF6]/20 text-[#8B5CF6] dark:bg-[#141B24] dark:border-[#8B5CF6]/30 dark:text-[#8B5CF6] flex items-center justify-center group-hover:scale-105 transition-transform">
             <Send className="w-4 h-4" />
           </div>
-          <span className="text-xs font-semibold text-[#0F172A] dark:text-[#EDF1F5] mt-1.5">Send</span>
+          <span className="text-[11px] sm:text-xs font-semibold text-[#0F172A] dark:text-[#EDF1F5] mt-1.5 truncate">Send</span>
         </button>
 
         <button
           id="action-convert"
           onClick={onOpenConvert}
-          className="flex flex-col items-center justify-center py-2.5 px-2 rounded-2xl bg-white dark:bg-[#0E141B] border border-[#D7E0EB] dark:border-[#242E3B] hover:border-[#8B5CF6]/50 dark:hover:bg-[#141B24] active:scale-95 transition-all group shadow-xs"
+          className="flex flex-col items-center justify-center py-2.5 px-1 sm:px-2 rounded-2xl bg-white dark:bg-[#0E141B] border border-[#D7E0EB] dark:border-[#242E3B] hover:border-[#8B5CF6]/50 dark:hover:bg-[#141B24] active:scale-95 transition-all group shadow-xs"
         >
-          <div className="w-10 h-10 rounded-full bg-[#8B5CF6]/10 border border-[#8B5CF6]/20 text-[#8B5CF6] dark:bg-[#141B24] dark:border-[#8B5CF6]/30 dark:text-[#8B5CF6] flex items-center justify-center group-hover:scale-105 transition-transform">
+          <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-[#8B5CF6]/10 border border-[#8B5CF6]/20 text-[#8B5CF6] dark:bg-[#141B24] dark:border-[#8B5CF6]/30 dark:text-[#8B5CF6] flex items-center justify-center group-hover:scale-105 transition-transform">
             <Repeat className="w-4 h-4" />
           </div>
-          <span className="text-xs font-semibold text-[#0F172A] dark:text-[#EDF1F5] mt-1.5">Convert</span>
+          <span className="text-[11px] sm:text-xs font-semibold text-[#0F172A] dark:text-[#EDF1F5] mt-1.5 truncate">Convert</span>
         </button>
+      </section>
+
+      {/* Promotional / Advertisement Slider & Announcements */}
+      <section id="home-promotional-section" className="mb-4">
+        <PromotionalBannerCarousel
+          onNavigateP2P={onNavigateP2P}
+          onOpenAiTrader={onOpenAiTrader}
+          onOpenPolymarket={onOpenPolymarket}
+          onNavigateMarkets={onNavigateMarkets}
+          onNavigateEarn={onNavigateEarn}
+          onOpenDeposit={onOpenDeposit}
+        />
       </section>
 
       {/* OKNexus Feature Grid (8 Dedicated Tiles: Markets | Trade, Convert | Buy/Sell, P2P | Wallet, Earn | More) */}
@@ -572,16 +608,6 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
           </div>
         )}
       </section>
-
-      {/* Promotional Campaign Graphic Flyer Carousel */}
-      <PromotionalBannerCarousel
-        onNavigateP2P={onNavigateP2P}
-        onOpenAiTrader={onOpenAiTrader}
-        onOpenPolymarket={onOpenPolymarket}
-        onNavigateMarkets={onNavigateMarkets}
-        onNavigateEarn={onNavigateEarn}
-        onOpenDeposit={onOpenDeposit}
-      />
 
       {/* Featured Products: AI Auto Trader & Polymarket */}
       <section id="home-featured-products" className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 mb-5">

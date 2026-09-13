@@ -21,9 +21,6 @@ export const EarnScreen: React.FC<EarnScreenProps> = ({
   onToggleTheme,
   isLoading = false,
 }) => {
-  if (isLoading) {
-    return <EarnSkeleton />;
-  }
   const [activeCategory, setActiveCategory] = useState<'all' | 'flexible' | 'fixed' | 'launchpad'>('all');
   const [selectedProduct, setSelectedProduct] = useState<EarnProduct | null>(null);
   const [stakeAmount, setStakeAmount] = useState('');
@@ -48,6 +45,10 @@ export const EarnScreen: React.FC<EarnScreenProps> = ({
       setStakeAmount('');
     }, 1800);
   };
+
+  if (isLoading) {
+    return <EarnSkeleton />;
+  }
 
   return (
     <div id="earn-screen" className="pb-32 md:pb-12 pt-3 px-4 sm:px-6 lg:px-8 max-w-md md:max-w-4xl lg:max-w-7xl mx-auto min-h-screen text-slate-900 dark:text-slate-100 bg-white dark:bg-[#07090E] transition-colors">

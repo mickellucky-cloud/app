@@ -64,9 +64,6 @@ export const P2PScreen: React.FC<P2PScreenProps> = ({
   onToggleTheme,
   isLoading = false,
 }) => {
-  if (isLoading) {
-    return <P2PSkeleton onExit={onExitP2P} />;
-  }
   const [activeP2PTab, setActiveP2PTab] = useState<P2PTab>('p2p_market');
   const [tradeSide, setTradeSide] = useState<'buy' | 'sell'>('buy');
 
@@ -135,6 +132,10 @@ export const P2PScreen: React.FC<P2PScreenProps> = ({
   const currentOrdersCount = 74;
   const currentCompletionRate = 98.5;
   const [selectedBadgeDetails, setSelectedBadgeDetails] = useState<string | null>(null);
+
+  if (isLoading) {
+    return <P2PSkeleton onExit={onExitP2P} />;
+  }
 
   // Dynamic Merchant Verification Thresholds & Evaluation
   // Injects 'Verified' badge (checkmark icon) if tradeVolume >= 10,000 USDT or feedbackScore >= 98.0%
@@ -1343,74 +1344,6 @@ export const P2PScreen: React.FC<P2PScreenProps> = ({
                         <span className={progressPercent >= 100 ? 'text-emerald-600 dark:text-emerald-400 font-bold' : ''}>
                           100% (${targetConfig.volume.toLocaleString()})
                         </span>
-                      </div>
-                    </div>
-
-                    {/* INTERACTIVE VOLUME SIMULATOR / TEST CONTROLS */}
-                    <div className="p-3 rounded-xl bg-purple-50/70 dark:bg-purple-950/20 border border-purple-200 dark:border-purple-500/20 space-y-2">
-                      <div className="flex items-center justify-between text-xs">
-                        <span className="font-semibold text-purple-800 dark:text-purple-300 flex items-center gap-1.5">
-                          <Flame className="w-3.5 h-3.5 text-amber-500 dark:text-amber-400" />
-                          <span>Interactive Volume Simulator</span>
-                        </span>
-                        <span className="text-[10px] text-slate-500 dark:text-slate-400 font-mono-num">
-                          Simulated: +${simulatedVolumeDelta.toLocaleString()} USDT
-                        </span>
-                      </div>
-
-                      {/* Volume Slider */}
-                      <div className="space-y-1">
-                        <input
-                          type="range"
-                          min={0}
-                          max={120000}
-                          step={500}
-                          value={effectiveVolume}
-                          onChange={(e) => {
-                            const newTotal = Number(e.target.value);
-                            setSimulatedVolumeDelta(newTotal - baseVolume);
-                          }}
-                          className="w-full accent-purple-600 cursor-pointer h-1.5 bg-slate-200 dark:bg-slate-800 rounded-lg"
-                        />
-                        <div className="flex justify-between text-[9px] text-slate-400 font-mono-num">
-                          <span>$0 USDT</span>
-                          <span>$50,000 USDT</span>
-                          <span>$120,000 USDT</span>
-                        </div>
-                      </div>
-
-                      {/* Quick Boost Pills */}
-                      <div className="flex items-center gap-1.5 flex-wrap pt-0.5">
-                        <button
-                          type="button"
-                          onClick={() => setSimulatedVolumeDelta((prev) => prev + 1000)}
-                          className="px-2 py-1 rounded-lg bg-white dark:bg-white/[0.04] hover:bg-slate-100 dark:hover:bg-white/[0.08] border border-slate-200 dark:border-white/[0.08] text-[10px] text-slate-700 dark:text-slate-300 font-medium transition-all"
-                        >
-                          +1,000 USDT
-                        </button>
-                        <button
-                          type="button"
-                          onClick={() => setSimulatedVolumeDelta((prev) => prev + 5000)}
-                          className="px-2 py-1 rounded-lg bg-white dark:bg-white/[0.04] hover:bg-slate-100 dark:hover:bg-white/[0.08] border border-slate-200 dark:border-white/[0.08] text-[10px] text-slate-700 dark:text-slate-300 font-medium transition-all"
-                        >
-                          +5,000 USDT
-                        </button>
-                        <button
-                          type="button"
-                          onClick={() => setSimulatedVolumeDelta((prev) => prev + 25000)}
-                          className="px-2 py-1 rounded-lg bg-white dark:bg-white/[0.04] hover:bg-slate-100 dark:hover:bg-white/[0.08] border border-slate-200 dark:border-white/[0.08] text-[10px] text-slate-700 dark:text-slate-300 font-medium transition-all"
-                        >
-                          +25,000 USDT
-                        </button>
-                        {simulatedVolumeDelta !== 0 && (
-                          <button
-                            type="button"
-                            onClick={() => setSimulatedVolumeDelta(0)}
-                            className="px-2 py-1 rounded-lg bg-rose-500/15 hover:bg-rose-500/25 border border-rose-500/30 text-[10px] text-rose-700 dark:text-rose-300 font-medium transition-all ml-auto"
-                          >
-                            Reset
-                          </button>
-                        )}
                       </div>
                     </div>
 

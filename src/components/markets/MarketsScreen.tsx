@@ -25,9 +25,6 @@ export const MarketsScreen: React.FC<MarketsScreenProps> = ({
   onToggleTheme,
   isLoading = false,
 }) => {
-  if (isLoading) {
-    return <MarketsSkeleton />;
-  }
   const [viewMode, setViewMode] = useState<'list' | 'heatmap'>('list');
   const [activeCategory, setActiveCategory] = useState<'favorites' | 'hot' | 'gainers' | 'new' | 'losers'>('hot');
   const [quoteFilter, setQuoteFilter] = useState<'all' | 'USDT' | 'BTC' | 'ETH' | 'SOL'>('all');
@@ -78,6 +75,10 @@ export const MarketsScreen: React.FC<MarketsScreenProps> = ({
       setSortAsc(false);
     }
   };
+
+  if (isLoading) {
+    return <MarketsSkeleton />;
+  }
 
   return (
     <div

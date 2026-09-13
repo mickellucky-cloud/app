@@ -49,6 +49,7 @@ export interface LeftNavProps {
   onOpenRewards: () => void;
   onOpenSupport: () => void;
   onOpenProfile: (tab?: 'profile' | 'system_settings') => void;
+  onOpenSettings?: () => void;
   userEmail: string;
   username?: string;
   userAvatar?: string;
@@ -73,6 +74,7 @@ export const LeftNav: React.FC<LeftNavProps> = ({
   onOpenRewards,
   onOpenSupport,
   onOpenProfile,
+  onOpenSettings,
   userEmail,
   username = 'Mickel_Lucky',
   userAvatar = '',
@@ -140,11 +142,10 @@ export const LeftNav: React.FC<LeftNavProps> = ({
       onClick: onOpenSupport,
     },
     {
-      id: 'scan_pay',
-      label: 'Scan to Pay',
-      icon: ScanLine,
-      badge: 'QR',
-      onClick: onOpenScanToPay,
+      id: 'settings',
+      label: 'Settings',
+      icon: Settings,
+      onClick: () => (onOpenSettings ? onOpenSettings() : onSelectTab('settings')),
     },
   ];
 
@@ -408,9 +409,14 @@ export const LeftNav: React.FC<LeftNavProps> = ({
           )}
           {!isCollapsed && (
             <button
+              id="leftnav-settings-btn"
               onClick={(e) => {
                 e.stopPropagation();
-                onOpenProfile('system_settings');
+                if (onOpenSettings) {
+                  onOpenSettings();
+                } else {
+                  onOpenProfile('system_settings');
+                }
               }}
               title="System Settings"
               aria-label="System Settings"

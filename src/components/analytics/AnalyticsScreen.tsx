@@ -124,9 +124,6 @@ export const AnalyticsScreen: React.FC<AnalyticsScreenProps> = ({
   onBack,
   isLoading = false,
 }) => {
-  if (isLoading) {
-    return <AnalyticsSkeleton onBack={onBack} />;
-  }
   const [timeRange, setTimeRange] = useState<TimeRange>('30D');
   const currentPerf = PERFORMANCE_DATA[timeRange];
 
@@ -148,6 +145,10 @@ export const AnalyticsScreen: React.FC<AnalyticsScreenProps> = ({
     .join(' ');
 
   const areaCoords = `${polylineCoords} ${svgWidth - padding},${svgHeight} ${padding},${svgHeight}`;
+
+  if (isLoading) {
+    return <AnalyticsSkeleton onBack={onBack} />;
+  }
 
   return (
     <div

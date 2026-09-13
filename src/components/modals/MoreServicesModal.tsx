@@ -30,7 +30,8 @@ interface MoreServicesModalProps {
   onOpenReferrals: () => void;
   onOpenApiManagement: () => void;
   onOpenPriceAlerts: () => void;
-  onOpenSettings: (tab?: 'profile' | 'system_settings') => void;
+  onOpenSettings: (tab?: any) => void;
+  onOpenProfile?: (section?: string) => void;
   onOpenSupport: () => void;
   onSignOut: () => void;
   onNavigateExplore?: () => void;
@@ -59,6 +60,7 @@ export const MoreServicesModal: React.FC<MoreServicesModalProps> = ({
   onOpenApiManagement,
   onOpenPriceAlerts,
   onOpenSettings,
+  onOpenProfile,
   onOpenSupport,
   onSignOut,
   onNavigateExplore,
@@ -132,7 +134,7 @@ export const MoreServicesModal: React.FC<MoreServicesModalProps> = ({
       iconBg: 'bg-purple-100 dark:bg-purple-950/60 border-purple-200 dark:border-purple-500/30',
       action: () => {
         onClose();
-        onOpenSettings('system_settings');
+        onOpenSettings('preferences');
       },
     },
     {
@@ -146,7 +148,11 @@ export const MoreServicesModal: React.FC<MoreServicesModalProps> = ({
       iconBg: 'bg-purple-100 dark:bg-purple-950/60 border-purple-200 dark:border-purple-500/30',
       action: () => {
         onClose();
-        onOpenSettings();
+        if (onOpenProfile) {
+          onOpenProfile('kyc');
+        } else {
+          onOpenSettings('account');
+        }
       },
     },
     {
@@ -160,7 +166,7 @@ export const MoreServicesModal: React.FC<MoreServicesModalProps> = ({
       iconBg: 'bg-purple-100 dark:bg-purple-950/60 border-purple-200 dark:border-purple-500/30',
       action: () => {
         onClose();
-        onOpenSettings();
+        onOpenSettings('payments');
       },
     },
     {

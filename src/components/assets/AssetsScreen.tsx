@@ -62,9 +62,6 @@ export const AssetsScreen: React.FC<AssetsScreenProps> = ({
   onToggleTheme,
   isLoading = false,
 }) => {
-  if (isLoading) {
-    return <AssetsSkeleton />;
-  }
   const [activeCategory, setActiveCategory] = useState<'all' | 'spot' | 'funding' | 'earn'>('all');
   const [searchQuery, setSearchQuery] = useState('');
 
@@ -73,6 +70,10 @@ export const AssetsScreen: React.FC<AssetsScreenProps> = ({
       a.symbol.toLowerCase().includes(searchQuery.toLowerCase()) ||
       a.name.toLowerCase().includes(searchQuery.toLowerCase())
   );
+
+  if (isLoading) {
+    return <AssetsSkeleton />;
+  }
 
   return (
     <div id="assets-screen" className="pb-32 md:pb-12 pt-3 px-4 sm:px-6 lg:px-8 max-w-md md:max-w-4xl lg:max-w-7xl mx-auto min-h-screen text-slate-900 dark:text-slate-100 bg-white dark:bg-[#07090E] transition-colors">

@@ -44,9 +44,6 @@ export const SpotTradeScreen: React.FC<SpotTradeScreenProps> = ({
   onToggleTheme,
   isLoading = false,
 }) => {
-  if (isLoading) {
-    return <TradeSkeleton />;
-  }
   const [timeframe, setTimeframe] = useState<ChartTimeframe>('1H');
   const [selectedBookPrice, setSelectedBookPrice] = useState<number | null>(null);
   const [openOrders, setOpenOrders] = useState<OpenOrder[]>([
@@ -168,6 +165,10 @@ export const SpotTradeScreen: React.FC<SpotTradeScreenProps> = ({
     ...selectedPair,
     price: livePrice,
   };
+
+  if (isLoading) {
+    return <TradeSkeleton />;
+  }
 
   return (
     <div

@@ -209,21 +209,6 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({
 
         {/* Right Column: Form Container (Mobile, Tablet, Desktop) */}
         <div className="w-full lg:col-span-5 max-w-md mx-auto p-5 sm:p-7 rounded-3xl bg-[#0A0D18]/95 border border-white/[0.08] shadow-[0_12px_40px_rgba(0,0,0,0.5)] backdrop-blur-xl">
-          {/* Mobile Only Brand Presence */}
-          <div className="flex md:hidden flex-col items-center justify-center mb-5 text-center">
-            <div className="p-3 rounded-2xl bg-gradient-to-br from-[#1E1433] via-[#121626] to-[#0A0D18] border border-purple-500/30 shadow-md mb-2">
-              <OKNexusLogo size={40} showWordmark={false} />
-            </div>
-            <div className="flex items-center gap-1.5">
-              <span className="font-display font-extrabold text-lg tracking-tight text-white">
-                OKNEXUS
-              </span>
-              <span className="px-1.5 py-0.5 rounded bg-purple-500/20 text-purple-300 text-[9px] font-bold border border-purple-500/30 tracking-wider">
-                EXCHANGE
-              </span>
-            </div>
-          </div>
-
           {/* Welcome Back & Subtitle */}
           <div className="mb-4 text-center md:text-left">
             <h1 className="text-xl sm:text-2xl font-bold font-display tracking-tight text-white mb-1">

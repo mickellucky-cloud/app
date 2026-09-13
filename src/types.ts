@@ -1,4 +1,4 @@
-export type MainTab = 'home' | 'market' | 'trade' | 'earn' | 'assets' | 'analytics' | 'explore' | 'profile';
+export type MainTab = 'home' | 'market' | 'trade' | 'earn' | 'assets' | 'analytics' | 'explore' | 'profile' | 'settings' | 'support';
 export type P2PTab = 'p2p_market' | 'p2p_orders' | 'p2p_ads' | 'p2p_profile';
 
 export interface CryptoAsset {
@@ -379,6 +379,29 @@ export interface CryptoNewsItem {
   sourceDomain?: string;
   impact?: 'High' | 'Medium' | 'Trending';
   relatedPair?: string;
+}
+
+export type TicketPriority = 'low' | 'medium' | 'high' | 'urgent';
+export type TicketStatus = 'open' | 'in_progress' | 'waiting_user' | 'resolved';
+
+export interface SupportTicket {
+  id: string;
+  ticketNumber: string;
+  subject: string;
+  category: string;
+  priority: TicketPriority;
+  status: TicketStatus;
+  createdAt: string;
+  updatedAt: string;
+  description: string;
+  txHashOrOrderId?: string;
+  messages: {
+    id: string;
+    sender: 'user' | 'agent' | 'system';
+    senderName: string;
+    content: string;
+    timestamp: string;
+  }[];
 }
 
 

@@ -171,9 +171,6 @@ export const ExploreScreen: React.FC<ExploreScreenProps> = ({
   onBack,
   isLoading = false,
 }) => {
-  if (isLoading) {
-    return <ExploreSkeleton onBack={onBack} />;
-  }
   const [activeCategory, setActiveCategory] = useState<'all' | 'trade_earn' | 'payments_spending' | 'build_access'>(
     'all'
   );
@@ -232,6 +229,10 @@ export const ExploreScreen: React.FC<ExploreScreenProps> = ({
       f.description.toLowerCase().includes(searchQuery.toLowerCase());
     return matchesCategory && matchesSearch;
   });
+
+  if (isLoading) {
+    return <ExploreSkeleton onBack={onBack} />;
+  }
 
   return (
     <div id="explore-screen" className="min-h-[calc(100vh-4rem)] pb-24 px-4 sm:px-6 max-w-6xl mx-auto pt-3">
