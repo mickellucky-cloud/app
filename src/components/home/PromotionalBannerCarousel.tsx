@@ -9,9 +9,11 @@ import {
 } from 'lucide-react';
 import {
   GRAPHIC_PROMOTIONAL_BANNERS,
-  GRAPHIC_ANNOUNCEMENTS,
   GraphicFlyerBanner,
 } from '../../data/promotionalGraphicBanners';
+import { AnnouncementSlider } from './AnnouncementSlider';
+
+export { AnnouncementSlider };
 
 interface PromotionalBannerCarouselProps {
   onNavigateP2P?: () => void;
@@ -32,12 +34,10 @@ export const PromotionalBannerCarousel: React.FC<PromotionalBannerCarouselProps>
 }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
-  const [announcementIndex, setAnnouncementIndex] = useState(0);
   const [imageErrorMap, setImageErrorMap] = useState<Record<string, boolean>>({});
   const timerRef = useRef<number | null>(null);
 
   const banners = GRAPHIC_PROMOTIONAL_BANNERS;
-  const announcements = GRAPHIC_ANNOUNCEMENTS;
 
   const handleAction = (banner: GraphicFlyerBanner) => {
     switch (banner.actionType) {
@@ -76,14 +76,6 @@ export const PromotionalBannerCarousel: React.FC<PromotionalBannerCarouselProps>
     };
   }, [isPaused, banners.length]);
 
-  // Autoplay announcements cycle
-  useEffect(() => {
-    const annInterval = setInterval(() => {
-      setAnnouncementIndex((prev) => (prev + 1) % announcements.length);
-    }, 4500);
-    return () => clearInterval(annInterval);
-  }, [announcements.length]);
-
   const prevSlide = () => {
     setCurrentIndex((prev) => (prev - 1 + banners.length) % banners.length);
   };
@@ -93,7 +85,6 @@ export const PromotionalBannerCarousel: React.FC<PromotionalBannerCarouselProps>
   };
 
   const currentBanner = banners[currentIndex];
-  const currentAnnouncement = announcements[announcementIndex];
 
   return (
     <div id="graphic-promotions-container" className="space-y-3 relative">
@@ -231,78 +222,6 @@ export const PromotionalBannerCarousel: React.FC<PromotionalBannerCarouselProps>
               className="ml-2 w-5 h-5 rounded-full bg-black/50 text-white/80 hover:text-white flex items-center justify-center text-[10px] backdrop-blur-xs"
             >
               {isPaused ? <Play className="w-2.5 h-2.5 ml-0.5" /> : <Pause className="w-2.5 h-2.5" />}
-            </button>
-          </div>
-        </div>
-      </div>
-
-      {/* 2. Upgraded 3D Announcements Ticker */}
-      <div
-        id="graphic-announcements-carousel"
-        className="group/ann flex items-center justify-between gap-3 px-3.5 py-2.5 rounded-2xl bg-white dark:bg-[#0C0F19]/90 border border-slate-200/80 dark:border-white/[0.08] shadow-sm hover:border-purple-300 dark:hover:border-purple-500/30 transition-all cursor-pointer backdrop-blur-md"
-        onClick={() => {
-          if (currentAnnouncement.category === 'NEW') onOpenDeposit?.();
-          else if (currentAnnouncement.category === 'PROMO') onNavigateP2P?.();
-          else if (currentAnnouncement.category === 'LISTING') onOpenAiTrader?.();
-        }}
-      >
-        <div className="flex items-center gap-3 min-w-0 flex-1">
-          {/* 3D High-Gloss Icon Thumbnail */}
-          <div className="w-8 h-8 shrink-0 rounded-xl overflow-hidden border border-slate-200 dark:border-white/15 shadow-md flex items-center justify-center bg-slate-900 ring-1 ring-purple-500/20 group-hover/ann:ring-purple-500/50 transition-all">
-            <img
-              src={currentAnnouncement.thumbnailUrl}
-              alt={currentAnnouncement.title}
-              className="w-full h-full object-cover transition-transform duration-300 group-hover/ann:scale-110"
-              loading="lazy"
-            />
-          </div>
-
-          <div className="flex items-center gap-2 min-w-0 flex-1">
-            <span
-              className={`px-2 py-0.5 shrink-0 rounded-md text-[9px] font-black tracking-wider uppercase ${
-                currentAnnouncement.category === 'NEW'
-                  ? 'bg-emerald-100 text-emerald-800 dark:bg-emerald-950/80 dark:text-emerald-300 border border-emerald-300/40 dark:border-emerald-500/30'
-                  : currentAnnouncement.category === 'SECURITY'
-                  ? 'bg-indigo-100 text-indigo-800 dark:bg-indigo-950/80 dark:text-indigo-300 border border-indigo-300/40 dark:border-indigo-500/30'
-                  : currentAnnouncement.category === 'PROMO'
-                  ? 'bg-amber-100 text-amber-800 dark:bg-amber-950/80 dark:text-amber-300 border border-amber-300/40 dark:border-amber-500/30'
-                  : 'bg-purple-100 text-purple-800 dark:bg-purple-950/80 dark:text-purple-300 border border-purple-300/40 dark:border-purple-500/30'
-              }`}
-            >
-              {currentAnnouncement.category}
-            </span>
-            <p className="text-xs font-bold text-slate-800 dark:text-slate-100 truncate transition-colors group-hover/ann:text-purple-600 dark:group-hover/ann:text-purple-400">
-              {currentAnnouncement.title}
-            </p>
-          </div>
-        </div>
-
-        <div className="flex items-center gap-2.5 shrink-0">
-          <span className="text-[10px] text-slate-500 dark:text-slate-400 font-mono font-medium hidden sm:inline">
-            {currentAnnouncement.time}
-          </span>
-          <div className="flex items-center gap-0.5">
-            <button
-              onClick={(e) => {
-                e.stopPropagation();
-                setAnnouncementIndex(
-                  (prev) => (prev - 1 + announcements.length) % announcements.length
-                );
-              }}
-              aria-label="Previous announcement"
-              className="p-1 rounded-lg text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-white/10 transition-colors"
-            >
-              <ChevronLeft className="w-3.5 h-3.5" />
-            </button>
-            <button
-              onClick={(e) => {
-                e.stopPropagation();
-                setAnnouncementIndex((prev) => (prev + 1) % announcements.length);
-              }}
-              aria-label="Next announcement"
-              className="p-1 rounded-lg text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-white/10 transition-colors"
-            >
-              <ChevronRight className="w-3.5 h-3.5" />
             </button>
           </div>
         </div>

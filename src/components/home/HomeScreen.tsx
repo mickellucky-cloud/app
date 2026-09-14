@@ -8,6 +8,7 @@ import { MarketListSkeleton } from './MarketListSkeleton';
 import { HomeSkeleton } from '../skeletons/HomeSkeleton';
 import { CryptoNewsSection } from './CryptoNewsSection';
 import { PromotionalBannerCarousel } from './PromotionalBannerCarousel';
+import { AnnouncementSlider } from './AnnouncementSlider';
 import { TotalAssetsArea } from './TotalAssetsArea';
 import { MarketPair, RecentActivityItem, ThemeMode, AppNotification } from '../../types';
 import {
@@ -167,8 +168,17 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
             onOpenConvert={onOpenConvert}
             onNavigateWallet={onNavigateWallet}
             variant="home"
-            className="mb-3"
+            className="mb-2"
           />
+
+          {/* Announcement Slider (Positioned immediately after Deposit, Withdraw, Send, Convert) */}
+          <section id="home-announcements-slider-section" className="mb-3">
+            <AnnouncementSlider
+              onOpenDeposit={onOpenDeposit}
+              onNavigateP2P={onNavigateP2P}
+              onOpenAiTrader={onOpenAiTrader}
+            />
+          </section>
 
           {/* Clean Modern Quick Actions Grid (4-col Mobile / 8-col Desktop) */}
           <section id="home-quick-actions" className="mb-3">
