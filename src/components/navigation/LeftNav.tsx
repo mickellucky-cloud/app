@@ -235,9 +235,9 @@ export const LeftNav: React.FC<LeftNavProps> = ({
                   id={`left-nav-${item.id}`}
                   onClick={() => onSelectTab(item.id)}
                   title={isCollapsed ? item.label : undefined}
-                  className={`w-full flex items-center gap-3 px-3 py-2 rounded-xl text-xs font-semibold transition-all duration-150 group relative ${
+                  className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-medium transition-all duration-150 group relative ${
                     isActive
-                      ? 'bg-purple-100/90 text-purple-700 border border-purple-300 dark:bg-gradient-to-r dark:from-purple-600/25 dark:to-purple-500/10 dark:text-white dark:border-purple-500/40 shadow-xs dark:shadow-[0_0_16px_rgba(168,85,247,0.15)] font-bold'
+                      ? 'bg-purple-50 text-purple-700 border border-purple-200/80 shadow-xs dark:bg-purple-950/40 dark:text-purple-200 dark:border-purple-500/30 dark:shadow-[0_0_16px_rgba(168,85,247,0.15)] font-semibold'
                       : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100 dark:text-slate-400 dark:hover:text-slate-200 dark:hover:bg-white/[0.04] border border-transparent'
                   } ${isCollapsed ? 'justify-center px-0' : ''}`}
                 >
@@ -259,7 +259,7 @@ export const LeftNav: React.FC<LeftNavProps> = ({
 
                   {/* Active bar indicator on the left */}
                   {isActive && (
-                    <div className="absolute left-0 top-2 bottom-2 w-1 rounded-r-full bg-purple-600 dark:bg-purple-500" />
+                    <div className="absolute left-0 top-2 bottom-2 w-1 rounded-r-full bg-purple-600 dark:bg-purple-400 shadow-[0_0_8px_rgba(168,85,247,0.5)]" />
                   )}
                 </button>
               );
@@ -277,17 +277,26 @@ export const LeftNav: React.FC<LeftNavProps> = ({
           <div className="space-y-1">
             {toolsNavItems.map((tool) => {
               const Icon = tool.icon;
+              const isActive = activeTab === tool.id;
               return (
                 <button
                   key={tool.id}
                   id={`left-nav-tool-${tool.id}`}
                   onClick={tool.onClick}
                   title={isCollapsed ? tool.label : undefined}
-                  className={`w-full flex items-center gap-3 px-3 py-2 rounded-xl text-xs font-semibold text-slate-600 hover:text-slate-900 hover:bg-slate-100 dark:text-slate-400 dark:hover:text-slate-200 dark:hover:bg-white/[0.04] transition-all group ${
-                    isCollapsed ? 'justify-center px-0' : ''
-                  }`}
+                  className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-medium transition-all duration-150 group relative ${
+                    isActive
+                      ? 'bg-purple-50 text-purple-700 border border-purple-200/80 shadow-xs dark:bg-purple-950/40 dark:text-purple-200 dark:border-purple-500/30 dark:shadow-[0_0_16px_rgba(168,85,247,0.15)] font-semibold'
+                      : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100 dark:text-slate-400 dark:hover:text-slate-200 dark:hover:bg-white/[0.04] border border-transparent'
+                  } ${isCollapsed ? 'justify-center px-0' : ''}`}
                 >
-                  <Icon className="w-4 h-4 flex-shrink-0 text-slate-500 group-hover:text-purple-600 dark:text-slate-400 dark:group-hover:text-purple-300 transition-colors" />
+                  <Icon
+                    className={`w-4 h-4 flex-shrink-0 transition-colors ${
+                      isActive
+                        ? 'text-purple-600 dark:text-purple-400'
+                        : 'text-slate-500 group-hover:text-purple-600 dark:text-slate-400 dark:group-hover:text-purple-300'
+                    }`}
+                  />
                   {!isCollapsed && (
                     <>
                       <span className="flex-1 text-left truncate">{tool.label}</span>
@@ -305,6 +314,11 @@ export const LeftNav: React.FC<LeftNavProps> = ({
                         </span>
                       )}
                     </>
+                  )}
+
+                  {/* Active bar indicator on the left */}
+                  {isActive && (
+                    <div className="absolute left-0 top-2 bottom-2 w-1 rounded-r-full bg-purple-600 dark:bg-purple-400 shadow-[0_0_8px_rgba(168,85,247,0.5)]" />
                   )}
                 </button>
               );

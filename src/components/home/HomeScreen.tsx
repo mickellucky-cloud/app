@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { OKNexusLogo, OKNexusBadge3D } from '../common/OKNexusLogo';
 import { CoinIcon } from '../common/CoinIcon';
 import { Sparkline } from '../common/Sparkline';
+import { AnimatedP2PIcon } from '../common/AnimatedP2PIcon';
 import { FeatureGridSkeleton } from './FeatureGridSkeleton';
 import { MarketListSkeleton } from './MarketListSkeleton';
 import { HomeSkeleton } from '../skeletons/HomeSkeleton';
@@ -206,7 +207,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
                   0%
                 </span>
                 <div className="w-12 h-12 rounded-2xl bg-emerald-100 dark:bg-emerald-950/60 border border-emerald-200/80 dark:border-emerald-500/30 text-emerald-600 dark:text-emerald-300 flex items-center justify-center group-hover:scale-105 group-hover:bg-emerald-200 dark:group-hover:bg-emerald-900/60 transition-transform shadow-xs">
-                  <Users2 className="w-5 h-5" />
+                  <AnimatedP2PIcon size={22} className="text-emerald-600 dark:text-emerald-300" />
                 </div>
                 <span className="text-xs font-semibold text-slate-800 dark:text-slate-200 mt-1.5">P2P</span>
               </button>
