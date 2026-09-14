@@ -10,6 +10,9 @@ export interface GraphicFlyerBanner {
   ctaText: string;
   aspectRatio: string;
   altText: string;
+  glowColor?: string;
+  accentColor?: string;
+  fallbackSvgUrl?: string;
 }
 
 export interface GraphicAnnouncement {
@@ -42,7 +45,10 @@ export const GRAPHIC_PROMOTIONAL_BANNERS: GraphicFlyerBanner[] = [
     actionType: 'ai_trader',
     aspectRatio: '16/6',
     altText: 'OKNexus AI Auto-Trader 24/7 Algorithmic Grid Bot Promo Flyer',
-    graphicUrl: createSvgGraphicUrl(`
+    graphicUrl: '/banners/banner_ai_autotrader.jpg',
+    glowColor: 'rgba(168, 85, 247, 0.45)',
+    accentColor: '#A855F7',
+    fallbackSvgUrl: createSvgGraphicUrl(`
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 450" width="1200" height="450">
         <defs>
           <linearGradient id="bgAI" x1="0%" y1="0%" x2="100%" y2="100%">
@@ -150,7 +156,10 @@ export const GRAPHIC_PROMOTIONAL_BANNERS: GraphicFlyerBanner[] = [
     actionType: 'p2p',
     aspectRatio: '16/6',
     altText: 'OKNexus 50,000 USDT P2P Zero Fees Championship Graphic Banner',
-    graphicUrl: createSvgGraphicUrl(`
+    graphicUrl: '/banners/banner_p2p_fiesta.jpg',
+    glowColor: 'rgba(245, 158, 11, 0.45)',
+    accentColor: '#F59E0B',
+    fallbackSvgUrl: createSvgGraphicUrl(`
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 450" width="1200" height="450">
         <defs>
           <linearGradient id="bgP2P" x1="0%" y1="0%" x2="100%" y2="100%">
@@ -241,7 +250,10 @@ export const GRAPHIC_PROMOTIONAL_BANNERS: GraphicFlyerBanner[] = [
     actionType: 'earn',
     aspectRatio: '16/6',
     altText: 'OKNexus Token Staking Vault 28.5% APR Graphic Banner',
-    graphicUrl: createSvgGraphicUrl(`
+    graphicUrl: '/banners/banner_okn_vault.jpg',
+    glowColor: 'rgba(6, 182, 212, 0.45)',
+    accentColor: '#06B6D4',
+    fallbackSvgUrl: createSvgGraphicUrl(`
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 450" width="1200" height="450">
         <defs>
           <linearGradient id="bgVault" x1="0%" y1="0%" x2="100%" y2="100%">
@@ -313,7 +325,10 @@ export const GRAPHIC_PROMOTIONAL_BANNERS: GraphicFlyerBanner[] = [
     actionType: 'markets',
     aspectRatio: '16/6',
     altText: 'OKNexus 500,000 USDT Futures Trading Championship Graphic Banner',
-    graphicUrl: createSvgGraphicUrl(`
+    graphicUrl: '/banners/banner_futures_arena.jpg',
+    glowColor: 'rgba(244, 63, 94, 0.45)',
+    accentColor: '#F43F5E',
+    fallbackSvgUrl: createSvgGraphicUrl(`
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 450" width="1200" height="450">
         <defs>
           <linearGradient id="bgArena" x1="0%" y1="0%" x2="100%" y2="100%">
@@ -385,51 +400,27 @@ export const GRAPHIC_ANNOUNCEMENTS: GraphicAnnouncement[] = [
     title: 'Instant SEPA & Wire Fiat Ramp Now Live with 0% Deposit Fees',
     category: 'NEW',
     time: '1h ago',
-    thumbnailUrl: createSvgGraphicUrl(`
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 80" width="80" height="80">
-        <rect width="80" height="80" rx="16" fill="#042F2E"/>
-        <circle cx="40" cy="40" r="26" fill="#0D9488"/>
-        <text x="32" y="47" fill="#CCFBF1" font-family="sans-serif" font-size="22" font-weight="900">€</text>
-      </svg>
-    `),
+    thumbnailUrl: '/announcements/ann_fiat_ramp.jpg',
   },
   {
     id: 'ann-2',
     title: 'Proof-of-Reserves Audited: 104.2% Clean Asset Backing',
     category: 'SECURITY',
     time: '3h ago',
-    thumbnailUrl: createSvgGraphicUrl(`
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 80" width="80" height="80">
-        <rect width="80" height="80" rx="16" fill="#1E1B4B"/>
-        <polygon points="40,20 60,30 60,55 40,65 20,55 20,30" fill="#6366F1"/>
-        <circle cx="40" cy="42" r="10" fill="#FFFFFF"/>
-      </svg>
-    `),
+    thumbnailUrl: '/announcements/ann_security_shield.jpg',
   },
   {
     id: 'ann-3',
     title: 'Zero-Fee P2P Tuesdays: Free Escrow Settlement All Day',
     category: 'PROMO',
     time: '5h ago',
-    thumbnailUrl: createSvgGraphicUrl(`
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 80" width="80" height="80">
-        <rect width="80" height="80" rx="16" fill="#451A03"/>
-        <circle cx="40" cy="40" r="26" fill="#F59E0B"/>
-        <text x="32" y="48" fill="#78350F" font-family="sans-serif" font-size="24" font-weight="900">₮</text>
-      </svg>
-    `),
+    thumbnailUrl: '/announcements/ann_p2p_badge.jpg',
   },
   {
     id: 'ann-4',
     title: 'AI Auto-Trader V2 Algorithm Integrated with Deep Liquidity',
     category: 'LISTING',
     time: '8h ago',
-    thumbnailUrl: createSvgGraphicUrl(`
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 80" width="80" height="80">
-        <rect width="80" height="80" rx="16" fill="#3B0764"/>
-        <rect x="22" y="24" width="36" height="32" rx="8" fill="#C084FC"/>
-        <rect x="28" y="32" width="24" height="8" rx="3" fill="#1E1B4B"/>
-      </svg>
-    `),
+    thumbnailUrl: '/announcements/ann_ai_chip.jpg',
   },
 ];

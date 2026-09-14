@@ -72,7 +72,8 @@ import { ScanToPayModal } from './components/modals/ScanToPayModal';
 export default function App() {
   // Authentication State
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(() => {
-    return safeStorage.getItem('oknexus_authenticated') === 'true';
+    const stored = safeStorage.getItem('oknexus_authenticated');
+    return stored === null ? true : stored === 'true';
   });
   const [userEmail, setUserEmail] = useState<string>('mickel.lucky@gmail.com');
   const [authView, setAuthView] = useState<'login' | 'signup' | 'forgot_password'>('login');
