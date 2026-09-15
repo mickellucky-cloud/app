@@ -117,7 +117,7 @@ export const SupportCenterScreen: React.FC<SupportCenterScreenProps> = ({
   onOpenP2P,
   onOpenAiTrader,
   onOpenSecurity,
-  userEmail = 'mickel.lucky@gmail.com',
+  userEmail = 'dev@nexus.com',
   theme = 'dark',
   isLoading = false,
 }) => {

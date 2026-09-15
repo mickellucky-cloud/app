@@ -4,6 +4,13 @@ import { fileURLToPath } from 'url';
 import { createServer as createViteServer } from 'vite';
 import dotenv from 'dotenv';
 import { GoogleGenAI } from '@google/genai';
+import { authRouter } from './server/routes/auth';
+import { walletRouter } from './server/routes/wallet';
+import { spotRouter } from './server/routes/spot';
+import { p2pRouter } from './server/routes/p2p';
+import { earnRouter } from './server/routes/earn';
+import { alertsRouter } from './server/routes/alerts';
+import { aiBotRouter } from './server/routes/aiBot';
 
 dotenv.config();
 
@@ -114,6 +121,15 @@ async function startServer() {
     });
   });
 
+  // Modular Exchange API Routers for Backend Integration
+  app.use('/api/auth', authRouter);
+  app.use('/api/wallet', walletRouter);
+  app.use('/api/spot', spotRouter);
+  app.use('/api/p2p', p2pRouter);
+  app.use('/api/earn', earnRouter);
+  app.use('/api/alerts', alertsRouter);
+  app.use('/api/ai-bot', aiBotRouter);
+
   // Support Chat API with Gemini AI
   app.post('/api/support/chat', async (req, res) => {
     try {
@@ -131,7 +147,7 @@ async function startServer() {
           const systemInstruction = `You are "NexusAssist", the premier VIP AI Customer Support & Trading Concierge for OKNexus Mobile Exchange (a top-tier Web3 cryptocurrency exchange).
 Your tone is exceptionally professional, helpful, concise, security-conscious, and crypto-native.
 User Account Context:
-- Email: ${userContext.email || 'mickel.lucky@gmail.com'}
+- Email: ${userContext.email || 'dev@nexus.com'}
 - Total Portfolio: $${userContext.totalAssets?.toLocaleString() || '42,318.65'} (Spot: $${userContext.spotUsd?.toLocaleString() || '28,412.32'}, Funding: $${userContext.fundingUsd?.toLocaleString() || '8,236.17'}, Earn: $${userContext.earnUsd?.toLocaleString() || '3,670.16'})
 - VIP Tier: VIP Tier 2 (Maker 0.08%, Taker 0.10%, OKN Discount Active)
 - Security: 2FA Enabled, Biometric Authentication Enabled (${userContext.biometricType || 'Face ID'}), KYC Level 2 Verified

@@ -42,7 +42,7 @@ interface AccountCenterModalProps {
 export const AccountCenterModal: React.FC<AccountCenterModalProps> = ({
   isOpen,
   onClose,
-  userEmail = 'mickel.lucky@gmail.com',
+  userEmail = 'dev@nexus.com',
   uid = '8829410',
   onSignOut,
   theme = 'dark',

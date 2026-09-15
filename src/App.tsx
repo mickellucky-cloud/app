@@ -75,11 +75,11 @@ export default function App() {
     const stored = safeStorage.getItem('oknexus_authenticated');
     return stored === null ? true : stored === 'true';
   });
-  const [userEmail, setUserEmail] = useState<string>('mickel.lucky@gmail.com');
+  const [userEmail, setUserEmail] = useState<string>('dev@nexus.com');
   const [authView, setAuthView] = useState<'login' | 'signup' | 'forgot_password'>('login');
   const [showPuzzleModal, setShowPuzzleModal] = useState<boolean>(false);
   const [showOtpScreen, setShowOtpScreen] = useState<boolean>(false);
-  const [authIdentifier, setAuthIdentifier] = useState<string>('mickel.lucky@gmail.com');
+  const [authIdentifier, setAuthIdentifier] = useState<string>('dev@nexus.com');
   const [authType, setAuthType] = useState<'email' | 'phone'>('email');
   const [authPurpose, setAuthPurpose] = useState<'login' | 'signup' | 'recovery'>('login');
   const [isForgotVerified, setIsForgotVerified] = useState<boolean>(false);
@@ -770,7 +770,7 @@ export default function App() {
   };
 
   const handleSocialSuccess = (provider: 'google' | 'apple') => {
-    const socialAccount = provider === 'google' ? 'mickel.lucky@gmail.com' : 'apple.trader@icloud.com';
+    const socialAccount = provider === 'google' ? 'dev@nexus.com' : 'apple.trader@icloud.com';
 
     setIsAuthenticated(true);
     safeStorage.setItem('oknexus_authenticated', 'true');

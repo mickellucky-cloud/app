@@ -80,7 +80,7 @@ type ProfileSection =
   | 'payments';
 
 export const ProfileScreen: React.FC<ProfileScreenProps> = ({
-  userEmail = 'mickel.lucky@gmail.com',
+  userEmail = 'dev@nexus.com',
   uid = '8829410',
   username = 'Mickel_Lucky',
   onUpdateUsername,

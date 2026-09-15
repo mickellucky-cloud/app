@@ -35,7 +35,7 @@ interface SecurityCenterModalProps {
 export const SecurityCenterModal: React.FC<SecurityCenterModalProps> = ({
   isOpen,
   onClose,
-  userEmail = 'mickel.lucky@gmail.com',
+  userEmail = 'dev@nexus.com',
   onShowToast,
 }) => {
   // Navigation tabs within Security Center

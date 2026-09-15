@@ -75,7 +75,7 @@ interface SettingsScreenProps {
 }
 
 export const SettingsScreen: React.FC<SettingsScreenProps> = ({
-  userEmail = 'mickel.lucky@gmail.com',
+  userEmail = 'dev@nexus.com',
   uid = '8829410',
   username = 'Mickel_Lucky',
   onUpdateUsername,
@@ -197,7 +197,7 @@ export const SettingsScreen: React.FC<SettingsScreenProps> = ({
   const [savedPaymentMethods, setSavedPaymentMethods] = useState([
     { id: 'pm-1', type: 'Bank Wire (SEPA)', detail: 'DE89 **** **** **** 4012', name: 'Mickel Lucky', active: true },
     { id: 'pm-2', type: 'Revolut Pay', detail: 'rev.me/@mickellucky', name: 'Mickel Lucky', active: true },
-    { id: 'pm-3', type: 'Wise Transfer', detail: 'mickel.lucky@gmail.com', name: 'Mickel Lucky', active: false },
+    { id: 'pm-3', type: 'Wise Transfer', detail: 'dev@nexus.com', name: 'Mickel Lucky', active: false },
   ]);
 
   // 7. Privacy Settings State

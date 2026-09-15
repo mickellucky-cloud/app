@@ -996,7 +996,7 @@ export const COUNTRY_CODES: CountryCodeItem[] = [
 ];
 
 export const DEV_TEST_ACCOUNT = {
-  email: 'mickel.lucky@gmail.com',
+  email: 'dev@nexus.com',
   altEmail: 'test@oknexus.io',
   phone: '8012345678',
   countryCode: '+234',

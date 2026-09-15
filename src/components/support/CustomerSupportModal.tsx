@@ -69,7 +69,7 @@ export const CustomerSupportModal: React.FC<CustomerSupportModalProps> = ({
   onOpenPriceAlerts,
   onOpenSecurity,
   onOpenEarn,
-  userEmail = 'mickel.lucky@gmail.com',
+  userEmail = 'dev@nexus.com',
   balances = {
     totalAssets: 42318.65,
     spotUsd: 28412.32,
