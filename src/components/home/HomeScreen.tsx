@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { OKNexusLogo, OKNexusBadge3D } from '../common/OKNexusLogo';
 import { CoinIcon } from '../common/CoinIcon';
 import { Sparkline } from '../common/Sparkline';
@@ -132,6 +132,25 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
   const [marketTab, setMarketTab] = useState<'hot' | 'gainers' | 'new' | 'losers'>('hot');
   const [isNotificationsDropdownOpen, setIsNotificationsDropdownOpen] = useState(false);
 
+  // Real-time price tick simulation for live trading floor feel
+  const [priceTicks, setPriceTicks] = useState<Record<string, { dir: 'up' | 'down'; time: number }>>({});
+
+  useEffect(() => {
+    const tickInterval = setInterval(() => {
+      if (!marketPairs.length) return;
+      const targetIdx = Math.floor(Math.random() * Math.min(marketPairs.length, 6));
+      const targetPair = marketPairs[targetIdx];
+      if (!targetPair) return;
+      const dir: 'up' | 'down' = Math.random() > 0.45 ? 'up' : 'down';
+      setPriceTicks((prev) => ({
+        ...prev,
+        [targetPair.symbol]: { dir, time: Date.now() },
+      }));
+    }, 2800);
+
+    return () => clearInterval(tickInterval);
+  }, [marketPairs]);
+
   const favoritePairsList = React.useMemo(
     () => marketPairs.filter((p) => p.isFavorite),
     [marketPairs]
@@ -152,7 +171,9 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
   }
 
   return (
-    <div id="home-screen" className="pb-28 md:pb-12 pt-1 sm:pt-3 px-3 sm:px-6 lg:px-8 max-w-md md:max-w-4xl lg:max-w-7xl mx-auto min-h-screen text-[#0F172A] dark:text-[#EDF1F5] bg-white dark:bg-[#0A0E13] transition-colors">
+    <div id="home-screen" className="relative pb-28 md:pb-12 pt-1 sm:pt-3 px-3 sm:px-6 lg:px-8 max-w-md md:max-w-4xl lg:max-w-7xl mx-auto min-h-screen text-[#0F172A] dark:text-[#EDF1F5] bg-white dark:bg-[#0A0E13] transition-colors">
+      {/* Layer 0: Ambient Radial Mesh Spotlight */}
+      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-5xl h-96 bg-gradient-to-b from-purple-600/10 via-indigo-600/5 to-transparent blur-3xl pointer-events-none -z-10" />
       {/* Responsive Grid Layout for Tablet and Web */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 items-start">
         {/* Main Column */}
@@ -352,41 +373,55 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
                 <MarketListSkeleton />
               ) : (
                 <div className="space-y-1 animate-fade-in">
-                  {filteredMarkets.map((pair) => (
-                    <div
-                      key={pair.symbol}
-                      onClick={() => onSelectPair(pair)}
-                      className="flex items-center justify-between p-2.5 rounded-xl hover:bg-[#F8FAFC] active:bg-[#F1F5F9] dark:hover:bg-[#141B24] dark:active:bg-[#1A222D] transition-colors cursor-pointer group"
-                    >
-                      <div className="flex items-center gap-2.5">
-                        <CoinIcon symbol={pair.base} size={32} />
-                        <div>
-                          <div className="font-bold text-xs text-[#0F172A] group-hover:text-[#8B5CF6] dark:text-[#EDF1F5] dark:group-hover:text-[#8B5CF6] transition-colors">
-                            {pair.symbol}
-                          </div>
-                          <div className="text-[11px] text-[#64748B] dark:text-[#8E98A6]">{pair.name}</div>
-                        </div>
-                      </div>
-
-                      <div className="flex items-center gap-2.5">
-                        <div className="text-right">
-                          <div className="font-mono-num text-xs font-bold text-[#0F172A] dark:text-[#EDF1F5]">
-                            ${pair.price >= 1 ? pair.price.toLocaleString('en-US', { minimumFractionDigits: 2 }) : pair.price.toFixed(4)}
+                  {filteredMarkets.map((pair) => {
+                    const tick = priceTicks[pair.symbol];
+                    const isFresh = tick && Date.now() - tick.time < 1200;
+                    return (
+                      <div
+                        key={pair.symbol}
+                        onClick={() => onSelectPair(pair)}
+                        className="flex items-center justify-between p-2.5 rounded-xl hover:bg-[#F8FAFC] active:bg-[#F1F5F9] dark:hover:bg-[#141B24] dark:active:bg-[#1A222D] transition-colors cursor-pointer group"
+                      >
+                        <div className="flex items-center gap-2.5">
+                          <CoinIcon symbol={pair.base} size={32} />
+                          <div>
+                            <div className="font-bold text-xs text-[#0F172A] group-hover:text-[#8B5CF6] dark:text-[#EDF1F5] dark:group-hover:text-[#8B5CF6] transition-colors">
+                              {pair.symbol}
+                            </div>
+                            <div className="text-[11px] text-[#64748B] dark:text-[#8E98A6]">{pair.name}</div>
                           </div>
                         </div>
 
-                        <div
-                          className={`min-w-[62px] px-2 py-1 rounded-lg text-right font-mono-num text-xs font-bold ${
-                            pair.change24h >= 0
-                              ? 'bg-emerald-50 text-[#10B981] border border-emerald-200 dark:bg-emerald-500/15 dark:text-[#10B981] dark:border-emerald-500/20'
-                              : 'bg-rose-50 text-[#EF4444] border border-rose-200 dark:bg-rose-500/15 dark:text-[#EF4444] dark:border-rose-500/20'
-                          }`}
-                        >
-                          {pair.change24h >= 0 ? `+${pair.change24h}%` : `${pair.change24h}%`}
+                        <div className="flex items-center gap-2.5">
+                          <div className="text-right">
+                            <div
+                              className={`font-mono-num text-xs font-bold transition-all duration-300 px-1.5 py-0.5 rounded-md ${
+                                isFresh
+                                  ? tick.dir === 'up'
+                                    ? 'text-emerald-500 bg-emerald-500/15 ring-1 ring-emerald-500/30'
+                                    : 'text-rose-500 bg-rose-500/15 ring-1 ring-rose-500/30'
+                                  : 'text-[#0F172A] dark:text-[#EDF1F5]'
+                              }`}
+                            >
+                              ${pair.price >= 1 ? pair.price.toLocaleString('en-US', { minimumFractionDigits: 2 }) : pair.price.toFixed(4)}
+                            </div>
+                          </div>
+
+                          <div
+                            className={`min-w-[62px] px-2 py-1 rounded-lg text-right font-mono-num text-xs font-bold transition-transform duration-300 ${
+                              isFresh ? 'scale-105' : ''
+                            } ${
+                              pair.change24h >= 0
+                                ? 'bg-emerald-50 text-[#10B981] border border-emerald-200 dark:bg-emerald-500/15 dark:text-[#10B981] dark:border-emerald-500/20'
+                                : 'bg-rose-50 text-[#EF4444] border border-rose-200 dark:bg-rose-500/15 dark:text-[#EF4444] dark:border-rose-500/20'
+                            }`}
+                          >
+                            {pair.change24h >= 0 ? `+${pair.change24h}%` : `${pair.change24h}%`}
+                          </div>
                         </div>
                       </div>
-                    </div>
-                  ))}
+                    );
+                  })}
                 </div>
               )}
             </section>
@@ -586,41 +621,55 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
               <MarketListSkeleton />
             ) : (
               <div className="space-y-1 animate-fade-in">
-                {filteredMarkets.map((pair) => (
-                  <div
-                    key={pair.symbol}
-                    onClick={() => onSelectPair(pair)}
-                    className="flex items-center justify-between p-2.5 rounded-xl hover:bg-[#F8FAFC] active:bg-[#F1F5F9] dark:hover:bg-[#141B24] dark:active:bg-[#1A222D] transition-colors cursor-pointer group"
-                  >
-                    <div className="flex items-center gap-2.5">
-                      <CoinIcon symbol={pair.base} size={32} />
-                      <div>
-                        <div className="font-semibold text-xs text-[#0F172A] group-hover:text-[#8B5CF6] dark:text-[#EDF1F5] dark:group-hover:text-[#8B5CF6] transition-colors">
-                          {pair.symbol}
-                        </div>
-                        <div className="text-[11px] text-[#64748B] dark:text-[#8E98A6]">{pair.name}</div>
-                      </div>
-                    </div>
-
-                    <div className="flex items-center gap-3">
-                      <div className="text-right">
-                        <div className="font-mono-num text-xs font-bold text-[#0F172A] dark:text-[#EDF1F5]">
-                          ${pair.price >= 1 ? pair.price.toLocaleString('en-US', { minimumFractionDigits: 2 }) : pair.price.toFixed(4)}
+                {filteredMarkets.map((pair) => {
+                  const tick = priceTicks[pair.symbol];
+                  const isFresh = tick && Date.now() - tick.time < 1200;
+                  return (
+                    <div
+                      key={pair.symbol}
+                      onClick={() => onSelectPair(pair)}
+                      className="flex items-center justify-between p-2.5 rounded-xl hover:bg-[#F8FAFC] active:bg-[#F1F5F9] dark:hover:bg-[#141B24] dark:active:bg-[#1A222D] transition-colors cursor-pointer group"
+                    >
+                      <div className="flex items-center gap-2.5">
+                        <CoinIcon symbol={pair.base} size={32} />
+                        <div>
+                          <div className="font-semibold text-xs text-[#0F172A] group-hover:text-[#8B5CF6] dark:text-[#EDF1F5] dark:group-hover:text-[#8B5CF6] transition-colors">
+                            {pair.symbol}
+                          </div>
+                          <div className="text-[11px] text-[#64748B] dark:text-[#8E98A6]">{pair.name}</div>
                         </div>
                       </div>
 
-                      <div
-                        className={`min-w-[62px] px-2 py-1 rounded-md text-right font-mono-num text-[11px] font-bold ${
-                          pair.change24h >= 0
-                            ? 'bg-emerald-50 text-[#10B981] border border-emerald-200 dark:bg-emerald-500/15 dark:text-[#10B981] dark:border-emerald-500/20'
-                            : 'bg-rose-50 text-[#EF4444] border border-rose-200 dark:bg-rose-500/15 dark:text-[#EF4444] dark:border-rose-500/20'
-                        }`}
-                      >
-                        {pair.change24h >= 0 ? `+${pair.change24h}%` : `${pair.change24h}%`}
+                      <div className="flex items-center gap-3">
+                        <div className="text-right">
+                          <div
+                            className={`font-mono-num text-xs font-bold transition-all duration-300 px-1.5 py-0.5 rounded-md ${
+                              isFresh
+                                ? tick.dir === 'up'
+                                  ? 'text-emerald-500 bg-emerald-500/15 ring-1 ring-emerald-500/30'
+                                  : 'text-rose-500 bg-rose-500/15 ring-1 ring-rose-500/30'
+                                : 'text-[#0F172A] dark:text-[#EDF1F5]'
+                            }`}
+                          >
+                            ${pair.price >= 1 ? pair.price.toLocaleString('en-US', { minimumFractionDigits: 2 }) : pair.price.toFixed(4)}
+                          </div>
+                        </div>
+
+                        <div
+                          className={`min-w-[62px] px-2 py-1 rounded-md text-right font-mono-num text-[11px] font-bold transition-transform duration-300 ${
+                            isFresh ? 'scale-105' : ''
+                          } ${
+                            pair.change24h >= 0
+                              ? 'bg-emerald-50 text-[#10B981] border border-emerald-200 dark:bg-emerald-500/15 dark:text-[#10B981] dark:border-emerald-500/20'
+                              : 'bg-rose-50 text-[#EF4444] border border-rose-200 dark:bg-rose-500/15 dark:text-[#EF4444] dark:border-rose-500/20'
+                          }`}
+                        >
+                          {pair.change24h >= 0 ? `+${pair.change24h}%` : `${pair.change24h}%`}
+                        </div>
                       </div>
                     </div>
-                  </div>
-                ))}
+                  );
+                })}
               </div>
             )}
           </section>

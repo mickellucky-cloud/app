@@ -10,8 +10,10 @@ import {
   Repeat,
   ChevronRight,
   Activity,
+  Share2,
 } from 'lucide-react';
 import { OKNexusBadge3D } from '../common/OKNexusLogo';
+import { SharePnlModal } from '../modals/SharePnlModal';
 
 export interface TotalAssetsAreaProps {
   balances: {
@@ -53,6 +55,7 @@ export const TotalAssetsArea: React.FC<TotalAssetsAreaProps> = ({
 }) => {
   const [currency, setCurrency] = useState<CurrencyUnit>('USD');
   const [timeframe, setTimeframe] = useState<TimeframeOption>('24H');
+  const [isShareModalOpen, setIsShareModalOpen] = useState(false);
 
   // Constants & conversions
   const BTC_RATE = 87450; // Reference BTC exchange rate
@@ -301,6 +304,18 @@ export const TotalAssetsArea: React.FC<TotalAssetsAreaProps> = ({
                     +${activePnl.pnlUsd.toLocaleString('en-US', { minimumFractionDigits: 2 })}
                   </div>
                 )}
+
+                {/* Share P&L Button */}
+                <motion.button
+                  whileHover={{ scale: 1.06, y: -1 }}
+                  whileTap={{ scale: 0.94 }}
+                  onClick={() => setIsShareModalOpen(true)}
+                  title="Share P&L Brag Card"
+                  className="flex items-center gap-1 px-2 py-1 rounded-xl bg-purple-500/10 hover:bg-purple-500/20 text-purple-600 dark:text-purple-400 border border-purple-500/25 transition-all text-xs font-bold shadow-2xs"
+                >
+                  <Share2 className="w-3.5 h-3.5" />
+                  <span className="hidden xs:inline">Share</span>
+                </motion.button>
               </div>
 
               {/* Sparkline Visual Graph */}
@@ -441,6 +456,16 @@ export const TotalAssetsArea: React.FC<TotalAssetsAreaProps> = ({
           </div>
         </div>
       </div>
+
+      {/* Share P&L Performance Modal */}
+      <SharePnlModal
+        isOpen={isShareModalOpen}
+        onClose={() => setIsShareModalOpen(false)}
+        pnlPct={activePnl.pnlPct}
+        pnlUsd={activePnl.pnlUsd}
+        totalAssets={totalUsd}
+        timeframe={timeframe}
+      />
     </div>
   );
 };
