@@ -49,30 +49,30 @@ export const PolymarketModal: React.FC<PolymarketModalProps> = ({ isOpen, onClos
   };
 
   return (
-    <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-md flex items-end justify-center p-0 sm:p-4">
-      <div className="w-full max-w-md bg-[#0F1320] border-t sm:border border-cyan-500/30 rounded-t-3xl sm:rounded-3xl p-5 safe-area-bottom max-h-[85vh] overflow-y-auto animate-slideUp text-slate-100">
-        <div className="flex items-center justify-between pb-3 border-b border-white/[0.06] mb-4">
+    <div className="fixed inset-0 z-50 bg-black/70 dark:bg-black/80 backdrop-blur-md flex items-end sm:items-center justify-center p-0 sm:p-4 animate-fadeIn">
+      <div className="w-full max-w-md bg-white dark:bg-[#0F1320] border-t sm:border border-slate-200 dark:border-cyan-500/30 rounded-t-3xl sm:rounded-3xl p-5 safe-area-bottom max-h-[85vh] overflow-y-auto animate-slideUp text-slate-900 dark:text-slate-100 shadow-2xl transition-colors">
+        <div className="flex items-center justify-between pb-3 border-b border-slate-200 dark:border-white/[0.06] mb-4">
           <div className="flex items-center gap-2">
-            <div className="w-8 h-8 rounded-xl bg-cyan-950/60 border border-cyan-500/40 flex items-center justify-center text-cyan-400">
+            <div className="w-8 h-8 rounded-xl bg-cyan-100 dark:bg-cyan-950/60 border border-cyan-300 dark:border-cyan-500/40 flex items-center justify-center text-cyan-600 dark:text-cyan-400">
               <Layers className="w-4 h-4" />
             </div>
             <div>
-              <h3 className="font-bold text-base text-white">Polymarket Web3</h3>
-              <span className="text-[10px] text-cyan-400 font-semibold">
+              <h3 className="font-bold text-base text-slate-900 dark:text-white">Polymarket Web3</h3>
+              <span className="text-[10px] text-cyan-600 dark:text-cyan-400 font-semibold">
                 Decentralized Prediction Protocol
               </span>
             </div>
           </div>
-          <button onClick={onClose} className="p-1 text-slate-400 hover:text-white">
+          <button onClick={onClose} className="p-1 text-slate-400 hover:text-slate-700 dark:hover:text-white transition-colors">
             <X className="w-5 h-5" />
           </button>
         </div>
 
         {isPlaced ? (
           <div className="py-8 text-center space-y-2">
-            <CheckCircle2 className="w-12 h-12 text-cyan-400 mx-auto animate-bounce" />
-            <h4 className="font-bold text-white text-base">Prediction Submitted!</h4>
-            <p className="text-xs text-slate-400">
+            <CheckCircle2 className="w-12 h-12 text-cyan-500 dark:text-cyan-400 mx-auto animate-bounce" />
+            <h4 className="font-bold text-slate-900 dark:text-white text-base">Prediction Submitted!</h4>
+            <p className="text-xs text-slate-600 dark:text-slate-400">
               Bought ${betAmount} of {betSide.toUpperCase()} shares on "{curr.question}".
             </p>
           </div>
@@ -86,37 +86,37 @@ export const PolymarketModal: React.FC<PolymarketModalProps> = ({ isOpen, onClos
                   onClick={() => setSelectedMarket(idx)}
                   className={`p-3 rounded-2xl border cursor-pointer transition-all ${
                     selectedMarket === idx
-                      ? 'bg-cyan-950/20 border-cyan-500/60 text-white shadow-sm'
-                      : 'bg-[#090C14] border-white/[0.06] text-slate-400'
+                      ? 'bg-cyan-50 dark:bg-cyan-950/20 border-cyan-500/60 text-slate-900 dark:text-white shadow-sm'
+                      : 'bg-slate-50 dark:bg-[#090C14] border-slate-200 dark:border-white/[0.06] text-slate-600 dark:text-slate-400 hover:border-cyan-300 dark:hover:border-white/20'
                   }`}
                 >
                   <div className="flex justify-between items-start mb-2">
-                    <p className="font-semibold text-xs text-white leading-snug flex-1 pr-2">
+                    <p className="font-semibold text-xs text-slate-900 dark:text-white leading-snug flex-1 pr-2">
                       {m.question}
                     </p>
-                    <span className="text-[10px] font-mono-num text-slate-400 whitespace-nowrap">
+                    <span className="text-[10px] font-mono-num text-slate-500 dark:text-slate-400 whitespace-nowrap">
                       {m.volume}
                     </span>
                   </div>
 
                   {/* Yes/No Probability Bar */}
-                  <div className="w-full h-2 rounded-full bg-rose-500/40 overflow-hidden flex mb-2">
+                  <div className="w-full h-2 rounded-full bg-rose-200 dark:bg-rose-500/40 overflow-hidden flex mb-2">
                     <div
-                      className="h-full bg-cyan-400"
+                      className="h-full bg-cyan-500 dark:bg-cyan-400"
                       style={{ width: `${m.yesPct}%` }}
                     />
                   </div>
 
                   <div className="flex justify-between text-[11px] font-mono-num font-bold">
-                    <span className="text-cyan-400">Yes {m.yesPct}%</span>
-                    <span className="text-rose-400">No {m.noPct}%</span>
+                    <span className="text-cyan-700 dark:text-cyan-400">Yes {m.yesPct}%</span>
+                    <span className="text-rose-600 dark:text-rose-400">No {m.noPct}%</span>
                   </div>
                 </div>
               ))}
             </div>
 
             {/* Bet Entry */}
-            <div className="p-3.5 rounded-2xl bg-[#090C14] border border-white/[0.08] space-y-3">
+            <div className="p-3.5 rounded-2xl bg-slate-50 dark:bg-[#090C14] border border-slate-200 dark:border-white/[0.08] space-y-3">
               <div className="grid grid-cols-2 gap-2">
                 <button
                   type="button"
@@ -124,7 +124,7 @@ export const PolymarketModal: React.FC<PolymarketModalProps> = ({ isOpen, onClos
                   className={`py-2 rounded-xl text-xs font-bold transition-all ${
                     betSide === 'yes'
                       ? 'bg-cyan-500 text-slate-950 shadow-[0_0_12px_rgba(6,182,212,0.4)]'
-                      : 'bg-slate-900 text-slate-400'
+                      : 'bg-slate-200 dark:bg-slate-900 text-slate-600 dark:text-slate-400'
                   }`}
                 >
                   Buy YES ({curr.yesPct}¢)
@@ -135,7 +135,7 @@ export const PolymarketModal: React.FC<PolymarketModalProps> = ({ isOpen, onClos
                   className={`py-2 rounded-xl text-xs font-bold transition-all ${
                     betSide === 'no'
                       ? 'bg-rose-500 text-white shadow-[0_0_12px_rgba(244,63,94,0.4)]'
-                      : 'bg-slate-900 text-slate-400'
+                      : 'bg-slate-200 dark:bg-slate-900 text-slate-600 dark:text-slate-400'
                   }`}
                 >
                   Buy NO ({curr.noPct}¢)
@@ -143,21 +143,21 @@ export const PolymarketModal: React.FC<PolymarketModalProps> = ({ isOpen, onClos
               </div>
 
               <div>
-                <label className="text-[11px] text-slate-400 block mb-1">Amount (USDT)</label>
-                <div className="flex items-center justify-between px-3 py-2 rounded-xl bg-[#0E1322] border border-white/10">
+                <label className="text-[11px] text-slate-600 dark:text-slate-400 block mb-1">Amount (USDT)</label>
+                <div className="flex items-center justify-between px-3 py-2 rounded-xl bg-white dark:bg-[#0E1322] border border-slate-300 dark:border-white/10">
                   <input
                     type="number"
                     value={betAmount}
                     onChange={(e) => setBetAmount(e.target.value)}
-                    className="bg-transparent text-white font-mono-num text-sm font-bold focus:outline-none w-full"
+                    className="bg-transparent text-slate-900 dark:text-white font-mono-num text-sm font-bold focus:outline-none w-full"
                   />
-                  <span className="text-xs text-slate-400">USDT</span>
+                  <span className="text-xs text-slate-500 dark:text-slate-400">USDT</span>
                 </div>
               </div>
 
-              <div className="flex justify-between text-xs text-slate-400 pt-1">
+              <div className="flex justify-between text-xs text-slate-600 dark:text-slate-400 pt-1">
                 <span>Potential Payout</span>
-                <span className="text-emerald-400 font-mono-num font-bold">
+                <span className="text-emerald-600 dark:text-emerald-400 font-mono-num font-bold">
                   ${(parseFloat(betAmount) * (100 / (betSide === 'yes' ? curr.yesPct : curr.noPct))).toFixed(2)} USDT
                 </span>
               </div>
@@ -165,7 +165,7 @@ export const PolymarketModal: React.FC<PolymarketModalProps> = ({ isOpen, onClos
 
             <button
               onClick={handlePlacePrediction}
-              className="w-full py-3 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-600 text-slate-950 font-display font-bold text-sm shadow-[0_4px_20px_rgba(6,182,212,0.3)] active:scale-98 transition-all"
+              className="w-full py-3 rounded-xl bg-gradient-to-r from-cyan-600 to-blue-600 text-white font-display font-bold text-sm shadow-[0_4px_20px_rgba(6,182,212,0.3)] active:scale-98 transition-all"
             >
               Place Prediction
             </button>

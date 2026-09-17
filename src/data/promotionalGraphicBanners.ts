@@ -38,6 +38,30 @@ const createSvgGraphicUrl = (svgContent: string): string => {
 
 export const GRAPHIC_PROMOTIONAL_BANNERS: GraphicFlyerBanner[] = [
   {
+    id: 'graphic-oknexus-card',
+    headline: 'OKNexus Debit Card (Mastercard)',
+    tag: 'COMING SOON',
+    ctaText: 'Reserve VIP Card',
+    actionType: 'deposit',
+    aspectRatio: '16/9',
+    altText: 'OKNexus Debit Card Mastercard Coming Soon Instant Crypto Spending',
+    graphicUrl: '/banners/banner_oknexus_card.png',
+    glowColor: 'rgba(6, 182, 212, 0.45)',
+    accentColor: '#06B6D4',
+  },
+  {
+    id: 'graphic-polymarket-copy',
+    headline: 'Polymarket Web3 Copy Trader',
+    tag: 'COPY & WIN',
+    ctaText: 'Explore & Copy',
+    actionType: 'polymarket',
+    aspectRatio: '16/9',
+    altText: 'Polymarket Copy Trader Follow Top Prediction Traders',
+    graphicUrl: '/banners/banner_polymarket_copytrader.png',
+    glowColor: 'rgba(139, 92, 246, 0.45)',
+    accentColor: '#8B5CF6',
+  },
+  {
     id: 'graphic-ai-trader',
     headline: 'AI Auto-Trader & Grid Pro 2.0',
     tag: 'NEW PROTOCOL',
@@ -395,6 +419,20 @@ export const GRAPHIC_PROMOTIONAL_BANNERS: GraphicFlyerBanner[] = [
 ];
 
 export const GRAPHIC_ANNOUNCEMENTS: GraphicAnnouncement[] = [
+  {
+    id: 'ann-card',
+    title: 'OKNexus Debit Card (Mastercard) Pre-Registration Now Open with VIP Cashbacks',
+    category: 'NEW',
+    time: 'Just now',
+    thumbnailUrl: '/banners/banner_oknexus_card.png',
+  },
+  {
+    id: 'ann-polymarket',
+    title: 'Polymarket Web3 Copy Trading Protocol Live: Mirror Top Prediction Whales',
+    category: 'PROMO',
+    time: '24m ago',
+    thumbnailUrl: '/banners/banner_polymarket_copytrader.png',
+  },
   {
     id: 'ann-1',
     title: 'Instant SEPA & Wire Fiat Ramp Now Live with 0% Deposit Fees',

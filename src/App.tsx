@@ -863,7 +863,7 @@ export default function App() {
   // Render Authentication Flow if not logged in
   if (!isAuthenticated) {
     return (
-      <div className="min-h-screen bg-[#07090E] text-slate-100 selection:bg-purple-500 selection:text-white relative">
+      <div className="min-h-screen bg-slate-50 dark:bg-[#07090E] text-slate-900 dark:text-slate-100 selection:bg-purple-500 selection:text-white relative transition-colors">
         {showOtpScreen ? (
           <AuthCodeScreen
             identifier={authIdentifier}

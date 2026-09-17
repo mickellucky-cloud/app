@@ -89,13 +89,13 @@ export const CreateAccountScreen: React.FC<CreateAccountScreenProps> = ({
   };
 
   return (
-    <div id="create-account-screen" className="min-h-screen max-w-md mx-auto px-6 py-6 flex flex-col justify-between text-slate-100 animate-fadeIn">
+    <div id="create-account-screen" className="min-h-screen max-w-md mx-auto px-6 py-6 flex flex-col justify-between text-slate-900 dark:text-slate-100 animate-fadeIn transition-colors">
       <div>
         {/* Header Bar */}
         <div className="flex items-center justify-between mb-6">
           <button
             onClick={onNavigateLogin}
-            className="flex items-center gap-1.5 text-xs text-slate-400 hover:text-white transition-colors p-1"
+            className="flex items-center gap-1.5 text-xs text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white transition-colors p-1"
           >
             <ArrowLeft className="w-4 h-4" />
             <span>Back to Login</span>
@@ -105,16 +105,16 @@ export const CreateAccountScreen: React.FC<CreateAccountScreenProps> = ({
 
         {/* Title */}
         <div className="mb-6">
-          <h1 className="text-2xl font-bold font-display tracking-tight text-white mb-1.5">
+          <h1 className="text-2xl font-bold font-display tracking-tight text-slate-900 dark:text-white mb-1.5">
             Create OKNexus Account
           </h1>
-          <p className="text-sm text-slate-400">
+          <p className="text-sm text-slate-600 dark:text-slate-400">
             Sign up to access Web3 spot trading, earn vaults, and 0% fee P2P.
           </p>
         </div>
 
         {/* Auth Method Switcher (Email vs Phone) */}
-        <div className="flex rounded-xl bg-[#0B0F19] p-1 border border-white/[0.08] mb-5">
+        <div className="flex rounded-xl bg-slate-100 dark:bg-[#0B0F19] p-1 border border-slate-200 dark:border-white/[0.08] mb-5">
           <button
             type="button"
             onClick={() => {
@@ -124,7 +124,7 @@ export const CreateAccountScreen: React.FC<CreateAccountScreenProps> = ({
             className={`flex-1 py-2 rounded-lg text-xs font-semibold transition-all ${
               authMethod === 'email'
                 ? 'bg-gradient-to-r from-purple-600 to-fuchsia-600 text-white shadow-md'
-                : 'text-slate-400 hover:text-white'
+                : 'text-slate-600 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white'
             }`}
           >
             Email
@@ -138,7 +138,7 @@ export const CreateAccountScreen: React.FC<CreateAccountScreenProps> = ({
             className={`flex-1 py-2 rounded-lg text-xs font-semibold transition-all ${
               authMethod === 'phone'
                 ? 'bg-gradient-to-r from-purple-600 to-fuchsia-600 text-white shadow-md'
-                : 'text-slate-400 hover:text-white'
+                : 'text-slate-600 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white'
             }`}
           >
             Phone Number
@@ -149,7 +149,7 @@ export const CreateAccountScreen: React.FC<CreateAccountScreenProps> = ({
         <form onSubmit={handleSubmit} className="space-y-4">
           {authMethod === 'email' ? (
             <div>
-              <label className="block text-xs font-medium text-slate-300 mb-1.5">
+              <label className="block text-xs font-medium text-slate-700 dark:text-slate-300 mb-1.5">
                 Email Address
               </label>
               <input
@@ -161,12 +161,12 @@ export const CreateAccountScreen: React.FC<CreateAccountScreenProps> = ({
                   setEmail(e.target.value);
                   setInlineError('');
                 }}
-                className="w-full px-3.5 py-3 rounded-xl bg-[#0F1322] border border-white/10 text-white placeholder:text-slate-500 text-sm focus:border-purple-500/80 focus:bg-[#131828] outline-none transition-all"
+                className="w-full px-3.5 py-3 rounded-xl bg-slate-50 dark:bg-[#0F1322] border border-slate-300 dark:border-white/10 text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-500 text-sm focus:border-purple-500/80 focus:bg-white dark:focus:bg-[#131828] outline-none transition-all"
               />
             </div>
           ) : (
             <div>
-              <label className="block text-xs font-medium text-slate-300 mb-1.5">
+              <label className="block text-xs font-medium text-slate-700 dark:text-slate-300 mb-1.5">
                 Phone Number
               </label>
               <div className="flex gap-2">
@@ -174,7 +174,7 @@ export const CreateAccountScreen: React.FC<CreateAccountScreenProps> = ({
                   <button
                     type="button"
                     onClick={() => setIsCountryDropdownOpen(!isCountryDropdownOpen)}
-                    className="flex items-center gap-1.5 px-3 py-3 rounded-xl bg-[#0F1322] border border-white/10 text-white text-sm hover:border-purple-500/40 transition-colors"
+                    className="flex items-center gap-1.5 px-3 py-3 rounded-xl bg-slate-50 dark:bg-[#0F1322] border border-slate-300 dark:border-white/10 text-slate-900 dark:text-white text-sm hover:border-purple-500/40 transition-colors"
                   >
                     <span>{selectedCountry.flag}</span>
                     <span className="font-mono-num font-semibold">{selectedCountry.code}</span>
@@ -182,7 +182,7 @@ export const CreateAccountScreen: React.FC<CreateAccountScreenProps> = ({
                   </button>
 
                   {isCountryDropdownOpen && (
-                    <div className="absolute top-full left-0 mt-1 z-50 w-52 max-h-56 overflow-y-auto rounded-xl bg-[#0D111D] border border-white/10 shadow-2xl p-1 text-xs">
+                    <div className="absolute top-full left-0 mt-1 z-50 w-52 max-h-56 overflow-y-auto rounded-xl bg-white dark:bg-[#0D111D] border border-slate-200 dark:border-white/10 shadow-2xl p-1 text-xs">
                       {COUNTRY_CODES.map((c) => (
                         <button
                           key={c.code + c.id}
@@ -191,13 +191,13 @@ export const CreateAccountScreen: React.FC<CreateAccountScreenProps> = ({
                             setSelectedCountry(c);
                             setIsCountryDropdownOpen(false);
                           }}
-                          className="w-full flex items-center justify-between p-2 rounded-lg hover:bg-purple-500/20 text-left text-slate-200"
+                          className="w-full flex items-center justify-between p-2 rounded-lg hover:bg-purple-50 dark:hover:bg-purple-500/20 text-left text-slate-800 dark:text-slate-200"
                         >
                           <span className="flex items-center gap-2">
                             <span>{c.flag}</span>
                             <span className="truncate max-w-[90px]">{c.country}</span>
                           </span>
-                          <span className="font-mono-num text-purple-300 font-semibold">{c.code}</span>
+                          <span className="font-mono-num text-purple-600 dark:text-purple-300 font-semibold">{c.code}</span>
                         </button>
                       ))}
                     </div>
@@ -213,7 +213,7 @@ export const CreateAccountScreen: React.FC<CreateAccountScreenProps> = ({
                     setPhone(e.target.value);
                     setInlineError('');
                   }}
-                  className="flex-1 px-3.5 py-3 rounded-xl bg-[#0F1322] border border-white/10 text-white placeholder:text-slate-500 text-sm focus:border-purple-500/80 focus:bg-[#131828] outline-none transition-all font-mono-num"
+                  className="flex-1 px-3.5 py-3 rounded-xl bg-slate-50 dark:bg-[#0F1322] border border-slate-300 dark:border-white/10 text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-500 text-sm focus:border-purple-500/80 focus:bg-white dark:focus:bg-[#131828] outline-none transition-all font-mono-num"
                 />
               </div>
             </div>
@@ -221,7 +221,7 @@ export const CreateAccountScreen: React.FC<CreateAccountScreenProps> = ({
 
           {/* Password Input */}
           <div>
-            <label className="block text-xs font-medium text-slate-300 mb-1.5">
+            <label className="block text-xs font-medium text-slate-700 dark:text-slate-300 mb-1.5">
               Set Password
             </label>
             <div className="relative">
@@ -234,12 +234,12 @@ export const CreateAccountScreen: React.FC<CreateAccountScreenProps> = ({
                   setPassword(e.target.value);
                   setInlineError('');
                 }}
-                className="w-full px-3.5 py-3 rounded-xl bg-[#0F1322] border border-white/10 text-white placeholder:text-slate-500 text-sm focus:border-purple-500/80 focus:bg-[#131828] outline-none transition-all pr-10"
+                className="w-full px-3.5 py-3 rounded-xl bg-slate-50 dark:bg-[#0F1322] border border-slate-300 dark:border-white/10 text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-500 text-sm focus:border-purple-500/80 focus:bg-white dark:focus:bg-[#131828] outline-none transition-all pr-10"
               />
               <button
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-white p-1"
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-700 dark:hover:text-white p-1"
                 aria-label="Toggle password visibility"
               >
                 {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
@@ -254,14 +254,14 @@ export const CreateAccountScreen: React.FC<CreateAccountScreenProps> = ({
                     <div
                       key={step}
                       className={`flex-1 rounded-full transition-all ${
-                        step < strengthScore ? strengthColors[strengthScore - 1] : 'bg-white/10'
+                        step < strengthScore ? strengthColors[strengthScore - 1] : 'bg-slate-200 dark:bg-white/10'
                       }`}
                     />
                   ))}
                 </div>
-                <div className="flex items-center justify-between text-[10px] text-slate-400 pt-0.5">
+                <div className="flex items-center justify-between text-[10px] text-slate-500 dark:text-slate-400 pt-0.5">
                   <span>Password strength:</span>
-                  <span className="font-semibold text-slate-200">
+                  <span className="font-semibold text-slate-700 dark:text-slate-200">
                     {strengthLabels[Math.max(0, strengthScore - 1)]}
                   </span>
                 </div>
@@ -271,7 +271,7 @@ export const CreateAccountScreen: React.FC<CreateAccountScreenProps> = ({
 
           {/* Confirm Password Input */}
           <div>
-            <label className="block text-xs font-medium text-slate-300 mb-1.5">
+            <label className="block text-xs font-medium text-slate-700 dark:text-slate-300 mb-1.5">
               Confirm Password
             </label>
             <div className="relative">
@@ -284,12 +284,12 @@ export const CreateAccountScreen: React.FC<CreateAccountScreenProps> = ({
                   setConfirmPassword(e.target.value);
                   setInlineError('');
                 }}
-                className="w-full px-3.5 py-3 rounded-xl bg-[#0F1322] border border-white/10 text-white placeholder:text-slate-500 text-sm focus:border-purple-500/80 focus:bg-[#131828] outline-none transition-all pr-10"
+                className="w-full px-3.5 py-3 rounded-xl bg-slate-50 dark:bg-[#0F1322] border border-slate-300 dark:border-white/10 text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-500 text-sm focus:border-purple-500/80 focus:bg-white dark:focus:bg-[#131828] outline-none transition-all pr-10"
               />
               <button
                 type="button"
                 onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-white p-1"
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-700 dark:hover:text-white p-1"
                 aria-label="Toggle confirm password visibility"
               >
                 {showConfirmPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
@@ -307,14 +307,14 @@ export const CreateAccountScreen: React.FC<CreateAccountScreenProps> = ({
                 setAgreedToTerms(e.target.checked);
                 setInlineError('');
               }}
-              className="mt-0.5 w-4 h-4 rounded border-white/20 bg-[#0F1322] text-purple-600 focus:ring-purple-500 cursor-pointer accent-purple-600"
+              className="mt-0.5 w-4 h-4 rounded border-slate-300 dark:border-white/20 bg-slate-50 dark:bg-[#0F1322] text-purple-600 focus:ring-purple-500 cursor-pointer accent-purple-600"
             />
-            <label htmlFor="terms-checkbox" className="text-xs text-slate-400 leading-relaxed cursor-pointer">
+            <label htmlFor="terms-checkbox" className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed cursor-pointer">
               I agree to OKNexus{' '}
               <button
                 type="button"
                 onClick={onOpenTerms}
-                className="text-purple-400 hover:text-purple-300 underline underline-offset-2 font-medium"
+                className="text-purple-600 hover:text-purple-700 dark:text-purple-400 dark:hover:text-purple-300 underline underline-offset-2 font-medium"
               >
                 Terms of Service
               </button>{' '}
@@ -322,7 +322,7 @@ export const CreateAccountScreen: React.FC<CreateAccountScreenProps> = ({
               <button
                 type="button"
                 onClick={onOpenPrivacy}
-                className="text-purple-400 hover:text-purple-300 underline underline-offset-2 font-medium"
+                className="text-purple-600 hover:text-purple-700 dark:text-purple-400 dark:hover:text-purple-300 underline underline-offset-2 font-medium"
               >
                 Privacy Policy
               </button>
@@ -332,7 +332,7 @@ export const CreateAccountScreen: React.FC<CreateAccountScreenProps> = ({
 
           {/* Inline Error */}
           {inlineError && (
-            <div className="flex items-center gap-1.5 p-3 rounded-xl bg-rose-500/10 border border-rose-500/20 text-rose-300 text-xs font-medium animate-shake">
+            <div className="flex items-center gap-1.5 p-3 rounded-xl bg-rose-500/10 border border-rose-500/20 text-rose-600 dark:text-rose-300 text-xs font-medium animate-shake">
               <AlertCircle className="w-4 h-4 flex-shrink-0" />
               <span>{inlineError}</span>
             </div>
@@ -349,20 +349,20 @@ export const CreateAccountScreen: React.FC<CreateAccountScreenProps> = ({
         </form>
 
         {/* Switch back to Login */}
-        <div className="mt-6 text-center text-xs text-slate-400">
+        <div className="mt-6 text-center text-xs text-slate-600 dark:text-slate-400">
           Already have an account?{' '}
           <button
             type="button"
             onClick={onNavigateLogin}
-            className="text-purple-400 hover:text-purple-300 font-bold underline underline-offset-4 transition-colors"
+            className="text-purple-600 hover:text-purple-700 dark:text-purple-400 dark:hover:text-purple-300 font-bold underline underline-offset-4 transition-colors"
           >
             Log In
           </button>
         </div>
       </div>
 
-      <div className="text-center pt-6 pb-2 text-[11px] text-slate-400 flex items-center justify-center gap-1.5">
-        <ShieldCheck className="w-3.5 h-3.5 text-emerald-400" />
+      <div className="text-center pt-6 pb-2 text-[11px] text-slate-500 dark:text-slate-400 flex items-center justify-center gap-1.5">
+        <ShieldCheck className="w-3.5 h-3.5 text-emerald-500 dark:text-emerald-400" />
         <span>Bank-grade 256-bit encryption</span>
       </div>
     </div>

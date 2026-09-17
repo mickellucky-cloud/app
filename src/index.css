@@ -449,7 +449,15 @@ html.light .text-slate-500 {
 
 html.light .text-\[\#3A4553\],
 html.light .text-slate-600 {
-  color: #94A3B8 !important;
+  color: #475569 !important;
+}
+
+html.light .text-slate-700 {
+  color: #334155 !important;
+}
+
+html.light .text-slate-800 {
+  color: #1E293B !important;
 }
 
 html.light .text-slate-200 {

@@ -128,7 +128,7 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({
   return (
     <div
       id="oknexus-login-screen"
-      className="min-h-screen w-full flex flex-col justify-between py-6 px-4 sm:px-6 lg:px-8 text-slate-100 animate-fadeIn relative overflow-x-hidden"
+      className="min-h-screen w-full flex flex-col justify-between py-6 px-4 sm:px-6 lg:px-8 text-slate-900 dark:text-slate-100 animate-fadeIn relative overflow-x-hidden transition-colors"
     >
       {/* Background ambient accents */}
       <div className="absolute -top-24 -right-24 w-96 h-96 rounded-full bg-purple-600/15 blur-3xl pointer-events-none" />
@@ -137,14 +137,14 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({
       {/* Top Header Bar with Brand (Hidden on mobile per user request) */}
       <div className="hidden sm:flex relative z-20 w-full max-w-6xl mx-auto items-center justify-between pb-2 mb-2">
         <div className="flex items-center gap-2.5">
-          <div className="p-1.5 rounded-xl bg-purple-950/60 border border-purple-500/30">
+          <div className="p-1.5 rounded-xl bg-purple-100 dark:bg-purple-950/60 border border-purple-200 dark:border-purple-500/30">
             <OKNexusLogo size={24} showWordmark={false} />
           </div>
           <div>
-            <span className="font-display font-extrabold text-base tracking-tight text-white block leading-none">
+            <span className="font-display font-extrabold text-base tracking-tight text-slate-900 dark:text-white block leading-none">
               OKNEXUS
             </span>
-            <span className="text-[10px] text-purple-400 font-semibold tracking-wider">
+            <span className="text-[10px] text-purple-600 dark:text-purple-400 font-semibold tracking-wider">
               INSTITUTIONAL DESK
             </span>
           </div>
@@ -158,32 +158,32 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({
           <div className="w-full flex items-center justify-between gap-6 xl:gap-8">
             {/* Left Headline */}
             <div className="space-y-1.5 min-w-0 flex-1">
-              <h2 className="text-2xl xl:text-3xl 2xl:text-4xl font-extrabold text-white tracking-tight leading-tight">
+              <h2 className="text-2xl xl:text-3xl 2xl:text-4xl font-extrabold text-slate-900 dark:text-white tracking-tight leading-tight">
                 Buy & sell directly with
               </h2>
               <h2 className="text-2xl xl:text-3xl 2xl:text-4xl font-extrabold tracking-tight leading-tight text-transparent bg-clip-text bg-gradient-to-r from-[#EC4899] via-[#F472B6] to-[#8B5CF6]">
                 OKNexus P2P
               </h2>
-              <p className="text-xs text-slate-400 max-w-xs pt-1">
+              <p className="text-xs text-slate-600 dark:text-slate-400 max-w-xs pt-1">
                 Zero gas fees, instant escrow settlement, and verified merchant liquidity.
               </p>
             </div>
 
             {/* Vertical Divider Line */}
-            <div className="w-[1px] h-36 bg-white/20 shrink-0" />
+            <div className="w-[1px] h-36 bg-slate-200 dark:bg-white/20 shrink-0" />
 
             {/* Two Stats Columns */}
             <div className="flex items-start gap-8 xl:gap-10 shrink-0">
               {/* Column 1: Supported Fiat */}
               <div className="space-y-2">
-                <div className="w-12 h-12 rounded-2xl bg-[#141B2E] border border-white/10 flex items-center justify-center shadow-lg">
+                <div className="w-12 h-12 rounded-2xl bg-white dark:bg-[#141B2E] border border-slate-200 dark:border-white/10 flex items-center justify-center shadow-xs dark:shadow-lg">
                   <Coins className="w-6 h-6 text-[#EC4899]" />
                 </div>
-                <div className="text-xs text-slate-300 font-medium">Supported Fiat</div>
-                <div className="text-2xl xl:text-3xl font-extrabold text-white font-mono-num leading-none">
+                <div className="text-xs text-slate-600 dark:text-slate-300 font-medium">Supported Fiat</div>
+                <div className="text-2xl xl:text-3xl font-extrabold text-slate-900 dark:text-white font-mono-num leading-none">
                   5+
                 </div>
-                <div className="space-y-0.5 text-[11px] text-slate-400">
+                <div className="space-y-0.5 text-[11px] text-slate-500 dark:text-slate-400">
                   <div>5+ Countries</div>
                   <div>100+ Payment methods</div>
                 </div>
@@ -191,14 +191,14 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({
 
               {/* Column 2: Cryptos */}
               <div className="space-y-2">
-                <div className="w-12 h-12 rounded-2xl bg-[#141B2E] border border-white/10 flex items-center justify-center shadow-lg">
+                <div className="w-12 h-12 rounded-2xl bg-white dark:bg-[#141B2E] border border-slate-200 dark:border-white/10 flex items-center justify-center shadow-xs dark:shadow-lg">
                   <Layers className="w-6 h-6 text-[#8B5CF6]" />
                 </div>
-                <div className="text-xs text-slate-300 font-medium">Cryptos</div>
-                <div className="text-2xl xl:text-3xl font-extrabold text-white font-mono-num leading-none">
+                <div className="text-xs text-slate-600 dark:text-slate-300 font-medium">Cryptos</div>
+                <div className="text-2xl xl:text-3xl font-extrabold text-slate-900 dark:text-white font-mono-num leading-none">
                   10+
                 </div>
-                <div className="space-y-0.5 text-[11px] text-slate-400">
+                <div className="space-y-0.5 text-[11px] text-slate-500 dark:text-slate-400">
                   <div>10K+ Advertisements</div>
                   <div>100K+ Daily orders</div>
                 </div>
@@ -208,44 +208,44 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({
         </div>
 
         {/* Right Column: Form Container (Mobile, Tablet, Desktop) */}
-        <div className="w-full lg:col-span-5 max-w-md mx-auto p-5 sm:p-7 rounded-3xl bg-[#0A0D18]/95 border border-white/[0.08] shadow-[0_12px_40px_rgba(0,0,0,0.5)] backdrop-blur-xl">
+        <div className="w-full lg:col-span-5 max-w-md mx-auto p-5 sm:p-7 rounded-3xl bg-white dark:bg-[#0A0D18]/95 border border-slate-200 dark:border-white/[0.08] shadow-xl dark:shadow-[0_12px_40px_rgba(0,0,0,0.5)] backdrop-blur-xl transition-colors">
           {/* Welcome Back & Subtitle */}
           <div className="mb-4 text-center md:text-left">
-            <h1 className="text-xl sm:text-2xl font-bold font-display tracking-tight text-white mb-1">
+            <h1 className="text-xl sm:text-2xl font-bold font-display tracking-tight text-slate-900 dark:text-white mb-1">
               Welcome back
             </h1>
-            <p className="text-xs text-slate-400">
+            <p className="text-xs text-slate-500 dark:text-slate-400">
               Enter your credentials to access your OKNexus trading desk
             </p>
           </div>
 
         {/* Development Test Helper Banner */}
-        <div className="mb-5 p-3 rounded-2xl bg-gradient-to-r from-[#1E1435]/70 via-[#101424]/90 to-[#0A1A28]/70 border border-purple-500/30 shadow-sm text-left">
+        <div className="mb-5 p-3 rounded-2xl bg-purple-50/80 dark:bg-gradient-to-r dark:from-[#1E1435]/70 dark:via-[#101424]/90 dark:to-[#0A1A28]/70 border border-purple-200 dark:border-purple-500/30 shadow-xs text-left">
           <div className="flex items-center justify-between mb-1">
-            <span className="text-[11px] font-bold text-purple-300 flex items-center gap-1.5">
-              <Sparkles className="w-3.5 h-3.5 text-amber-400" />
+            <span className="text-[11px] font-bold text-purple-700 dark:text-purple-300 flex items-center gap-1.5">
+              <Sparkles className="w-3.5 h-3.5 text-amber-500 dark:text-amber-400" />
               Dev Test Account
             </span>
-            <span className="text-[10px] px-1.5 py-0.2 rounded bg-purple-500/20 text-purple-300 font-mono-num font-semibold">
+            <span className="text-[10px] px-1.5 py-0.2 rounded bg-purple-100 text-purple-700 dark:bg-purple-500/20 dark:text-purple-300 font-mono-num font-semibold">
               Ready to test
             </span>
           </div>
-          <div className="flex items-center justify-between text-[11px] text-slate-300">
-            <span className="font-mono-num text-slate-400 truncate max-w-[190px]">
+          <div className="flex items-center justify-between text-[11px] text-slate-700 dark:text-slate-300">
+            <span className="font-mono-num text-slate-600 dark:text-slate-400 truncate max-w-[190px]">
               {DEV_TEST_ACCOUNT.email}
             </span>
             <div className="flex items-center gap-1.5">
               <button
                 type="button"
                 onClick={() => handleUseTestAccount('email')}
-                className="px-2 py-1 rounded-lg bg-purple-600/30 hover:bg-purple-600/50 border border-purple-500/40 text-purple-200 text-[10px] font-bold active:scale-95 transition-all"
+                className="px-2 py-1 rounded-lg bg-purple-100 hover:bg-purple-200 dark:bg-purple-600/30 dark:hover:bg-purple-600/50 border border-purple-300 dark:border-purple-500/40 text-purple-700 dark:text-purple-200 text-[10px] font-bold active:scale-95 transition-all"
               >
                 Use Email
               </button>
               <button
                 type="button"
                 onClick={() => handleUseTestAccount('phone')}
-                className="px-2 py-1 rounded-lg bg-cyan-600/20 hover:bg-cyan-600/40 border border-cyan-500/30 text-cyan-300 text-[10px] font-bold active:scale-95 transition-all"
+                className="px-2 py-1 rounded-lg bg-cyan-100 hover:bg-cyan-200 dark:bg-cyan-600/20 dark:hover:bg-cyan-600/40 border border-cyan-300 dark:border-cyan-500/30 text-cyan-800 dark:text-cyan-300 text-[10px] font-bold active:scale-95 transition-all"
               >
                 Use Phone
               </button>
@@ -254,7 +254,7 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({
         </div>
 
         {/* Authentication Switcher (Email vs Phone) */}
-        <div className="flex rounded-2xl bg-[#090C16] p-1 border border-white/[0.08] mb-4">
+        <div className="flex rounded-2xl bg-slate-100 dark:bg-[#090C16] p-1 border border-slate-200 dark:border-white/[0.08] mb-4">
           <button
             type="button"
             onClick={() => {
@@ -264,7 +264,7 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({
             className={`flex-1 py-2 rounded-xl text-xs font-semibold flex items-center justify-center gap-1.5 transition-all ${
               authMethod === 'email'
                 ? 'bg-gradient-to-r from-purple-600 to-fuchsia-600 text-white shadow-[0_2px_12px_rgba(168,85,247,0.3)]'
-                : 'text-slate-400 hover:text-white'
+                : 'text-slate-600 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white'
             }`}
           >
             <Mail className="w-3.5 h-3.5" />
@@ -279,7 +279,7 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({
             className={`flex-1 py-2 rounded-xl text-xs font-semibold flex items-center justify-center gap-1.5 transition-all ${
               authMethod === 'phone'
                 ? 'bg-gradient-to-r from-purple-600 to-fuchsia-600 text-white shadow-[0_2px_12px_rgba(168,85,247,0.3)]'
-                : 'text-slate-400 hover:text-white'
+                : 'text-slate-600 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white'
             }`}
           >
             <Phone className="w-3.5 h-3.5" />
@@ -291,7 +291,7 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({
         <form onSubmit={handleSubmit} className="space-y-3.5">
           {authMethod === 'email' ? (
             <div>
-              <label htmlFor="login-email" className="block text-xs font-medium text-slate-300 mb-1.5">
+              <label htmlFor="login-email" className="block text-xs font-medium text-slate-700 dark:text-slate-300 mb-1.5">
                 Email Address
               </label>
               <input
@@ -304,17 +304,17 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({
                   setInlineError('');
                 }}
                 disabled={isSubmitting}
-                className={`w-full px-3.5 py-3 rounded-2xl bg-[#0F1322] border text-white placeholder:text-slate-500 text-sm outline-none transition-all ${
+                className={`w-full px-3.5 py-3 rounded-2xl bg-slate-50 dark:bg-[#0F1322] border text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-500 text-sm outline-none transition-all ${
                   inlineError
-                    ? 'border-rose-500/80 bg-rose-950/20 shadow-[0_0_12px_rgba(244,63,94,0.2)]'
-                    : 'border-white/10 focus:border-purple-500/80 focus:bg-[#131828]'
+                    ? 'border-rose-500/80 bg-rose-50 dark:bg-rose-950/20 shadow-[0_0_12px_rgba(244,63,94,0.2)]'
+                    : 'border-slate-300 dark:border-white/10 focus:border-purple-500/80 focus:bg-white dark:focus:bg-[#131828]'
                 }`}
                 autoComplete="email"
               />
             </div>
           ) : (
             <div>
-              <label htmlFor="login-phone" className="block text-xs font-medium text-slate-300 mb-1.5">
+              <label htmlFor="login-phone" className="block text-xs font-medium text-slate-700 dark:text-slate-300 mb-1.5">
                 Phone Number
               </label>
               <div className="flex gap-2">
@@ -323,7 +323,7 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({
                   <button
                     type="button"
                     onClick={() => setIsCountryDropdownOpen(!isCountryDropdownOpen)}
-                    className="flex items-center gap-1.5 px-3 py-3 rounded-2xl bg-[#0F1322] border border-white/10 text-white text-sm hover:border-purple-500/40 transition-colors"
+                    className="flex items-center gap-1.5 px-3 py-3 rounded-2xl bg-slate-50 dark:bg-[#0F1322] border border-slate-300 dark:border-white/10 text-slate-900 dark:text-white text-sm hover:border-purple-500/40 transition-colors"
                   >
                     <span>{selectedCountry.flag}</span>
                     <span className="font-mono-num font-semibold text-xs">{selectedCountry.code}</span>
@@ -331,7 +331,7 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({
                   </button>
 
                   {isCountryDropdownOpen && (
-                    <div className="absolute top-full left-0 mt-1 z-50 w-56 max-h-56 overflow-y-auto rounded-2xl bg-[#0D111D] border border-white/10 shadow-2xl p-1 text-xs">
+                    <div className="absolute top-full left-0 mt-1 z-50 w-56 max-h-56 overflow-y-auto rounded-2xl bg-white dark:bg-[#0D111D] border border-slate-200 dark:border-white/10 shadow-2xl p-1 text-xs">
                       {COUNTRY_CODES.map((c) => (
                         <button
                           key={c.code + c.id}
@@ -340,13 +340,13 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({
                             setSelectedCountry(c);
                             setIsCountryDropdownOpen(false);
                           }}
-                          className="w-full flex items-center justify-between p-2 rounded-xl hover:bg-purple-500/20 text-left text-slate-200"
+                          className="w-full flex items-center justify-between p-2 rounded-xl hover:bg-purple-50 dark:hover:bg-purple-500/20 text-left text-slate-800 dark:text-slate-200"
                         >
                           <span className="flex items-center gap-2">
                             <span>{c.flag}</span>
                             <span className="truncate max-w-[100px]">{c.country}</span>
                           </span>
-                          <span className="font-mono-num text-purple-300 font-semibold">{c.code}</span>
+                          <span className="font-mono-num text-purple-600 dark:text-purple-300 font-semibold">{c.code}</span>
                         </button>
                       ))}
                     </div>
@@ -363,10 +363,10 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({
                     setInlineError('');
                   }}
                   disabled={isSubmitting}
-                  className={`flex-1 px-3.5 py-3 rounded-2xl bg-[#0F1322] border text-white placeholder:text-slate-500 text-sm outline-none transition-all font-mono-num ${
+                  className={`flex-1 px-3.5 py-3 rounded-2xl bg-slate-50 dark:bg-[#0F1322] border text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-500 text-sm outline-none transition-all font-mono-num ${
                     inlineError
-                      ? 'border-rose-500/80 bg-rose-950/20 shadow-[0_0_12px_rgba(244,63,94,0.2)]'
-                      : 'border-white/10 focus:border-purple-500/80 focus:bg-[#131828]'
+                      ? 'border-rose-500/80 bg-rose-50 dark:bg-rose-950/20 shadow-[0_0_12px_rgba(244,63,94,0.2)]'
+                      : 'border-slate-300 dark:border-white/10 focus:border-purple-500/80 focus:bg-white dark:focus:bg-[#131828]'
                   }`}
                   autoComplete="tel"
                 />
@@ -374,9 +374,9 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({
             </div>
           )}
 
-          {/* Inline Feedback (No browser alerts!) */}
+          {/* Inline Feedback */}
           {inlineError && (
-            <div className="flex items-center gap-1.5 p-3 rounded-xl bg-rose-500/10 border border-rose-500/20 text-rose-300 text-xs font-medium animate-shake">
+            <div className="flex items-center gap-1.5 p-3 rounded-xl bg-rose-500/10 border border-rose-500/20 text-rose-600 dark:text-rose-300 text-xs font-medium animate-shake">
               <AlertCircle className="w-4 h-4 flex-shrink-0" />
               <span>{inlineError}</span>
             </div>
@@ -405,14 +405,14 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({
           <button
             type="button"
             onClick={onNavigateForgotPassword}
-            className="text-slate-400 hover:text-purple-300 transition-colors"
+            className="text-slate-500 hover:text-purple-600 dark:text-slate-400 dark:hover:text-purple-300 transition-colors"
           >
             Forgot password?
           </button>
           <button
             type="button"
             onClick={onNavigateCreateAccount}
-            className="font-bold text-purple-400 hover:text-purple-300 transition-colors"
+            className="font-bold text-purple-600 hover:text-purple-700 dark:text-purple-400 dark:hover:text-purple-300 transition-colors"
           >
             Create account
           </button>
@@ -421,28 +421,28 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({
         {/* Divider */}
         <div className="relative my-3">
           <div className="absolute inset-0 flex items-center">
-            <div className="w-full border-t border-white/[0.08]" />
+            <div className="w-full border-t border-slate-200 dark:border-white/[0.08]" />
           </div>
           <div className="relative flex justify-center text-xs">
-            <span className="px-3 bg-[#07090E] text-slate-500 text-[11px] font-medium uppercase tracking-wider">
+            <span className="px-3 bg-white dark:bg-[#07090E] text-slate-500 text-[11px] font-medium uppercase tracking-wider">
               or connect with
             </span>
           </div>
         </div>
 
-        {/* Social Authentication Options (Side by side matching reference) */}
+        {/* Social Authentication Options */}
         <div className="grid grid-cols-2 gap-3 mt-4">
           {/* Google Button */}
           <button
             type="button"
             onClick={() => handleSocialLogin('google')}
             disabled={socialLoading !== null}
-            className="py-3 px-3 rounded-2xl bg-[#0E121E] border border-white/10 hover:border-purple-500/40 active:scale-[0.99] transition-all flex items-center justify-center gap-2 text-xs font-semibold text-slate-200"
+            className="py-3 px-3 rounded-2xl bg-slate-50 dark:bg-[#0E121E] border border-slate-200 dark:border-white/10 hover:border-purple-500/40 hover:bg-slate-100 dark:hover:bg-[#141B2E] active:scale-[0.99] transition-all flex items-center justify-center gap-2 text-xs font-semibold text-slate-800 dark:text-slate-200 shadow-xs"
           >
             {socialLoading === 'google' ? (
-              <RefreshCw className="w-4 h-4 animate-spin text-purple-400" />
+              <RefreshCw className="w-4 h-4 animate-spin text-purple-600 dark:text-purple-400" />
             ) : socialSuccess === 'google' ? (
-              <CheckCircle2 className="w-4 h-4 text-emerald-400" />
+              <CheckCircle2 className="w-4 h-4 text-emerald-500 dark:text-emerald-400" />
             ) : (
               <svg className="w-4 h-4 shrink-0" viewBox="0 0 24 24">
                 <path
@@ -471,14 +471,14 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({
             type="button"
             onClick={() => handleSocialLogin('apple')}
             disabled={socialLoading !== null}
-            className="py-3 px-3 rounded-2xl bg-[#0E121E] border border-white/10 hover:border-purple-500/40 active:scale-[0.99] transition-all flex items-center justify-center gap-2 text-xs font-semibold text-slate-200"
+            className="py-3 px-3 rounded-2xl bg-slate-50 dark:bg-[#0E121E] border border-slate-200 dark:border-white/10 hover:border-purple-500/40 hover:bg-slate-100 dark:hover:bg-[#141B2E] active:scale-[0.99] transition-all flex items-center justify-center gap-2 text-xs font-semibold text-slate-800 dark:text-slate-200 shadow-xs"
           >
             {socialLoading === 'apple' ? (
-              <RefreshCw className="w-4 h-4 animate-spin text-purple-400" />
+              <RefreshCw className="w-4 h-4 animate-spin text-purple-600 dark:text-purple-400" />
             ) : socialSuccess === 'apple' ? (
-              <CheckCircle2 className="w-4 h-4 text-emerald-400" />
+              <CheckCircle2 className="w-4 h-4 text-emerald-500 dark:text-emerald-400" />
             ) : (
-              <svg className="w-4 h-4 fill-white shrink-0" viewBox="0 0 24 24">
+              <svg className="w-4 h-4 fill-slate-900 dark:fill-white shrink-0" viewBox="0 0 24 24">
                 <path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M15.97 6.37c.62-.75 1.04-1.8 0.92-2.85-.9.04-1.99.6-2.63 1.35-.57.66-.99 1.73-.85 2.76 1.01.08 2.01-.51 2.56-1.26z" />
               </svg>
             )}

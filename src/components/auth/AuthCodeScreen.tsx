@@ -167,13 +167,13 @@ export const AuthCodeScreen: React.FC<AuthCodeScreenProps> = ({
   };
 
   return (
-    <div id="auth-code-screen" className="min-h-screen max-w-md mx-auto px-6 py-6 flex flex-col justify-between text-slate-100 animate-fadeIn">
+    <div id="auth-code-screen" className="min-h-screen max-w-md mx-auto px-6 py-6 flex flex-col justify-between text-slate-900 dark:text-slate-100 animate-fadeIn transition-colors">
       {/* Top Bar with back button */}
       <div>
         <div className="flex items-center justify-between mb-8">
           <button
             onClick={handleBackAction}
-            className="flex items-center gap-1.5 text-xs text-slate-400 hover:text-white transition-colors p-1"
+            className="flex items-center gap-1.5 text-xs text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white transition-colors p-1"
           >
             <ArrowLeft className="w-4 h-4" />
             <span>Change {actualType}</span>
@@ -183,17 +183,17 @@ export const AuthCodeScreen: React.FC<AuthCodeScreenProps> = ({
 
         {/* Title & Description */}
         <div className="mb-8 text-center sm:text-left">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-purple-500/10 border border-purple-500/20 text-purple-300 text-xs font-semibold mb-3">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-purple-100 dark:bg-purple-500/10 border border-purple-200 dark:border-purple-500/20 text-purple-700 dark:text-purple-300 text-xs font-semibold mb-3">
             <KeyRound className="w-3.5 h-3.5" />
             <span>Two-Step Verification</span>
           </div>
-          <h1 className="text-2xl font-bold font-display tracking-tight text-white mb-2">
+          <h1 className="text-2xl font-bold font-display tracking-tight text-slate-900 dark:text-white mb-2">
             Verify your account
           </h1>
-          <p className="text-sm text-slate-400 leading-relaxed">
+          <p className="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
             We've sent a 6-digit verification code to
           </p>
-          <p className="text-sm font-semibold text-white font-mono-num mt-0.5">
+          <p className="text-sm font-semibold text-slate-900 dark:text-white font-mono-num mt-0.5">
             {maskedIdentifier}
           </p>
         </div>
@@ -214,14 +214,14 @@ export const AuthCodeScreen: React.FC<AuthCodeScreenProps> = ({
               onKeyDown={(e) => handleKeyDown(index, e)}
               onPaste={handlePaste}
               disabled={isLoading || isSuccess}
-              className={`w-12 h-14 text-center font-mono-num text-xl font-bold rounded-2xl bg-[#0F1322] border transition-all outline-none ${
+              className={`w-12 h-14 text-center font-mono-num text-xl font-bold rounded-2xl transition-all outline-none ${
                 isSuccess
-                  ? 'border-emerald-500/80 bg-emerald-950/20 text-emerald-400 shadow-[0_0_12px_rgba(16,185,129,0.3)]'
+                  ? 'border-emerald-500 bg-emerald-50 dark:bg-emerald-950/20 text-emerald-600 dark:text-emerald-400 shadow-[0_0_12px_rgba(16,185,129,0.2)]'
                   : errorMsg
-                  ? 'border-rose-500/80 bg-rose-950/20 text-rose-300 shadow-[0_0_12px_rgba(244,63,94,0.3)]'
+                  ? 'border-rose-500 bg-rose-50 dark:bg-rose-950/20 text-rose-600 dark:text-rose-300 shadow-[0_0_12px_rgba(244,63,94,0.2)]'
                   : digit
-                  ? 'border-purple-500/80 text-white shadow-[0_0_12px_rgba(168,85,247,0.25)]'
-                  : 'border-white/10 text-white focus:border-purple-500/70 focus:bg-[#121728]'
+                  ? 'border-purple-500 bg-white dark:bg-[#121728] text-slate-900 dark:text-white shadow-[0_0_12px_rgba(168,85,247,0.2)]'
+                  : 'bg-slate-50 dark:bg-[#0F1322] border-slate-300 dark:border-white/10 text-slate-900 dark:text-white focus:border-purple-500/70 focus:bg-white dark:focus:bg-[#121728]'
               }`}
             />
           ))}
@@ -229,39 +229,39 @@ export const AuthCodeScreen: React.FC<AuthCodeScreenProps> = ({
 
         {/* Inline Error or Loading feedback */}
         {errorMsg && (
-          <div className="flex items-center justify-center gap-1.5 text-xs text-rose-400 font-medium mb-4 animate-shake">
+          <div className="flex items-center justify-center gap-1.5 text-xs text-rose-600 dark:text-rose-400 font-medium mb-4 animate-shake">
             <AlertCircle className="w-4 h-4 flex-shrink-0" />
             <span>{errorMsg}</span>
           </div>
         )}
 
         {isLoading && (
-          <div className="flex items-center justify-center gap-2 text-xs text-purple-300 font-medium mb-4">
-            <RefreshCw className="w-4 h-4 animate-spin text-purple-400" />
+          <div className="flex items-center justify-center gap-2 text-xs text-purple-700 dark:text-purple-300 font-medium mb-4">
+            <RefreshCw className="w-4 h-4 animate-spin text-purple-600 dark:text-purple-400" />
             <span>Verifying code...</span>
           </div>
         )}
 
         {isSuccess && (
-          <div className="flex items-center justify-center gap-2 text-xs text-emerald-400 font-bold mb-4 animate-fadeIn">
-            <CheckCircle2 className="w-4 h-4 text-emerald-400" />
+          <div className="flex items-center justify-center gap-2 text-xs text-emerald-600 dark:text-emerald-400 font-bold mb-4 animate-fadeIn">
+            <CheckCircle2 className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
             <span>Authentication successful! Redirecting...</span>
           </div>
         )}
 
         {/* Resend Countdown */}
-        <div className="text-center text-xs text-slate-400 mb-8">
+        <div className="text-center text-xs text-slate-600 dark:text-slate-400 mb-8">
           {canResend ? (
             <button
               onClick={handleResend}
-              className="font-semibold text-purple-400 hover:text-purple-300 underline underline-offset-4 transition-colors"
+              className="font-semibold text-purple-600 dark:text-purple-400 hover:text-purple-700 dark:hover:text-purple-300 underline underline-offset-4 transition-colors"
             >
               Resend verification code
             </button>
           ) : (
             <span>
               Resend code in{' '}
-              <span className="font-mono-num font-semibold text-purple-300">
+              <span className="font-mono-num font-semibold text-purple-700 dark:text-purple-300">
                 {countdown}s
               </span>
             </span>
@@ -269,24 +269,24 @@ export const AuthCodeScreen: React.FC<AuthCodeScreenProps> = ({
         </div>
 
         {/* Development Helper Box */}
-        <div className="p-3.5 rounded-2xl bg-gradient-to-r from-purple-950/30 via-[#101322] to-cyan-950/30 border border-purple-500/25 text-left mb-6">
+        <div className="p-3.5 rounded-2xl bg-gradient-to-r from-purple-50 dark:from-purple-950/30 via-slate-50 dark:via-[#101322] to-cyan-50 dark:to-cyan-950/30 border border-purple-200 dark:border-purple-500/25 text-left mb-6">
           <div className="flex items-center justify-between mb-1.5">
-            <span className="text-[11px] font-bold text-purple-300 flex items-center gap-1">
-              <Sparkles className="w-3.5 h-3.5 text-amber-400" />
+            <span className="text-[11px] font-bold text-purple-800 dark:text-purple-300 flex items-center gap-1">
+              <Sparkles className="w-3.5 h-3.5 text-amber-500 dark:text-amber-400" />
               Development Test Credentials
             </span>
-            <span className="text-[10px] px-1.5 py-0.2 rounded bg-purple-500/20 text-purple-300 font-mono-num font-semibold">
+            <span className="text-[10px] px-1.5 py-0.5 rounded bg-purple-100 dark:bg-purple-500/20 text-purple-700 dark:text-purple-300 font-mono-num font-semibold">
               OTP: 123456
             </span>
           </div>
-          <p className="text-[11px] text-slate-400 mb-2">
-            Use test code <code className="text-purple-300 font-mono font-bold">123456</code> to complete the authentication journey instantly.
+          <p className="text-[11px] text-slate-600 dark:text-slate-400 mb-2">
+            Use test code <code className="text-purple-700 dark:text-purple-300 font-mono font-bold bg-purple-100/70 dark:bg-purple-950/50 px-1 py-0.5 rounded">123456</code> to complete the authentication journey instantly.
           </p>
           <button
             type="button"
             onClick={handleAutoFillTest}
             disabled={isLoading || isSuccess}
-            className="w-full py-2 px-3 rounded-xl bg-purple-600/20 hover:bg-purple-600/30 border border-purple-500/40 text-purple-200 text-xs font-semibold flex items-center justify-center gap-2 active:scale-98 transition-all"
+            className="w-full py-2 px-3 rounded-xl bg-purple-100 hover:bg-purple-200 dark:bg-purple-600/20 dark:hover:bg-purple-600/30 border border-purple-300 dark:border-purple-500/40 text-purple-800 dark:text-purple-200 text-xs font-semibold flex items-center justify-center gap-2 active:scale-98 transition-all"
           >
             ⚡ Auto-Fill Test Code (123456)
           </button>
@@ -294,8 +294,8 @@ export const AuthCodeScreen: React.FC<AuthCodeScreenProps> = ({
       </div>
 
       {/* Footer Security Badge */}
-      <div className="text-center pt-4 pb-2 border-t border-white/[0.06] text-[11px] text-slate-400 flex items-center justify-center gap-1.5">
-        <ShieldCheck className="w-3.5 h-3.5 text-emerald-400" />
+      <div className="text-center pt-4 pb-2 border-t border-slate-200 dark:border-white/[0.06] text-[11px] text-slate-500 dark:text-slate-400 flex items-center justify-center gap-1.5">
+        <ShieldCheck className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" />
         <span>Protected by OKNexus Quantum Shield Security</span>
       </div>
     </div>
