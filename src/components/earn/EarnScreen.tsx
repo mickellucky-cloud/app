@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { EarnProduct, ThemeMode } from '../../types';
 import { CoinIcon } from '../common/CoinIcon';
-import { Percent, Search, Coins, CheckCircle2, X } from 'lucide-react';
+import { Percent, Search, Coins, CheckCircle2, X, Sparkles, ShieldCheck, ArrowRight } from 'lucide-react';
 import { EarnSkeleton } from '../skeletons/EarnSkeleton';
 
 interface EarnScreenProps {
@@ -72,41 +72,63 @@ export const EarnScreen: React.FC<EarnScreenProps> = ({
 
       {/* Top Section: Banner + Portfolio Stats (Responsive Grid) */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 mb-6">
-        {/* Featured Banner: Flexible Savings with Gold Coins graphic */}
+        {/* Featured Banner: OKNexus Prime Staking & High-Yield Vaults */}
         <section
           id="earn-featured-banner"
-          className="lg:col-span-7 relative overflow-hidden rounded-2xl bg-amber-50/70 dark:bg-gradient-to-br dark:from-[#291E0A]/90 dark:via-[#1C150A]/90 dark:to-[#0F111A] border border-amber-300/80 dark:border-amber-500/30 p-5 shadow-xs dark:shadow-[0_8px_32px_rgba(245,158,11,0.12)] flex items-center justify-between"
+          className="lg:col-span-7 relative overflow-hidden rounded-2xl bg-gradient-to-br from-purple-100/80 via-indigo-50/90 to-amber-50/70 dark:bg-gradient-to-br dark:from-[#1E1238] dark:via-[#101428] dark:to-[#0A0D18] border border-purple-200/80 dark:border-purple-500/30 p-5 shadow-xs dark:shadow-[0_12px_40px_rgba(168,85,247,0.15)] flex flex-col justify-between"
         >
-          <div className="absolute -top-12 -right-12 w-48 h-48 rounded-full bg-amber-500/20 blur-3xl pointer-events-none" />
+          {/* Ambient Lighting Orbs */}
+          <div className="absolute -top-16 -right-16 w-56 h-56 rounded-full bg-purple-500/20 dark:bg-purple-500/25 blur-3xl pointer-events-none" />
+          <div className="absolute -bottom-16 -left-16 w-48 h-48 rounded-full bg-amber-500/15 dark:bg-emerald-500/15 blur-3xl pointer-events-none" />
 
-          <div className="relative z-10 max-w-xs sm:max-w-sm">
-            <span className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded bg-amber-100 text-amber-800 border border-amber-300 dark:bg-amber-500/20 dark:text-amber-300 dark:border-amber-500/30">
-              FEATURED VAULT
-            </span>
-            <h2 className="text-xl sm:text-2xl font-bold font-display text-slate-900 dark:text-white mt-2 leading-tight">
-              Flexible Savings
-            </h2>
-            <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-300 mt-1">Grow your crypto with automated daily payouts & zero lockup period</p>
-
-            <div className="mt-4 flex items-baseline gap-2">
-              <span className="text-xs text-slate-500 dark:text-slate-400">Up to</span>
-              <span className="font-mono-num text-2xl sm:text-3xl font-extrabold text-amber-600 dark:text-amber-400">
-                12.5%
+          <div className="relative z-10">
+            <div className="flex items-center gap-2 mb-2">
+              <span className="inline-flex items-center gap-1 text-[10px] font-extrabold uppercase tracking-wider px-2.5 py-0.5 rounded-full bg-purple-600 text-white shadow-xs">
+                <Sparkles className="w-3 h-3" />
+                PRIME STAKING
               </span>
-              <span className="text-xs font-bold text-amber-600 dark:text-amber-400">APY</span>
+              <span className="inline-flex items-center gap-1 text-[10px] font-semibold text-emerald-700 dark:text-emerald-300 bg-emerald-100/80 dark:bg-emerald-500/15 border border-emerald-300/60 dark:border-emerald-500/30 px-2 py-0.5 rounded-full">
+                <ShieldCheck className="w-3 h-3" />
+                100% Capital Protected
+              </span>
+            </div>
+
+            <h2 className="text-xl sm:text-2xl font-bold font-display text-slate-900 dark:text-white leading-tight">
+              Institutional Yield & Auto-Compound
+            </h2>
+            <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-300 mt-1 max-w-md">
+              Earn daily automated payouts with instant withdrawals, zero redemption penalties, and smart vault routing.
+            </p>
+
+            {/* Live APY Multi-Token Ticker Pills */}
+            <div className="mt-4 flex flex-wrap items-center gap-2">
+              <div className="px-3 py-1.5 rounded-xl bg-white/90 dark:bg-white/[0.06] border border-slate-200/80 dark:border-white/10 shadow-2xs flex items-center gap-2">
+                <span className="text-xs font-bold text-slate-700 dark:text-slate-300">USDT</span>
+                <span className="font-mono-num text-sm font-extrabold text-amber-600 dark:text-amber-400">18.5% APY</span>
+              </div>
+              <div className="px-3 py-1.5 rounded-xl bg-white/90 dark:bg-white/[0.06] border border-slate-200/80 dark:border-white/10 shadow-2xs flex items-center gap-2">
+                <span className="text-xs font-bold text-slate-700 dark:text-slate-300">SOL</span>
+                <span className="font-mono-num text-sm font-extrabold text-purple-600 dark:text-purple-400">14.2% APY</span>
+              </div>
+              <div className="px-3 py-1.5 rounded-xl bg-white/90 dark:bg-white/[0.06] border border-slate-200/80 dark:border-white/10 shadow-2xs flex items-center gap-2">
+                <span className="text-xs font-bold text-slate-700 dark:text-slate-300">BTC / ETH</span>
+                <span className="font-mono-num text-sm font-extrabold text-emerald-600 dark:text-emerald-400">8.9% APY</span>
+              </div>
             </div>
           </div>
 
-          {/* 3D Gold Coins Graphic */}
-          <div className="relative flex-shrink-0 w-28 h-28 hidden sm:flex items-center justify-center">
-            <div className="absolute inset-0 rounded-full bg-amber-500/20 blur-xl animate-pulse" />
-            <div className="relative flex flex-col items-center">
-              <div className="w-16 h-7 rounded-full bg-gradient-to-r from-amber-300 via-amber-400 to-amber-600 border border-amber-200 shadow-md transform -rotate-6" />
-              <div className="w-20 h-8 rounded-full bg-gradient-to-r from-yellow-400 via-amber-500 to-amber-700 border border-amber-300 shadow-md -mt-2 transform rotate-3" />
-              <div className="w-20 h-9 rounded-full bg-gradient-to-r from-amber-300 via-amber-500 to-amber-800 border border-amber-200 shadow-lg -mt-2 flex items-center justify-center">
-                <Coins className="w-5 h-5 text-amber-950 font-bold" />
-              </div>
-            </div>
+          <div className="relative z-10 mt-4 pt-3 border-t border-slate-200/70 dark:border-white/[0.06] flex items-center justify-between text-xs">
+            <span className="text-slate-500 dark:text-slate-400 text-[11px]">
+              Daily distribution: <strong className="text-slate-700 dark:text-slate-200 font-mono-num">00:00 UTC</strong>
+            </span>
+            <button
+              type="button"
+              onClick={() => setActiveCategory('flexible')}
+              className="inline-flex items-center gap-1 font-bold text-purple-700 dark:text-purple-300 hover:text-purple-900 dark:hover:text-purple-200 transition-colors"
+            >
+              <span>Explore Vaults</span>
+              <ArrowRight className="w-3.5 h-3.5" />
+            </button>
           </div>
         </section>
 

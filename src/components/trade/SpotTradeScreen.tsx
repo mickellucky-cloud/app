@@ -99,7 +99,7 @@ export const SpotTradeScreen: React.FC<SpotTradeScreenProps> = ({
     },
   ]);
 
-  // Mobile Bybit Dual-Mode Switcher: 'trade' (split terminal) | 'chart' (full chart + floating actions)
+  // Mobile Dual-Mode Switcher: 'trade' (split terminal) | 'chart' (full chart + floating actions)
   const [mobileViewMode, setMobileViewMode] = useState<'trade' | 'chart'>('trade');
   const [activeSide, setActiveSide] = useState<'buy' | 'sell'>('buy');
 
@@ -330,7 +330,7 @@ export const SpotTradeScreen: React.FC<SpotTradeScreenProps> = ({
         </div>
       </section>
 
-      {/* Mobile Mode Switcher: Trade (Split Terminal) vs Chart (Full Height + Floating Action Dock) */}
+      {/* Mobile Mode Switcher: Trade vs Chart */}
       <div className="flex lg:hidden items-center justify-between gap-2 mb-3 bg-slate-100/90 dark:bg-[#0E121E]/90 backdrop-blur-md p-1 rounded-xl border border-slate-200/80 dark:border-white/10 shadow-xs">
         <button
           type="button"
@@ -342,7 +342,7 @@ export const SpotTradeScreen: React.FC<SpotTradeScreenProps> = ({
           }`}
         >
           <SlidersHorizontal className="w-3.5 h-3.5" />
-          <span>Trade (Split Orderbook)</span>
+          <span>Trade</span>
         </button>
 
         <button
@@ -355,7 +355,7 @@ export const SpotTradeScreen: React.FC<SpotTradeScreenProps> = ({
           }`}
         >
           <CandlestickChart className="w-3.5 h-3.5" />
-          <span>Chart & Depth</span>
+          <span>Chart</span>
         </button>
       </div>
 
@@ -363,7 +363,7 @@ export const SpotTradeScreen: React.FC<SpotTradeScreenProps> = ({
       <div className="block lg:hidden">
         {mobileViewMode === 'trade' ? (
           <div className="space-y-4">
-            {/* Bybit Split-Screen Terminal: Left 58% Order Entry, Right 42% Compact Order Book */}
+            {/* Split Terminal: Left 58% Order Entry, Right 42% Compact Order Book */}
             <div className="grid grid-cols-12 gap-2">
               <div className="col-span-7">
                 <OrderEntryForm
@@ -409,54 +409,44 @@ export const SpotTradeScreen: React.FC<SpotTradeScreenProps> = ({
               onTimeframeChange={setTimeframe}
             />
 
-            {/* Floating Bybit-Style Mobile Bottom Action Bar (in Chart View) */}
-            <div className="fixed bottom-20 inset-x-0 z-40 px-3 pointer-events-none animate-in fade-in slide-in-from-bottom-4 duration-300">
-              <div className="max-w-md mx-auto pointer-events-auto p-2 rounded-2xl bg-white/90 dark:bg-[#0B0E18]/90 backdrop-blur-xl border border-slate-200/80 dark:border-white/10 shadow-[0_12px_36px_rgba(0,0,0,0.35)] flex items-center justify-between gap-2.5">
-                {/* Buy Action Button */}
+            {/* Minimal Floating Action Micro-Capsule (Unobtrusive & Sleek) */}
+            <div className="fixed bottom-20 inset-x-0 z-40 px-4 pointer-events-none flex justify-center animate-in fade-in slide-in-from-bottom-2 duration-300">
+              <div className="pointer-events-auto py-1 px-2 rounded-full bg-white/90 dark:bg-[#0E121E]/90 backdrop-blur-md border border-slate-200/80 dark:border-white/10 shadow-[0_4px_16px_rgba(0,0,0,0.2)] flex items-center justify-between gap-2 max-w-[280px] w-full">
+                {/* Minimal Buy Action */}
                 <button
                   type="button"
                   onClick={handleActionBuy}
-                  className="flex-1 py-2 px-3 rounded-xl bg-gradient-to-r from-emerald-500 to-emerald-600 hover:from-emerald-600 hover:to-emerald-700 active:scale-[0.98] text-white font-bold shadow-md shadow-emerald-500/20 flex flex-col items-center justify-center transition-all cursor-pointer"
+                  className="py-1 px-2.5 rounded-full bg-emerald-500 hover:bg-emerald-600 active:scale-95 text-white font-bold text-[10px] flex items-center gap-1 transition-all shadow-xs cursor-pointer"
+                  title="Quick Buy"
                 >
-                  <div className="flex items-center gap-1 text-xs font-black uppercase tracking-wider">
-                    <span>Buy</span>
-                    <span className="text-[10px] opacity-80">{selectedPair.base}</span>
-                  </div>
-                  <span className="font-mono-num text-[11px] font-semibold opacity-95">
-                    ${liveAskPrice >= 1 ? liveAskPrice.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : liveAskPrice.toFixed(4)}
+                  <span>Buy</span>
+                  <span className="font-mono-num font-semibold text-[9px] opacity-90">
+                    ${liveAskPrice >= 1 ? liveAskPrice.toFixed(2) : liveAskPrice.toFixed(4)}
                   </span>
                 </button>
 
-                {/* Center Balance Info / Quick Trade Mode Trigger */}
+                {/* Available Balance Micro-Indicator */}
                 <button
                   type="button"
                   onClick={() => setMobileViewMode('trade')}
-                  className="px-2 py-1 flex flex-col items-center justify-center text-center hover:opacity-80 active:scale-95 transition-all cursor-pointer"
-                  title="Switch to trade terminal"
+                  className="px-1 text-center hover:opacity-75 active:scale-95 transition-all cursor-pointer"
+                  title="Switch to trade form"
                 >
-                  <span className="text-[9px] font-medium text-slate-500 dark:text-slate-400 uppercase tracking-wider">
-                    Avail. USDT
-                  </span>
-                  <span className="font-mono-num text-xs font-extrabold text-slate-800 dark:text-slate-200">
-                    {availableUsdt.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
-                  </span>
-                  <span className="text-[9px] text-purple-600 dark:text-purple-400 font-semibold flex items-center gap-0.5 mt-0.5">
-                    <SlidersHorizontal className="w-2.5 h-2.5" /> Order Form
+                  <span className="font-mono-num text-[9px] text-slate-500 dark:text-slate-400 font-medium">
+                    {availableUsdt >= 1000 ? `${(availableUsdt / 1000).toFixed(1)}k` : availableUsdt.toFixed(0)} USDT
                   </span>
                 </button>
 
-                {/* Sell Action Button */}
+                {/* Minimal Sell Action */}
                 <button
                   type="button"
                   onClick={handleActionSell}
-                  className="flex-1 py-2 px-3 rounded-xl bg-gradient-to-r from-rose-500 to-rose-600 hover:from-rose-600 hover:to-rose-700 active:scale-[0.98] text-white font-bold shadow-md shadow-rose-500/20 flex flex-col items-center justify-center transition-all cursor-pointer"
+                  className="py-1 px-2.5 rounded-full bg-rose-500 hover:bg-rose-600 active:scale-95 text-white font-bold text-[10px] flex items-center gap-1 transition-all shadow-xs cursor-pointer"
+                  title="Quick Sell"
                 >
-                  <div className="flex items-center gap-1 text-xs font-black uppercase tracking-wider">
-                    <span>Sell</span>
-                    <span className="text-[10px] opacity-80">{selectedPair.base}</span>
-                  </div>
-                  <span className="font-mono-num text-[11px] font-semibold opacity-95">
-                    ${liveBidPrice >= 1 ? liveBidPrice.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : liveBidPrice.toFixed(4)}
+                  <span>Sell</span>
+                  <span className="font-mono-num font-semibold text-[9px] opacity-90">
+                    ${liveBidPrice >= 1 ? liveBidPrice.toFixed(2) : liveBidPrice.toFixed(4)}
                   </span>
                 </button>
               </div>

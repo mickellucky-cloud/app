@@ -118,6 +118,7 @@ export const P2PScreen: React.FC<P2PScreenProps> = ({
   const [adMinLimit, setAdMinLimit] = useState('10000');
   const [adMaxLimit, setAdMaxLimit] = useState('1500000');
   const [adPaymentMethod, setAdPaymentMethod] = useState('Bank Transfer');
+  const [showP2PAnnouncement, setShowP2PAnnouncement] = useState(true);
 
   const handleOpenCreateAd = () => {
     setEditingAdId(null);
@@ -470,6 +471,50 @@ export const P2PScreen: React.FC<P2PScreenProps> = ({
         {/* TAB 1: P2P MARKETPLACE */}
         {activeP2PTab === 'p2p_market' && (
           <div className="space-y-4">
+            {/* Official OKNexus P2P Zero-Fee & Escrow Security Announcement Banner */}
+            {showP2PAnnouncement && (
+              <div className="relative overflow-hidden rounded-2xl bg-gradient-to-r from-purple-900/20 via-indigo-900/15 to-emerald-900/20 dark:from-[#1A1333] dark:via-[#0F1428] dark:to-[#0D1E1E] border border-purple-300/60 dark:border-white/10 p-3.5 sm:p-4 shadow-xs backdrop-blur-md">
+                <div className="absolute -top-12 -right-12 w-36 h-36 rounded-full bg-purple-500/15 blur-2xl pointer-events-none" />
+                <div className="absolute -bottom-12 -left-12 w-36 h-36 rounded-full bg-emerald-500/15 blur-2xl pointer-events-none" />
+
+                <div className="relative z-10 flex items-start sm:items-center justify-between gap-3">
+                  <div className="flex items-start gap-3">
+                    <div className="w-10 h-10 rounded-xl bg-purple-600/15 dark:bg-purple-500/20 border border-purple-500/30 flex items-center justify-center text-purple-600 dark:text-purple-300 shrink-0 mt-0.5 sm:mt-0">
+                      <ShieldCheck className="w-5 h-5" />
+                    </div>
+                    <div>
+                      <div className="flex flex-wrap items-center gap-1.5 mb-1">
+                        <span className="text-[10px] font-extrabold uppercase tracking-wider px-2 py-0.5 rounded-md bg-purple-600 text-white shadow-2xs">
+                          P2P ESCROW PROMISE
+                        </span>
+                        <span className="text-[10px] font-bold text-emerald-700 dark:text-emerald-300 bg-emerald-100/80 dark:bg-emerald-500/20 border border-emerald-300/60 dark:border-emerald-500/30 px-2 py-0.5 rounded-md">
+                          0% Trading Fees
+                        </span>
+                        <span className="hidden sm:inline-flex text-[10px] font-medium text-slate-500 dark:text-slate-400">
+                          Avg. release: 4.2 mins
+                        </span>
+                      </div>
+                      <h3 className="text-sm font-bold text-slate-900 dark:text-white leading-snug">
+                        Zero-Fee Fiat Gateway with 100% Escrow Protection
+                      </h3>
+                      <p className="text-xs text-slate-600 dark:text-slate-400 mt-0.5">
+                        Your crypto is safely held in smart contract escrow until fiat payment is verified. 24/7 dispute arbitration guaranteed.
+                      </p>
+                    </div>
+                  </div>
+
+                  <button
+                    type="button"
+                    onClick={() => setShowP2PAnnouncement(false)}
+                    className="p-1 rounded-lg text-slate-400 hover:text-slate-700 dark:hover:text-white hover:bg-slate-200/60 dark:hover:bg-white/10 transition-colors shrink-0"
+                    title="Dismiss notice"
+                  >
+                    <X className="w-4 h-4" />
+                  </button>
+                </div>
+              </div>
+            )}
+
             {/* Top Bar: Multi-Currency & Payment Filter and Sort Component */}
             <P2PFilterSortBar
               tradeSide={tradeSide}

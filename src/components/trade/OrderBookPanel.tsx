@@ -218,7 +218,7 @@ export const OrderBookPanel: React.FC<OrderBookPanelProps> = ({
             ))}
           </div>
 
-          {/* Bybit-Style Real-Time Buyer / Seller Sentiment Meter */}
+          {/* Real-Time Buyer / Seller Sentiment Meter */}
           <div className="mt-2 pt-1.5 border-t border-slate-200/60 dark:border-white/[0.04]">
             <div className="flex justify-between text-[9px] font-mono-num font-bold mb-1">
               <span className="text-emerald-600 dark:text-emerald-400">B 58%</span>

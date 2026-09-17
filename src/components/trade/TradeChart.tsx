@@ -540,10 +540,10 @@ export const TradeChart: React.FC<TradeChartProps> = ({
             </linearGradient>
           </defs>
 
-          {/* Grid lines (Dotted) */}
-          <line x1="0" y1={chartHeight * 0.25} x2={chartWidth} y2={chartHeight * 0.25} stroke="#94A3B8" strokeOpacity="0.25" strokeDasharray="3 3" />
-          <line x1="0" y1={chartHeight * 0.5} x2={chartWidth} y2={chartHeight * 0.5} stroke="#94A3B8" strokeOpacity="0.25" strokeDasharray="3 3" />
-          <line x1="0" y1={chartHeight * 0.75} x2={chartWidth} y2={chartHeight * 0.75} stroke="#94A3B8" strokeOpacity="0.25" strokeDasharray="3 3" />
+          {/* Subtle Pro Grid lines */}
+          <line x1="0" y1={chartHeight * 0.25} x2={chartWidth} y2={chartHeight * 0.25} stroke="#94A3B8" strokeOpacity="0.12" strokeDasharray="3 3" />
+          <line x1="0" y1={chartHeight * 0.5} x2={chartWidth} y2={chartHeight * 0.5} stroke="#94A3B8" strokeOpacity="0.12" strokeDasharray="3 3" />
+          <line x1="0" y1={chartHeight * 0.75} x2={chartWidth} y2={chartHeight * 0.75} stroke="#94A3B8" strokeOpacity="0.12" strokeDasharray="3 3" />
 
           {/* Mode 1: CANDLESTICKS */}
           {chartStyle === 'candles' && (
@@ -552,21 +552,21 @@ export const TradeChart: React.FC<TradeChartProps> = ({
               {candles.map((c, i) => {
                 const x = 12 + i * candleGap;
                 const volY = getVolY(c.volume);
-                const volH = chartHeight - volY;
+                const volH = Math.max(1, chartHeight - volY);
                 return (
                   <rect
                     key={`vol-${i}`}
-                    x={x + 1}
+                    x={x + 0.5}
                     y={volY}
-                    width={candleWidth - 2}
+                    width={Math.max(2, candleWidth - 1)}
                     height={volH}
-                    fill={c.isUp ? 'rgba(16,185,129,0.3)' : 'rgba(244,63,94,0.3)'}
-                    rx={1}
+                    fill={c.isUp ? 'rgba(16,185,129,0.35)' : 'rgba(244,63,94,0.35)'}
+                    rx={0.75}
                   />
                 );
               })}
 
-              {/* Candles (Wick + Body) */}
+              {/* High-Definition Candlesticks (Wick + Body) */}
               {candles.map((c, i) => {
                 const x = 12 + i * candleGap;
                 const centerX = x + candleWidth / 2;
@@ -574,14 +574,15 @@ export const TradeChart: React.FC<TradeChartProps> = ({
                 const lowY = getY(c.low);
                 const openY = getY(c.open);
                 const closeY = getY(c.close);
-
                 const bodyY = Math.min(openY, closeY);
-                const bodyH = Math.max(2.5, Math.abs(openY - closeY));
+                const rawH = Math.abs(closeY - openY);
+                const bodyH = Math.max(1.5, rawH);
                 const candleColor = c.isUp ? '#10B981' : '#F43F5E';
+                const strokeColor = c.isUp ? '#059669' : '#E11D48';
 
                 return (
-                  <g key={`c-${i}`} className="transition-opacity hover:opacity-80">
-                    {/* Wick */}
+                  <g key={`c-${i}`} className="transition-opacity hover:opacity-90">
+                    {/* Upper & Lower Wick */}
                     <line
                       x1={centerX}
                       y1={highY}
@@ -589,15 +590,18 @@ export const TradeChart: React.FC<TradeChartProps> = ({
                       y2={lowY}
                       stroke={candleColor}
                       strokeWidth={1.2}
+                      strokeLinecap="round"
                     />
-                    {/* Body */}
+                    {/* Candle Body with optical border */}
                     <rect
                       x={x}
                       y={bodyY}
                       width={candleWidth}
                       height={bodyH}
                       fill={candleColor}
-                      rx={1}
+                      stroke={strokeColor}
+                      strokeWidth={0.6}
+                      rx={0.75}
                     />
                   </g>
                 );

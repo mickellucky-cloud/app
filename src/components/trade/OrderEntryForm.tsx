@@ -323,7 +323,7 @@ export const OrderEntryForm: React.FC<OrderEntryFormProps> = ({
           </div>
         </div>
 
-        {/* Bybit-Style 5-Point Node Percentage Slider */}
+        {/* Precision 5-Point Node Percentage Slider */}
         <div className="pt-2 px-1 pb-1">
           <div className="relative flex items-center h-4">
             {/* Background Rail */}
