@@ -99,7 +99,10 @@ export const BottomNav: React.FC<BottomNavProps> = ({
       {/* Floating Island Container */}
       <div
         id="floating-liquid-nav-container"
-        className="fixed bottom-3.5 sm:bottom-6 left-0 right-0 z-40 flex justify-center px-3.5 pointer-events-none md:hidden safe-area-bottom"
+        className="fixed left-0 right-0 z-40 flex justify-center px-3.5 pointer-events-none md:hidden"
+        style={{
+          bottom: 'max(0.5rem, calc(env(safe-area-inset-bottom, 0px) * 0.35 + 6px))',
+        }}
       >
         <nav
           id="bottom-navigation-bar"

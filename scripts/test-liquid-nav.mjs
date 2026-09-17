@@ -18,6 +18,20 @@ async function testLiquidNav() {
   await page.screenshot({ path: 'scripts/floating-liquid-nav-dark.png' });
   console.log('Saved scripts/floating-liquid-nav-dark.png');
 
+  // Check bounding box of the floating nav
+  const box = await page.$eval('#bottom-navigation-bar', el => {
+    const rect = el.getBoundingClientRect();
+    return {
+      top: rect.top,
+      bottom: rect.bottom,
+      left: rect.left,
+      width: rect.width,
+      height: rect.height,
+      distanceFromWindowBottom: 844 - rect.bottom
+    };
+  });
+  console.log('iPhone 12 Nav Position:', box);
+
   // Click Market tab
   const marketBtn = await page.$('#nav-tab-market');
   if (marketBtn) {

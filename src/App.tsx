@@ -958,7 +958,7 @@ export default function App() {
   }
 
   return (
-    <div className="min-h-screen bg-white dark:bg-[#07090E] text-slate-900 dark:text-slate-100 selection:bg-purple-500 selection:text-white flex overflow-hidden transition-colors">
+    <div className="min-h-screen min-h-[100dvh] bg-white dark:bg-[#07090E] text-slate-900 dark:text-slate-100 selection:bg-purple-500 selection:text-white flex overflow-hidden transition-colors">
       {/* Left Navigation Menu (for Web and Tablet) */}
       <LeftNav
         activeTab={activeTab}
@@ -988,7 +988,7 @@ export default function App() {
       />
 
       {/* Main Content Area */}
-      <div className="flex-1 flex flex-col min-w-0 h-screen overflow-y-auto overflow-x-hidden relative bg-white dark:bg-[#07090E] transition-colors">
+      <div className="flex-1 flex flex-col min-w-0 h-screen h-[100dvh] overflow-y-auto overflow-x-hidden relative bg-white dark:bg-[#07090E] transition-colors">
         {/* Desktop Top Utility Bar */}
         {activeTab !== 'p2p' && (
           <DesktopTopBar
