@@ -1,13 +1,15 @@
 import React, { useState } from 'react';
 import { OKNexusLogo } from '../common/OKNexusLogo';
-import { Eye, EyeOff, CheckCircle2, AlertCircle, ArrowLeft, ShieldCheck, Sparkles, ChevronDown } from 'lucide-react';
+import { Eye, EyeOff, CheckCircle2, AlertCircle, ArrowLeft, ShieldCheck, Sparkles, ChevronDown, RefreshCw } from 'lucide-react';
 import { COUNTRY_CODES } from '../../data/mockData';
+import { SocialProvider } from './LoginScreen';
 
 interface CreateAccountScreenProps {
   onContinue: (identifier: string, type: 'email' | 'phone') => void;
   onNavigateLogin: () => void;
   onOpenTerms: () => void;
   onOpenPrivacy: () => void;
+  onSocialSuccess?: (provider: SocialProvider) => void;
 }
 
 export const CreateAccountScreen: React.FC<CreateAccountScreenProps> = ({
@@ -15,6 +17,7 @@ export const CreateAccountScreen: React.FC<CreateAccountScreenProps> = ({
   onNavigateLogin,
   onOpenTerms,
   onOpenPrivacy,
+  onSocialSuccess,
 }) => {
   const [authMethod, setAuthMethod] = useState<'email' | 'phone'>('email');
   const [email, setEmail] = useState('');
@@ -40,6 +43,21 @@ export const CreateAccountScreen: React.FC<CreateAccountScreenProps> = ({
   const strengthScore = [hasMinLength, hasNumber, hasLetter, hasSpecial].filter(Boolean).length;
   const strengthLabels = ['Weak', 'Fair', 'Good', 'Strong'];
   const strengthColors = ['bg-rose-500', 'bg-amber-500', 'bg-purple-500', 'bg-emerald-500'];
+
+  // Social Auth States
+  const [socialLoading, setSocialLoading] = useState<SocialProvider | null>(null);
+  const [socialSuccess, setSocialSuccess] = useState<SocialProvider | null>(null);
+
+  const handleSocialLogin = (provider: SocialProvider) => {
+    setSocialLoading(provider);
+    setTimeout(() => {
+      setSocialLoading(null);
+      setSocialSuccess(provider);
+      setTimeout(() => {
+        onSocialSuccess?.(provider);
+      }, 600);
+    }, 1000);
+  };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -348,8 +366,118 @@ export const CreateAccountScreen: React.FC<CreateAccountScreenProps> = ({
           </button>
         </form>
 
+        {/* Divider */}
+        <div className="relative my-4">
+          <div className="absolute inset-0 flex items-center">
+            <div className="w-full border-t border-slate-200 dark:border-white/10" />
+          </div>
+          <div className="relative flex justify-center text-xs">
+            <span className="px-3 bg-white dark:bg-[#07090E] text-slate-500 text-[11px] font-medium uppercase tracking-wider">
+              or sign up with
+            </span>
+          </div>
+        </div>
+
+        {/* Social Authentication Options */}
+        <div className="grid grid-cols-2 gap-2.5">
+          {/* Google Button */}
+          <button
+            type="button"
+            onClick={() => handleSocialLogin('google')}
+            disabled={socialLoading !== null}
+            className="py-2.5 px-2 rounded-2xl bg-white dark:bg-[#0E121E] border border-slate-200 dark:border-white/10 hover:border-purple-500/40 hover:bg-slate-50 dark:hover:bg-[#141B2E] active:scale-[0.99] transition-all flex items-center justify-center gap-1.5 text-xs font-semibold text-slate-800 dark:text-slate-200 shadow-xs"
+          >
+            {socialLoading === 'google' ? (
+              <RefreshCw className="w-4 h-4 animate-spin text-purple-600 dark:text-purple-400" />
+            ) : socialSuccess === 'google' ? (
+              <CheckCircle2 className="w-4 h-4 text-emerald-500 dark:text-emerald-400" />
+            ) : (
+              <svg className="w-4 h-4 shrink-0" viewBox="0 0 24 24">
+                <path
+                  fill="#4285F4"
+                  d="M23.745 12.27c0-.7-.06-1.4-.19-2.07H12v4.51h6.6c-.29 1.52-1.14 2.8-2.4 3.68v3.05h3.88c2.27-2.09 3.665-5.17 3.665-9.17z"
+                />
+                <path
+                  fill="#34A853"
+                  d="M12 24c3.24 0 5.95-1.08 7.93-2.91l-3.88-3.05c-1.08.72-2.45 1.16-4.05 1.16-3.12 0-5.77-2.1-6.72-4.93H1.24v3.15C3.26 21.36 7.33 24 12 24z"
+                />
+                <path
+                  fill="#FBBC05"
+                  d="M5.28 14.27c-.25-.72-.38-1.49-.38-2.27s.13-1.55.38-2.27V6.58H1.24C.45 8.15 0 9.92 0 12s.45 3.85 1.24 5.42l4.04-3.15z"
+                />
+                <path
+                  fill="#EA4335"
+                  d="M12 4.75c1.77 0 3.35.61 4.6 1.8l3.42-3.42C17.95 1.19 15.24 0 12 0 7.33 0 3.26 2.64 1.24 6.58l4.04 3.15c.95-2.83 3.6-4.98 6.72-4.98z"
+                />
+              </svg>
+            )}
+            <span className="truncate">Google</span>
+          </button>
+
+          {/* Apple Button */}
+          <button
+            type="button"
+            onClick={() => handleSocialLogin('apple')}
+            disabled={socialLoading !== null}
+            className="py-2.5 px-2 rounded-2xl bg-white dark:bg-[#0E121E] border border-slate-200 dark:border-white/10 hover:border-purple-500/40 hover:bg-slate-50 dark:hover:bg-[#141B2E] active:scale-[0.99] transition-all flex items-center justify-center gap-1.5 text-xs font-semibold text-slate-800 dark:text-slate-200 shadow-xs"
+          >
+            {socialLoading === 'apple' ? (
+              <RefreshCw className="w-4 h-4 animate-spin text-purple-600 dark:text-purple-400" />
+            ) : socialSuccess === 'apple' ? (
+              <CheckCircle2 className="w-4 h-4 text-emerald-500 dark:text-emerald-400" />
+            ) : (
+              <svg className="w-4 h-4 fill-slate-900 dark:fill-white shrink-0" viewBox="0 0 24 24">
+                <path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M15.97 6.37c.62-.75 1.04-1.8 0.92-2.85-.9.04-1.99.6-2.63 1.35-.57.66-.99 1.73-.85 2.76 1.01.08 2.01-.51 2.56-1.26z" />
+              </svg>
+            )}
+            <span className="truncate">Apple</span>
+          </button>
+
+          {/* Telegram Button */}
+          <button
+            type="button"
+            onClick={() => handleSocialLogin('telegram')}
+            disabled={socialLoading !== null}
+            className="py-2.5 px-2 rounded-2xl bg-white dark:bg-[#0E121E] border border-slate-200 dark:border-white/10 hover:border-[#229ED9]/50 hover:bg-slate-50 dark:hover:bg-[#141B2E] active:scale-[0.99] transition-all flex items-center justify-center gap-1.5 text-xs font-semibold text-slate-800 dark:text-slate-200 shadow-xs"
+          >
+            {socialLoading === 'telegram' ? (
+              <RefreshCw className="w-4 h-4 animate-spin text-[#229ED9]" />
+            ) : socialSuccess === 'telegram' ? (
+              <CheckCircle2 className="w-4 h-4 text-emerald-500 dark:text-emerald-400" />
+            ) : (
+              <img
+                src="/icons/telegram.png"
+                alt="Telegram"
+                className="w-4 h-4 shrink-0 rounded-full object-contain"
+              />
+            )}
+            <span className="truncate">Telegram</span>
+          </button>
+
+          {/* Facebook Button */}
+          <button
+            type="button"
+            onClick={() => handleSocialLogin('facebook')}
+            disabled={socialLoading !== null}
+            className="py-2.5 px-2 rounded-2xl bg-white dark:bg-[#0E121E] border border-slate-200 dark:border-white/10 hover:border-[#1877F2]/50 hover:bg-slate-50 dark:hover:bg-[#141B2E] active:scale-[0.99] transition-all flex items-center justify-center gap-1.5 text-xs font-semibold text-slate-800 dark:text-slate-200 shadow-xs"
+          >
+            {socialLoading === 'facebook' ? (
+              <RefreshCw className="w-4 h-4 animate-spin text-[#1877F2]" />
+            ) : socialSuccess === 'facebook' ? (
+              <CheckCircle2 className="w-4 h-4 text-emerald-500 dark:text-emerald-400" />
+            ) : (
+              <img
+                src="/icons/facebook.png"
+                alt="Facebook"
+                className="w-4 h-4 shrink-0 rounded-full object-contain"
+              />
+            )}
+            <span className="truncate">Facebook</span>
+          </button>
+        </div>
+
         {/* Switch back to Login */}
-        <div className="mt-6 text-center text-xs text-slate-600 dark:text-slate-400">
+        <div className="mt-5 text-center text-xs text-slate-600 dark:text-slate-400">
           Already have an account?{' '}
           <button
             type="button"

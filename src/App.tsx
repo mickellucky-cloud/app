@@ -769,8 +769,21 @@ export default function App() {
     ]);
   };
 
-  const handleSocialSuccess = (provider: 'google' | 'apple') => {
-    const socialAccount = provider === 'google' ? 'dev@nexus.com' : 'apple.trader@icloud.com';
+  const handleSocialSuccess = (provider: 'google' | 'apple' | 'facebook' | 'telegram') => {
+    const accountMap: Record<string, string> = {
+      google: 'dev@nexus.com',
+      apple: 'apple.trader@icloud.com',
+      facebook: 'fb.trader@oknexus.io',
+      telegram: '@oknexus_desk',
+    };
+    const providerLabel: Record<string, string> = {
+      google: 'Google',
+      apple: 'Apple',
+      facebook: 'Facebook',
+      telegram: 'Telegram',
+    };
+    const socialAccount = accountMap[provider] || 'trader@oknexus.io';
+    const label = providerLabel[provider] || 'Social Account';
 
     setIsAuthenticated(true);
     safeStorage.setItem('oknexus_authenticated', 'true');
@@ -783,7 +796,7 @@ export default function App() {
     setToasts((prev) => [
       {
         id: `toast-${Date.now()}`,
-        title: `Signed in with ${provider === 'google' ? 'Google' : 'Apple'} ✓`,
+        title: `Signed in with ${label} ✓`,
         message: `Connected via ${socialAccount}`,
         type: 'success',
         timestamp: 'Just now',
@@ -907,6 +920,7 @@ export default function App() {
               setTermsModalTab('privacy');
               setIsTermsModalOpen(true);
             }}
+            onSocialSuccess={handleSocialSuccess}
           />
         ) : (
           <ForgotPasswordScreen

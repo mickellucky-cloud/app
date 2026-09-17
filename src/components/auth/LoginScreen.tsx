@@ -18,6 +18,7 @@ import {
   Shield,
 } from 'lucide-react';
 import { COUNTRY_CODES, DEV_TEST_ACCOUNT, CountryCodeItem } from '../../data/mockData';
+export type SocialProvider = 'google' | 'apple' | 'facebook' | 'telegram';
 
 interface LoginScreenProps {
   onContinue: (identifier: string, type: 'email' | 'phone') => void;
@@ -25,7 +26,7 @@ interface LoginScreenProps {
   onNavigateForgotPassword: () => void;
   onOpenTerms: () => void;
   onOpenPrivacy: () => void;
-  onSocialSuccess: (provider: 'google' | 'apple') => void;
+  onSocialSuccess: (provider: SocialProvider) => void;
   theme?: ThemeMode;
   onToggleTheme?: () => void;
 }
@@ -51,8 +52,8 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   // Social Auth States
-  const [socialLoading, setSocialLoading] = useState<'google' | 'apple' | null>(null);
-  const [socialSuccess, setSocialSuccess] = useState<'google' | 'apple' | null>(null);
+  const [socialLoading, setSocialLoading] = useState<SocialProvider | null>(null);
+  const [socialSuccess, setSocialSuccess] = useState<SocialProvider | null>(null);
   const [socialError, setSocialError] = useState<string | null>(null);
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -110,7 +111,7 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({
   };
 
   // Social OAuth (Mock flow for preview)
-  const handleSocialLogin = (provider: 'google' | 'apple') => {
+  const handleSocialLogin = (provider: SocialProvider) => {
     setSocialError(null);
     setSocialLoading(provider);
 
@@ -431,13 +432,13 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({
         </div>
 
         {/* Social Authentication Options */}
-        <div className="grid grid-cols-2 gap-3 mt-4">
+        <div className="grid grid-cols-2 gap-2.5 mt-4">
           {/* Google Button */}
           <button
             type="button"
             onClick={() => handleSocialLogin('google')}
             disabled={socialLoading !== null}
-            className="py-3 px-3 rounded-2xl bg-slate-50 dark:bg-[#0E121E] border border-slate-200 dark:border-white/10 hover:border-purple-500/40 hover:bg-slate-100 dark:hover:bg-[#141B2E] active:scale-[0.99] transition-all flex items-center justify-center gap-2 text-xs font-semibold text-slate-800 dark:text-slate-200 shadow-xs"
+            className="py-2.5 px-2 rounded-2xl bg-white dark:bg-[#0E121E] border border-slate-200 dark:border-white/10 hover:border-purple-500/40 hover:bg-slate-50 dark:hover:bg-[#141B2E] active:scale-[0.99] transition-all flex items-center justify-center gap-1.5 text-xs font-semibold text-slate-800 dark:text-slate-200 shadow-xs"
           >
             {socialLoading === 'google' ? (
               <RefreshCw className="w-4 h-4 animate-spin text-purple-600 dark:text-purple-400" />
@@ -471,7 +472,7 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({
             type="button"
             onClick={() => handleSocialLogin('apple')}
             disabled={socialLoading !== null}
-            className="py-3 px-3 rounded-2xl bg-slate-50 dark:bg-[#0E121E] border border-slate-200 dark:border-white/10 hover:border-purple-500/40 hover:bg-slate-100 dark:hover:bg-[#141B2E] active:scale-[0.99] transition-all flex items-center justify-center gap-2 text-xs font-semibold text-slate-800 dark:text-slate-200 shadow-xs"
+            className="py-2.5 px-2 rounded-2xl bg-white dark:bg-[#0E121E] border border-slate-200 dark:border-white/10 hover:border-purple-500/40 hover:bg-slate-50 dark:hover:bg-[#141B2E] active:scale-[0.99] transition-all flex items-center justify-center gap-1.5 text-xs font-semibold text-slate-800 dark:text-slate-200 shadow-xs"
           >
             {socialLoading === 'apple' ? (
               <RefreshCw className="w-4 h-4 animate-spin text-purple-600 dark:text-purple-400" />
@@ -483,6 +484,48 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({
               </svg>
             )}
             <span className="truncate">Apple</span>
+          </button>
+
+          {/* Telegram Button */}
+          <button
+            type="button"
+            onClick={() => handleSocialLogin('telegram')}
+            disabled={socialLoading !== null}
+            className="py-2.5 px-2 rounded-2xl bg-white dark:bg-[#0E121E] border border-slate-200 dark:border-white/10 hover:border-[#229ED9]/50 hover:bg-slate-50 dark:hover:bg-[#141B2E] active:scale-[0.99] transition-all flex items-center justify-center gap-1.5 text-xs font-semibold text-slate-800 dark:text-slate-200 shadow-xs"
+          >
+            {socialLoading === 'telegram' ? (
+              <RefreshCw className="w-4 h-4 animate-spin text-[#229ED9]" />
+            ) : socialSuccess === 'telegram' ? (
+              <CheckCircle2 className="w-4 h-4 text-emerald-500 dark:text-emerald-400" />
+            ) : (
+              <img
+                src="/icons/telegram.png"
+                alt="Telegram"
+                className="w-4 h-4 shrink-0 rounded-full object-contain"
+              />
+            )}
+            <span className="truncate">Telegram</span>
+          </button>
+
+          {/* Facebook Button */}
+          <button
+            type="button"
+            onClick={() => handleSocialLogin('facebook')}
+            disabled={socialLoading !== null}
+            className="py-2.5 px-2 rounded-2xl bg-white dark:bg-[#0E121E] border border-slate-200 dark:border-white/10 hover:border-[#1877F2]/50 hover:bg-slate-50 dark:hover:bg-[#141B2E] active:scale-[0.99] transition-all flex items-center justify-center gap-1.5 text-xs font-semibold text-slate-800 dark:text-slate-200 shadow-xs"
+          >
+            {socialLoading === 'facebook' ? (
+              <RefreshCw className="w-4 h-4 animate-spin text-[#1877F2]" />
+            ) : socialSuccess === 'facebook' ? (
+              <CheckCircle2 className="w-4 h-4 text-emerald-500 dark:text-emerald-400" />
+            ) : (
+              <img
+                src="/icons/facebook.png"
+                alt="Facebook"
+                className="w-4 h-4 shrink-0 rounded-full object-contain"
+              />
+            )}
+            <span className="truncate">Facebook</span>
           </button>
         </div>
 

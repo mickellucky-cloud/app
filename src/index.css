@@ -432,8 +432,12 @@ html.light .border-\[\#1A222C\] {
 
 /* Typography on Light Surfaces */
 html.light .text-\[\#EDF1F5\],
-html.light .text-white:not([class*="bg-purple-"]):not([class*="bg-emerald-"]):not([class*="bg-rose-"]):not([class*="bg-blue-"]):not([class*="bg-indigo-"]):not([class*="bg-amber-"]):not([class*="bg-gradient-"]):not(.text-white-force),
-html.light .text-slate-100:not([class*="bg-purple-"]):not([class*="bg-emerald-"]):not([class*="bg-rose-"]) {
+html.light .text-white:not(button):not(a):not(.text-white-force):not([class*="from-purple-"]):not([class*="bg-purple-600"]):not([class*="bg-emerald-600"]):not([class*="bg-rose-600"]),
+html.light .text-slate-100:not(button):not(a):not(.text-white-force):not([class*="from-purple-"]):not([class*="bg-purple-600"]) {
+  color: #0F172A !important;
+}
+
+html.light .text-slate-900 {
   color: #0F172A !important;
 }
 
@@ -468,30 +472,27 @@ html.light .text-slate-300 {
   color: #334155 !important;
 }
 
-/* Ensure buttons, pills, badges, and gradient elements keep pure crisp white text */
+/* Ensure dark solid action buttons, primary badges, and text-white-force keep pure crisp white text in light mode */
 html.light button.bg-purple-600,
-html.light button.bg-purple-500,
+html.light button.bg-purple-600 *,
+html.light button.bg-purple-700,
+html.light button.bg-purple-700 *,
 html.light button.bg-emerald-600,
-html.light button.bg-emerald-500,
+html.light button.bg-emerald-600 *,
 html.light button.bg-rose-600,
-html.light button.bg-rose-500,
+html.light button.bg-rose-600 *,
 html.light button.bg-blue-600,
+html.light button.bg-blue-600 *,
 html.light button.bg-indigo-600,
-html.light button.bg-amber-500,
-html.light [class*="bg-purple-600"],
-html.light [class*="bg-purple-500"],
-html.light [class*="bg-emerald-600"],
-html.light [class*="bg-emerald-500"],
-html.light [class*="bg-rose-600"],
-html.light [class*="bg-rose-500"],
-html.light [class*="bg-gradient-to-"],
-html.light .text-white-force,
-html.light [role="switch"] span,
+html.light button.bg-indigo-600 *,
+html.light button[class*="from-purple-600"],
+html.light button[class*="from-purple-600"] *,
+html.light a[class*="from-purple-600"],
+html.light a[class*="from-purple-600"] *,
 html.light .btn-primary,
-html.light [class*="bg-purple-600"] span,
-html.light [class*="bg-emerald-600"] span,
-html.light [class*="bg-rose-600"] span,
-html.light [class*="bg-gradient-to-"] span {
+html.light .btn-primary *,
+html.light .text-white-force,
+html.light .text-white-force * {
   color: #FFFFFF !important;
 }
 
