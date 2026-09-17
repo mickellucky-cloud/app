@@ -22,6 +22,9 @@ interface OrderEntryFormProps {
   onOrderPlaced: (order: OpenOrder, msg: string) => void;
   onOpenDeposit: () => void;
   className?: string;
+  initialSide?: 'buy' | 'sell';
+  onSideChange?: (side: 'buy' | 'sell') => void;
+  isCompact?: boolean;
 }
 
 export const OrderEntryForm: React.FC<OrderEntryFormProps> = ({
@@ -32,8 +35,18 @@ export const OrderEntryForm: React.FC<OrderEntryFormProps> = ({
   onOrderPlaced,
   onOpenDeposit,
   className = '',
+  initialSide = 'buy',
+  onSideChange,
+  isCompact = false,
 }) => {
-  const [side, setSide] = useState<'buy' | 'sell'>('buy');
+  const [side, setSide] = useState<'buy' | 'sell'>(initialSide);
+  const [maxSlippageEnabled, setMaxSlippageEnabled] = useState(false);
+
+  useEffect(() => {
+    if (initialSide) {
+      setSide(initialSide);
+    }
+  }, [initialSide]);
   const [orderType, setOrderType] = useState<'limit' | 'market' | 'stop_limit'>('limit');
   const [priceInput, setPriceInput] = useState(pair.price.toString());
   const [triggerPriceInput, setTriggerPriceInput] = useState((pair.price * 0.98).toFixed(2));
@@ -156,17 +169,18 @@ export const OrderEntryForm: React.FC<OrderEntryFormProps> = ({
       className={`rounded-2xl bg-slate-50 dark:bg-[#090C14] border border-slate-200 dark:border-white/[0.08] p-3.5 shadow-xs dark:shadow-xl transition-all ${className}`}
     >
       {/* Side Toggle: Buy vs Sell */}
-      <div className="grid grid-cols-2 gap-2 p-1 rounded-xl bg-slate-100 dark:bg-[#06080E] border border-slate-200 dark:border-white/[0.06] mb-3">
+      <div className="grid grid-cols-2 gap-1.5 p-1 rounded-xl bg-slate-100 dark:bg-[#06080E] border border-slate-200 dark:border-white/[0.06] mb-2.5">
         <button
           type="button"
           onClick={() => {
             setSide('buy');
+            onSideChange?.('buy');
             setAmountInput('');
             setPercentage(0);
           }}
-          className={`py-2 rounded-lg font-bold text-xs transition-all flex items-center justify-center gap-1.5 ${
+          className={`py-1.5 rounded-lg font-bold text-xs transition-all flex items-center justify-center gap-1 ${
             side === 'buy'
-              ? 'bg-gradient-to-r from-emerald-500 to-teal-400 text-slate-950 font-extrabold shadow-sm'
+              ? 'bg-gradient-to-r from-emerald-500 to-teal-500 text-slate-950 font-extrabold shadow-sm'
               : 'text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
           }`}
         >
@@ -176,10 +190,11 @@ export const OrderEntryForm: React.FC<OrderEntryFormProps> = ({
           type="button"
           onClick={() => {
             setSide('sell');
+            onSideChange?.('sell');
             setAmountInput('');
             setPercentage(0);
           }}
-          className={`py-2 rounded-lg font-bold text-xs transition-all flex items-center justify-center gap-1.5 ${
+          className={`py-1.5 rounded-lg font-bold text-xs transition-all flex items-center justify-center gap-1 ${
             side === 'sell'
               ? 'bg-gradient-to-r from-rose-500 to-pink-500 text-white font-extrabold shadow-sm'
               : 'text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
@@ -190,15 +205,15 @@ export const OrderEntryForm: React.FC<OrderEntryFormProps> = ({
       </div>
 
       {/* Order Type Chips */}
-      <div className="flex items-center gap-1.5 mb-3 text-xs">
+      <div className="flex items-center gap-1 mb-2.5 text-xs overflow-x-auto no-scrollbar">
         {(['limit', 'market', 'stop_limit'] as const).map((ot) => (
           <button
             key={ot}
             type="button"
             onClick={() => setOrderType(ot)}
-            className={`px-2.5 py-1 rounded-lg capitalize font-medium text-[11px] transition-all ${
+            className={`px-2 py-0.5 rounded-md capitalize font-medium text-[10px] sm:text-[11px] whitespace-nowrap transition-all ${
               orderType === ot
-                ? 'bg-purple-100 text-purple-700 border border-purple-300 dark:bg-purple-600/35 dark:text-purple-200 dark:border-purple-500/40 shadow-xs'
+                ? 'bg-purple-100 text-purple-700 border border-purple-300 dark:bg-purple-600/35 dark:text-purple-200 dark:border-purple-500/40 shadow-xs font-bold'
                 : 'bg-slate-100 dark:bg-white/[0.03] text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white border border-transparent'
             }`}
           >
@@ -208,16 +223,16 @@ export const OrderEntryForm: React.FC<OrderEntryFormProps> = ({
       </div>
 
       {/* Available Balance Strip */}
-      <div className="flex items-center justify-between text-[11px] font-mono-num mb-2 text-slate-500 dark:text-slate-400 px-1">
-        <span>Available:</span>
-        <div className="flex items-center gap-1.5 text-slate-800 dark:text-slate-200 font-semibold">
+      <div className="flex items-center justify-between text-[11px] font-mono-num mb-2 text-slate-500 dark:text-slate-400 px-0.5">
+        <span className="text-[10px]">Available:</span>
+        <div className="flex items-center gap-1 text-slate-800 dark:text-slate-200 font-semibold text-[10px] sm:text-[11px]">
           {side === 'buy' ? (
             <>
-              <span>{availableUsdt.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} USDT</span>
+              <span>{availableUsdt.toLocaleString('en-US', { minimumFractionDigits: 1, maximumFractionDigits: 2 })} USDT</span>
               <button
                 type="button"
                 onClick={onOpenDeposit}
-                className="w-4 h-4 rounded-full bg-purple-100 dark:bg-purple-500/25 text-purple-700 dark:text-purple-300 hover:bg-purple-200 dark:hover:bg-purple-500/40 flex items-center justify-center transition-colors"
+                className="w-3.5 h-3.5 rounded-full bg-purple-100 dark:bg-purple-500/25 text-purple-700 dark:text-purple-300 hover:bg-purple-200 dark:hover:bg-purple-500/40 flex items-center justify-center transition-colors"
                 title="Deposit USDT"
               >
                 <Plus className="w-2.5 h-2.5" />
@@ -229,70 +244,70 @@ export const OrderEntryForm: React.FC<OrderEntryFormProps> = ({
         </div>
       </div>
 
-      <form onSubmit={handleSubmit} className="space-y-2.5">
+      <form onSubmit={handleSubmit} className="space-y-2">
         {/* Trigger Price (Stop Limit only) */}
         {orderType === 'stop_limit' && (
-          <div className="flex items-center justify-between px-3 py-2 rounded-xl bg-slate-100 dark:bg-[#06080E] border border-slate-200 dark:border-white/10 focus-within:border-purple-500/50">
-            <span className="text-xs text-slate-600 dark:text-slate-400 font-medium">Trigger Price</span>
-            <div className="flex items-center gap-2">
+          <div className="flex items-center justify-between px-2.5 py-1.5 rounded-xl bg-slate-100 dark:bg-[#06080E] border border-slate-200 dark:border-white/10 focus-within:border-purple-500/50">
+            <span className="text-[10px] sm:text-xs text-slate-600 dark:text-slate-400 font-medium">Trigger</span>
+            <div className="flex items-center gap-1.5">
               <input
                 type="number"
                 step="any"
                 value={triggerPriceInput}
                 onChange={(e) => setTriggerPriceInput(e.target.value)}
-                className="bg-transparent text-right font-mono-num text-xs font-bold text-slate-900 dark:text-white focus:outline-none w-28"
+                className="bg-transparent text-right font-mono-num text-xs font-bold text-slate-900 dark:text-white focus:outline-none w-20 sm:w-24"
                 placeholder="0.00"
               />
-              <span className="text-[11px] font-semibold text-slate-500 dark:text-slate-400">USDT</span>
+              <span className="text-[10px] font-semibold text-slate-500 dark:text-slate-400">USDT</span>
             </div>
           </div>
         )}
 
-        {/* Price Input with +/- stepper */}
+        {/* Price Input (Limit & Stop Limit) */}
         {orderType !== 'market' ? (
-          <div className="flex items-center justify-between px-3 py-1.5 rounded-xl bg-slate-100 dark:bg-[#06080E] border border-slate-200 dark:border-white/10 focus-within:border-purple-500/50">
-            <span className="text-xs text-slate-600 dark:text-slate-400 font-medium">Order Price</span>
+          <div className="flex items-center justify-between px-2.5 py-1.5 rounded-xl bg-slate-100 dark:bg-[#06080E] border border-slate-200 dark:border-white/10 focus-within:border-purple-500/50">
+            <span className="text-[10px] sm:text-xs text-slate-600 dark:text-slate-400 font-medium">Price</span>
             <div className="flex items-center gap-1.5">
-              <button
-                type="button"
-                onClick={() => handleStepPrice('down')}
-                className="p-1 rounded bg-slate-200 dark:bg-white/[0.06] hover:bg-slate-300 dark:hover:bg-white/10 text-slate-700 dark:text-slate-300 transition-colors"
-                title="Decrease price"
-              >
-                <Minus className="w-3 h-3" />
-              </button>
               <input
                 type="number"
                 step="any"
                 value={priceInput}
                 onChange={(e) => setPriceInput(e.target.value)}
-                className="bg-transparent text-right font-mono-num text-xs font-bold text-slate-900 dark:text-white focus:outline-none w-24"
+                className="bg-transparent text-right font-mono-num text-xs font-bold text-slate-900 dark:text-white focus:outline-none w-20 sm:w-24"
                 placeholder="0.00"
               />
-              <span className="text-[11px] font-semibold text-slate-500 dark:text-slate-400">USDT</span>
-              <button
-                type="button"
-                onClick={() => handleStepPrice('up')}
-                className="p-1 rounded bg-slate-200 dark:bg-white/[0.06] hover:bg-slate-300 dark:hover:bg-white/10 text-slate-700 dark:text-slate-300 transition-colors"
-                title="Increase price"
-              >
-                <Plus className="w-3 h-3" />
-              </button>
+              <span className="text-[10px] font-semibold text-slate-500 dark:text-slate-400">USDT</span>
+              <div className="flex flex-col gap-0.5">
+                <button
+                  type="button"
+                  onClick={() => handleStepPrice('up')}
+                  className="w-3.5 h-3 rounded bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-300 dark:hover:bg-slate-700 flex items-center justify-center text-[8px]"
+                >
+                  ▲
+                </button>
+                <button
+                  type="button"
+                  onClick={() => handleStepPrice('down')}
+                  className="w-3.5 h-3 rounded bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-300 dark:hover:bg-slate-700 flex items-center justify-center text-[8px]"
+                >
+                  ▼
+                </button>
+              </div>
             </div>
           </div>
         ) : (
-          <div className="flex items-center justify-between px-3 py-2.5 rounded-xl bg-slate-100 dark:bg-[#06080E] border border-slate-200 dark:border-white/10 text-xs">
-            <span className="text-slate-600 dark:text-slate-400">Order Price</span>
-            <span className="font-semibold text-emerald-600 dark:text-emerald-400 font-mono-num flex items-center gap-1">
-              <Sparkles className="w-3 h-3" /> Best Market Execution
+          <div className="flex items-center justify-between px-2.5 py-2 rounded-xl bg-slate-100 dark:bg-[#06080E] border border-slate-200 dark:border-white/10 text-xs">
+            <span className="text-[10px] sm:text-xs text-slate-600 dark:text-slate-400">Order Price</span>
+            <span className="font-semibold text-emerald-600 dark:text-emerald-400 font-mono-num flex items-center gap-1 text-[10px] sm:text-xs">
+              <Sparkles className="w-3 h-3" /> Best Market
             </span>
           </div>
         )}
 
         {/* Amount Input */}
-        <div className="flex items-center justify-between px-3 py-2 rounded-xl bg-slate-100 dark:bg-[#06080E] border border-slate-200 dark:border-white/10 focus-within:border-purple-500/50">
-          <span className="text-xs text-slate-600 dark:text-slate-400 font-medium">Amount</span>
-          <div className="flex items-center gap-2">
+        <div className="flex items-center justify-between px-2.5 py-1.5 rounded-xl bg-slate-100 dark:bg-[#06080E] border border-slate-200 dark:border-white/10 focus-within:border-purple-500/50">
+          <span className="text-[10px] sm:text-xs text-slate-600 dark:text-slate-400 font-medium">Amount</span>
+          <div className="flex items-center gap-1.5">
             <input
               type="number"
               step="any"
@@ -301,42 +316,74 @@ export const OrderEntryForm: React.FC<OrderEntryFormProps> = ({
                 setAmountInput(e.target.value);
                 setPercentage(0);
               }}
-              className="bg-transparent text-right font-mono-num text-xs font-bold text-slate-900 dark:text-white focus:outline-none w-28"
+              className="bg-transparent text-right font-mono-num text-xs font-bold text-slate-900 dark:text-white focus:outline-none w-20 sm:w-24"
               placeholder="0.00"
             />
-            <span className="text-[11px] font-semibold text-slate-500 dark:text-slate-400">{pair.base}</span>
+            <span className="text-[10px] font-semibold text-slate-500 dark:text-slate-400">{pair.base}</span>
           </div>
         </div>
 
-        {/* Percentage Slider */}
-        <div className="pt-1 px-1">
-          <div className="relative mb-1 flex items-center">
-            <input
-              type="range"
-              min="0"
-              max="100"
-              step="1"
-              value={percentage}
-              onChange={(e) => handlePercentageSelect(Number(e.target.value))}
-              className="w-full h-1 bg-slate-200 dark:bg-slate-800 rounded-lg appearance-none cursor-pointer accent-purple-600"
+        {/* Bybit-Style 5-Point Node Percentage Slider */}
+        <div className="pt-2 px-1 pb-1">
+          <div className="relative flex items-center h-4">
+            {/* Background Rail */}
+            <div className="absolute inset-x-0 h-1 bg-slate-200 dark:bg-[#1E2638] rounded-full" />
+            {/* Active Filled Rail */}
+            <div
+              className="absolute left-0 h-1 bg-gradient-to-r from-purple-500 to-indigo-500 rounded-full transition-all duration-150"
+              style={{ width: `${percentage}%` }}
             />
+            {/* 5 Stops (0%, 25%, 50%, 75%, 100%) */}
+            <div className="relative w-full flex justify-between items-center z-10">
+              {[0, 25, 50, 75, 100].map((step) => {
+                const isPassed = percentage >= step;
+                return (
+                  <button
+                    key={step}
+                    type="button"
+                    onClick={() => handlePercentageSelect(step)}
+                    className="group relative flex items-center justify-center p-1 -m-1 focus:outline-none"
+                    title={`${step}%`}
+                  >
+                    <span
+                      className={`w-2.5 h-2.5 rounded-full border-2 transition-all duration-150 ${
+                        isPassed
+                          ? 'border-purple-500 bg-white dark:bg-purple-400 shadow-[0_0_6px_rgba(168,85,247,0.6)]'
+                          : 'border-slate-300 dark:border-slate-700 bg-white dark:bg-[#0E121E]'
+                      }`}
+                    />
+                  </button>
+                );
+              })}
+            </div>
           </div>
-          {/* Percentage Quick Chips */}
-          <div className="grid grid-cols-4 gap-1.5">
-            {[25, 50, 75, 100].map((pct) => (
-              <button
-                key={pct}
-                type="button"
-                onClick={() => handlePercentageSelect(pct)}
-                className={`py-1 rounded-lg text-[10px] font-mono-num font-bold transition-all ${
-                  percentage === pct
-                    ? 'bg-purple-100 text-purple-700 border border-purple-300 dark:bg-purple-600/40 dark:text-purple-200 dark:border-purple-500/40'
-                    : 'bg-slate-100 dark:bg-[#101422] border border-slate-200 dark:border-white/[0.04] text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
-                }`}
-              >
-                {pct === 100 ? 'MAX' : `${pct}%`}
-              </button>
-            ))}
+
+          {/* Readouts below slider */}
+          <div className="flex items-center justify-between text-[10px] font-mono-num text-slate-500 dark:text-slate-400 mt-1">
+            <span>{percentage > 0 ? `${percentage}%` : '0%'}</span>
+            <span>
+              {side === 'buy' ? 'Max. Buy:' : 'Max. Sell:'}{' '}
+              <strong className="text-slate-700 dark:text-slate-200">
+                {side === 'buy' && numericPrice > 0
+                  ? (availableUsdt / numericPrice).toFixed(4)
+                  : availableCrypto.toFixed(4)}{' '}
+                {pair.base}
+              </strong>
+            </span>
+          </div>
+
+          {/* Institutional Max Slippage Checkbox */}
+          <div className="flex items-center justify-between mt-2 pt-1 border-t border-slate-200/50 dark:border-white/[0.04]">
+            <label className="flex items-center gap-1.5 cursor-pointer select-none">
+              <input
+                type="checkbox"
+                checked={maxSlippageEnabled}
+                onChange={(e) => setMaxSlippageEnabled(e.target.checked)}
+                className="w-3 h-3 rounded text-purple-600 accent-purple-600 cursor-pointer"
+              />
+              <span className="text-[10px] text-slate-500 dark:text-slate-400 font-medium">Max. Slippage</span>
+            </label>
+            <span className="text-[10px] font-mono-num text-purple-600 dark:text-purple-400 font-semibold">0.50%</span>
           </div>
         </div>
 

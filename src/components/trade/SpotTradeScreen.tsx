@@ -14,6 +14,10 @@ import {
   ArrowDownRight,
   Sparkles,
   Share2,
+  CandlestickChart,
+  SlidersHorizontal,
+  Maximize2,
+  Zap,
 } from 'lucide-react';
 import { TradeSkeleton } from '../skeletons/TradeSkeleton';
 
@@ -95,10 +99,27 @@ export const SpotTradeScreen: React.FC<SpotTradeScreenProps> = ({
     },
   ]);
 
+  // Mobile Bybit Dual-Mode Switcher: 'trade' (split terminal) | 'chart' (full chart + floating actions)
+  const [mobileViewMode, setMobileViewMode] = useState<'trade' | 'chart'>('trade');
+  const [activeSide, setActiveSide] = useState<'buy' | 'sell'>('buy');
+
   // Live price tick animation state
   const [lastTickDirection, setLastTickDirection] = useState<'up' | 'down' | null>(null);
   const [livePrice, setLivePrice] = useState<number>(selectedPair.price);
   const prevPriceRef = useRef<number>(selectedPair.price);
+
+  const liveAskPrice = Number((livePrice * 1.0001).toFixed(2));
+  const liveBidPrice = Number((livePrice * 0.9999).toFixed(2));
+
+  const handleActionBuy = () => {
+    setActiveSide('buy');
+    setMobileViewMode('trade');
+  };
+
+  const handleActionSell = () => {
+    setActiveSide('sell');
+    setMobileViewMode('trade');
+  };
 
   // Sync when selectedPair changes
   useEffect(() => {
@@ -309,8 +330,156 @@ export const SpotTradeScreen: React.FC<SpotTradeScreenProps> = ({
         </div>
       </section>
 
-      {/* Responsive Grid Layout for Tablet and Desktop Terminal */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-4">
+      {/* Mobile Mode Switcher: Trade (Split Terminal) vs Chart (Full Height + Floating Action Dock) */}
+      <div className="flex lg:hidden items-center justify-between gap-2 mb-3 bg-slate-100/90 dark:bg-[#0E121E]/90 backdrop-blur-md p-1 rounded-xl border border-slate-200/80 dark:border-white/10 shadow-xs">
+        <button
+          type="button"
+          onClick={() => setMobileViewMode('trade')}
+          className={`flex-1 flex items-center justify-center gap-1.5 py-2 px-3 rounded-lg text-xs font-bold transition-all ${
+            mobileViewMode === 'trade'
+              ? 'bg-white dark:bg-purple-600 text-slate-900 dark:text-white shadow-xs font-extrabold scale-[1.01]'
+              : 'text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200'
+          }`}
+        >
+          <SlidersHorizontal className="w-3.5 h-3.5" />
+          <span>Trade (Split Orderbook)</span>
+        </button>
+
+        <button
+          type="button"
+          onClick={() => setMobileViewMode('chart')}
+          className={`flex-1 flex items-center justify-center gap-1.5 py-2 px-3 rounded-lg text-xs font-bold transition-all ${
+            mobileViewMode === 'chart'
+              ? 'bg-white dark:bg-purple-600 text-slate-900 dark:text-white shadow-xs font-extrabold scale-[1.01]'
+              : 'text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200'
+          }`}
+        >
+          <CandlestickChart className="w-3.5 h-3.5" />
+          <span>Chart & Depth</span>
+        </button>
+      </div>
+
+      {/* MOBILE VIEWPORT CONTENT (lg:hidden) */}
+      <div className="block lg:hidden">
+        {mobileViewMode === 'trade' ? (
+          <div className="space-y-4">
+            {/* Bybit Split-Screen Terminal: Left 58% Order Entry, Right 42% Compact Order Book */}
+            <div className="grid grid-cols-12 gap-2">
+              <div className="col-span-7">
+                <OrderEntryForm
+                  pair={updatedPair}
+                  availableUsdt={availableUsdt}
+                  availableCrypto={availableCrypto}
+                  externalPrice={selectedBookPrice}
+                  onOrderPlaced={handleOrderPlaced}
+                  onOpenDeposit={onOpenDeposit}
+                  isCompact={true}
+                  initialSide={activeSide}
+                  onSideChange={setActiveSide}
+                />
+              </div>
+              <div className="col-span-5">
+                <OrderBookPanel
+                  pair={updatedPair}
+                  onSelectPrice={handleSelectPriceFromBook}
+                  isCompact={true}
+                />
+              </div>
+            </div>
+
+            {/* Orders Management for Mobile Viewport */}
+            <section className="mt-3">
+              <OrdersHistoryPanel
+                pair={updatedPair}
+                openOrders={openOrders}
+                historyOrders={historyOrders}
+                availableCrypto={availableCrypto}
+                availableUsdt={availableUsdt}
+                onCancelOrder={handleCancelOrder}
+                onCancelAllOrders={handleCancelAllOrders}
+              />
+            </section>
+          </div>
+        ) : (
+          <div className="space-y-4">
+            {/* Full-width mobile chart */}
+            <TradeChart
+              pair={updatedPair}
+              timeframe={timeframe}
+              onTimeframeChange={setTimeframe}
+            />
+
+            {/* Floating Bybit-Style Mobile Bottom Action Bar (in Chart View) */}
+            <div className="fixed bottom-20 inset-x-0 z-40 px-3 pointer-events-none animate-in fade-in slide-in-from-bottom-4 duration-300">
+              <div className="max-w-md mx-auto pointer-events-auto p-2 rounded-2xl bg-white/90 dark:bg-[#0B0E18]/90 backdrop-blur-xl border border-slate-200/80 dark:border-white/10 shadow-[0_12px_36px_rgba(0,0,0,0.35)] flex items-center justify-between gap-2.5">
+                {/* Buy Action Button */}
+                <button
+                  type="button"
+                  onClick={handleActionBuy}
+                  className="flex-1 py-2 px-3 rounded-xl bg-gradient-to-r from-emerald-500 to-emerald-600 hover:from-emerald-600 hover:to-emerald-700 active:scale-[0.98] text-white font-bold shadow-md shadow-emerald-500/20 flex flex-col items-center justify-center transition-all cursor-pointer"
+                >
+                  <div className="flex items-center gap-1 text-xs font-black uppercase tracking-wider">
+                    <span>Buy</span>
+                    <span className="text-[10px] opacity-80">{selectedPair.base}</span>
+                  </div>
+                  <span className="font-mono-num text-[11px] font-semibold opacity-95">
+                    ${liveAskPrice >= 1 ? liveAskPrice.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : liveAskPrice.toFixed(4)}
+                  </span>
+                </button>
+
+                {/* Center Balance Info / Quick Trade Mode Trigger */}
+                <button
+                  type="button"
+                  onClick={() => setMobileViewMode('trade')}
+                  className="px-2 py-1 flex flex-col items-center justify-center text-center hover:opacity-80 active:scale-95 transition-all cursor-pointer"
+                  title="Switch to trade terminal"
+                >
+                  <span className="text-[9px] font-medium text-slate-500 dark:text-slate-400 uppercase tracking-wider">
+                    Avail. USDT
+                  </span>
+                  <span className="font-mono-num text-xs font-extrabold text-slate-800 dark:text-slate-200">
+                    {availableUsdt.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                  </span>
+                  <span className="text-[9px] text-purple-600 dark:text-purple-400 font-semibold flex items-center gap-0.5 mt-0.5">
+                    <SlidersHorizontal className="w-2.5 h-2.5" /> Order Form
+                  </span>
+                </button>
+
+                {/* Sell Action Button */}
+                <button
+                  type="button"
+                  onClick={handleActionSell}
+                  className="flex-1 py-2 px-3 rounded-xl bg-gradient-to-r from-rose-500 to-rose-600 hover:from-rose-600 hover:to-rose-700 active:scale-[0.98] text-white font-bold shadow-md shadow-rose-500/20 flex flex-col items-center justify-center transition-all cursor-pointer"
+                >
+                  <div className="flex items-center gap-1 text-xs font-black uppercase tracking-wider">
+                    <span>Sell</span>
+                    <span className="text-[10px] opacity-80">{selectedPair.base}</span>
+                  </div>
+                  <span className="font-mono-num text-[11px] font-semibold opacity-95">
+                    ${liveBidPrice >= 1 ? liveBidPrice.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : liveBidPrice.toFixed(4)}
+                  </span>
+                </button>
+              </div>
+            </div>
+
+            {/* Orders Management below chart in mobile chart mode */}
+            <section className="mt-3">
+              <OrdersHistoryPanel
+                pair={updatedPair}
+                openOrders={openOrders}
+                historyOrders={historyOrders}
+                availableCrypto={availableCrypto}
+                availableUsdt={availableUsdt}
+                onCancelOrder={handleCancelOrder}
+                onCancelAllOrders={handleCancelAllOrders}
+              />
+            </section>
+          </div>
+        )}
+      </div>
+
+      {/* DESKTOP VIEWPORT CONTENT (hidden lg:grid) */}
+      <div className="hidden lg:grid grid-cols-12 gap-4">
         {/* Left/Main Column: Chart & History */}
         <div className="lg:col-span-7 xl:col-span-8 space-y-4">
           {/* Interactive Candlestick / Line / Depth Pro Chart */}
@@ -323,7 +492,7 @@ export const SpotTradeScreen: React.FC<SpotTradeScreenProps> = ({
           </section>
 
           {/* Orders Management on Desktop / Tablet (Open Orders, Order History) */}
-          <section className="hidden lg:block">
+          <section>
             <OrdersHistoryPanel
               pair={updatedPair}
               openOrders={openOrders}
@@ -354,19 +523,6 @@ export const SpotTradeScreen: React.FC<SpotTradeScreenProps> = ({
             onSelectPrice={handleSelectPriceFromBook}
           />
         </div>
-
-        {/* Orders Management for Mobile Viewports (Visible below on mobile) */}
-        <section className="block lg:hidden col-span-1 mt-2">
-          <OrdersHistoryPanel
-            pair={updatedPair}
-            openOrders={openOrders}
-            historyOrders={historyOrders}
-            availableCrypto={availableCrypto}
-            availableUsdt={availableUsdt}
-            onCancelOrder={handleCancelOrder}
-            onCancelAllOrders={handleCancelAllOrders}
-          />
-        </section>
       </div>
     </div>
   );
