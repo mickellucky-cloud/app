@@ -157,7 +157,7 @@ export const MobileNotificationsSheet: React.FC<MobileNotificationsSheetProps> =
     >
       {/* Semi-transparent Dimmed Backdrop (Preserves top context of header and bell icon) */}
       <div
-        className="absolute inset-0 bg-black/45 dark:bg-black/60 backdrop-blur-[2px] transition-opacity"
+        className="absolute inset-0 bg-black/45 dark:bg-black/65 backdrop-blur-md transition-opacity"
         onClick={onClose}
         aria-hidden="true"
       />
@@ -166,7 +166,7 @@ export const MobileNotificationsSheet: React.FC<MobileNotificationsSheetProps> =
       <div
         ref={sheetRef}
         id="mobile-notifications-sheet-content"
-        className="relative w-full max-w-lg mx-auto bg-white dark:bg-[#0E141B] rounded-t-3xl border-t border-x border-[#D7E0EB] dark:border-[#242E3B] shadow-[0_-16px_48px_rgba(0,0,0,0.3)] dark:shadow-[0_-20px_50px_rgba(0,0,0,0.85)] flex flex-col h-[74vh] max-h-[82vh] min-h-[58vh] overflow-hidden transition-transform duration-150 ease-out animate-in slide-in-from-bottom-full"
+        className="relative w-full max-w-lg mx-auto bg-white/90 dark:bg-[#0E141B]/90 backdrop-blur-2xl rounded-t-3xl border-t border-x border-white/60 dark:border-white/10 shadow-[0_-16px_48px_rgba(0,0,0,0.25)] dark:shadow-[0_-20px_50px_rgba(0,0,0,0.85)] flex flex-col h-[74vh] max-h-[82vh] min-h-[58vh] overflow-hidden transition-transform duration-150 ease-out animate-in slide-in-from-bottom-full"
         style={{
           transform: dragOffset > 0 ? `translateY(${dragOffset}px)` : undefined,
           transition: isDragging ? 'none' : 'transform 0.2s ease-out',
@@ -185,7 +185,7 @@ export const MobileNotificationsSheet: React.FC<MobileNotificationsSheetProps> =
 
         {/* Sheet Header */}
         <div
-          className="px-4 py-2.5 border-b border-[#D7E0EB] dark:border-[#1E2633] flex items-center justify-between shrink-0 bg-white dark:bg-[#0E141B]"
+          className="px-4 py-2.5 border-b border-[#D7E0EB]/70 dark:border-[#1E2633]/70 flex items-center justify-between shrink-0 bg-white/50 dark:bg-[#0E141B]/50 backdrop-blur-sm"
           onTouchStart={handleTouchStart}
           onTouchMove={handleTouchMove}
           onTouchEnd={handleTouchEnd}
@@ -243,7 +243,7 @@ export const MobileNotificationsSheet: React.FC<MobileNotificationsSheetProps> =
         </div>
 
         {/* Filter Navigation Tabs */}
-        <div className="px-3 py-2 flex items-center gap-1.5 border-b border-[#D7E0EB]/70 dark:border-[#1E2633]/70 bg-slate-50/50 dark:bg-[#0B0F15] shrink-0 overflow-x-auto no-scrollbar">
+        <div className="px-3 py-2 flex items-center gap-1.5 border-b border-[#D7E0EB]/70 dark:border-[#1E2633]/70 bg-slate-50/40 dark:bg-[#0B0F15]/40 shrink-0 overflow-x-auto no-scrollbar">
           {(['all', 'unread', 'trading', 'system'] as const).map((tab) => {
             const isActive = filter === tab;
             return (

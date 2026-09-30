@@ -462,7 +462,7 @@ export const PuzzleVerificationModal: React.FC<PuzzleVerificationModalProps> = (
             onPointerUp={handleVerify}
             disabled={status === 'success'}
             className="w-full h-11 appearance-none bg-slate-100 dark:bg-[#090C16] border border-slate-300 dark:border-white/10 rounded-2xl cursor-pointer outline-none transition-all px-1
-                       [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-10 [&::-webkit-slider-thumb]:h-9 [&::-webkit-slider-thumb]:rounded-xl [&::-webkit-slider-thumb]:bg-gradient-to-r [&::-webkit-slider-thumb]:from-purple-600 [&::-webkit-slider-thumb]:to-fuchsia-600 [&::-webkit-slider-thumb]:border [&::-webkit-slider-thumb]:border-white/50 [&::-webkit-slider-thumb]:shadow-[0_2px_8px_rgba(147,51,234,0.4)] [&::-webkit-slider-thumb]:cursor-grab [&::-webkit-slider-thumb]:active:cursor-grabbing"
+                       [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-10 [&::-webkit-slider-thumb]:h-9 [&::-webkit-slider-thumb]:rounded-xl [&::-webkit-slider-thumb]:bg-purple-600 [&::-webkit-slider-thumb]:border [&::-webkit-slider-thumb]:border-white/30 [&::-webkit-slider-thumb]:shadow-sm [&::-webkit-slider-thumb]:cursor-grab [&::-webkit-slider-thumb]:active:cursor-grabbing"
             aria-label="Puzzle verification slider"
           />
 

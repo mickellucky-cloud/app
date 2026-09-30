@@ -118,7 +118,7 @@ export const ForgotPasswordScreen: React.FC<ForgotPasswordScreenProps> = ({
                 }}
                 className={`flex-1 py-2 rounded-lg text-xs font-semibold transition-all ${
                   authMethod === 'email'
-                    ? 'bg-gradient-to-r from-purple-600 to-fuchsia-600 text-white shadow-md'
+                    ? 'bg-purple-600 text-white shadow-xs'
                     : 'text-slate-600 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white'
                 }`}
               >
@@ -132,7 +132,7 @@ export const ForgotPasswordScreen: React.FC<ForgotPasswordScreenProps> = ({
                 }}
                 className={`flex-1 py-2 rounded-lg text-xs font-semibold transition-all ${
                   authMethod === 'phone'
-                    ? 'bg-gradient-to-r from-purple-600 to-fuchsia-600 text-white shadow-md'
+                    ? 'bg-purple-600 text-white shadow-xs'
                     : 'text-slate-600 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white'
                 }`}
               >
@@ -190,7 +190,7 @@ export const ForgotPasswordScreen: React.FC<ForgotPasswordScreenProps> = ({
 
               <button
                 type="submit"
-                className="w-full py-3.5 rounded-2xl bg-gradient-to-r from-purple-600 via-fuchsia-600 to-amber-500 hover:opacity-95 active:scale-[0.99] font-bold text-white text-sm shadow-[0_4px_20px_rgba(168,85,247,0.35)] transition-all"
+                className="w-full py-3.5 rounded-2xl bg-purple-600 hover:bg-purple-700 active:scale-[0.99] font-semibold text-white text-sm shadow-xs transition-colors"
               >
                 Continue to Verification
               </button>
@@ -277,7 +277,7 @@ export const ForgotPasswordScreen: React.FC<ForgotPasswordScreenProps> = ({
 
                 <button
                   type="submit"
-                  className="w-full py-3.5 rounded-2xl bg-gradient-to-r from-purple-600 via-fuchsia-600 to-amber-500 hover:opacity-95 active:scale-[0.99] font-bold text-white text-sm shadow-[0_4px_20px_rgba(168,85,247,0.35)] transition-all"
+                  className="w-full py-3.5 rounded-2xl bg-purple-600 hover:bg-purple-700 active:scale-[0.99] font-semibold text-white text-sm shadow-xs transition-colors"
                 >
                   Save New Password
                 </button>

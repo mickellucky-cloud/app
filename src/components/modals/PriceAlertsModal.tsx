@@ -580,7 +580,7 @@ export const PriceAlertsModal: React.FC<PriceAlertsModalProps> = ({
                 <button
                   id="submit-create-alert-btn"
                   type="submit"
-                  className="w-full py-3 rounded-xl bg-gradient-to-r from-purple-600 via-fuchsia-600 to-purple-600 text-white font-display font-bold text-sm shadow-[0_4px_20px_rgba(168,85,247,0.35)] active:scale-98 transition-all flex items-center justify-center gap-2 mt-2"
+                  className="w-full py-3 rounded-xl bg-purple-600 hover:bg-purple-700 active:scale-98 text-white font-semibold text-sm shadow-xs border border-purple-500/30 transition-colors flex items-center justify-center gap-2 mt-2 cursor-pointer"
                 >
                   <BellRing className="w-4 h-4" />
                   <span>Set Price Alert</span>

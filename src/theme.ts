@@ -4,11 +4,13 @@
  */
 
 export const OKNEXUS_BRAND = {
-  primaryPurple: '#8B5CF6',
+  primaryPurple: '#7C3AED',
+  primaryPurpleHover: '#6D28D9',
+  purpleAccent: '#8B5CF6',
   magenta: '#EC4899',
   gold: '#F59E0B',
   cyan: '#06B6D4',
-  brandGradient: 'linear-gradient(135deg, #8B5CF6 0%, #EC4899 100%)',
+  brandGradient: 'linear-gradient(135deg, #7C3AED 0%, #A78BFA 100%)',
   accentGradient: 'linear-gradient(135deg, #F59E0B 0%, #06B6D4 100%)',
 } as const;
 
@@ -41,7 +43,7 @@ export const OKNEXUS_DARK = {
   shadow: {
     sm: '0 2px 8px rgba(0, 0, 0, 0.4)',
     md: '0 8px 24px rgba(0, 0, 0, 0.5)',
-    glow: '0 0 16px rgba(139, 92, 246, 0.3)',
+    glow: '0 0 16px rgba(124, 58, 237, 0.25)',
   },
 } as const;
 
@@ -67,7 +69,7 @@ export const OKNEXUS_LIGHT = {
   shadow: {
     sm: '0 2px 8px rgba(15, 23, 42, 0.08)',
     md: '0 8px 24px rgba(15, 23, 42, 0.12)',
-    glow: '0 0 16px rgba(139, 92, 246, 0.12)',
+    glow: '0 0 16px rgba(124, 58, 237, 0.12)',
   },
 } as const;
 

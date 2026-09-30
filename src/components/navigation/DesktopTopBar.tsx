@@ -101,7 +101,7 @@ export const DesktopTopBar: React.FC<DesktopTopBarProps> = ({
         {/* Deposit Button */}
         <button
           onClick={onOpenDeposit}
-          className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-purple-600 hover:bg-purple-500 active:scale-95 text-white font-bold text-xs shadow-[0_2px_12px_rgba(168,85,247,0.3)] transition-all"
+          className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-purple-600 hover:bg-purple-700 active:scale-95 text-white font-semibold text-xs shadow-xs border border-purple-500/40 transition-colors cursor-pointer"
         >
           <Plus className="w-3.5 h-3.5" />
           <span>Deposit</span>
@@ -112,9 +112,9 @@ export const DesktopTopBar: React.FC<DesktopTopBarProps> = ({
           <button
             id="desktop-notifications-trigger"
             onClick={toggleNotifications}
-            className={`relative p-2 rounded-xl border transition-all ${
+            className={`relative p-2 rounded-xl border transition-all cursor-pointer ${
               isNotificationsDropdownOpen
-                ? 'bg-[#8B5CF6]/15 border-[#8B5CF6] text-[#8B5CF6] shadow-xs'
+                ? 'bg-purple-500/15 border-purple-500 text-purple-600 dark:text-purple-400 shadow-xs'
                 : 'bg-slate-100 hover:bg-slate-200/80 border-slate-200 text-slate-600 hover:text-slate-900 dark:bg-[#0D111A] dark:hover:bg-[#121724] dark:border-white/[0.07] dark:text-slate-300 dark:hover:text-white'
             }`}
             title="Notifications & Alerts"
@@ -123,7 +123,7 @@ export const DesktopTopBar: React.FC<DesktopTopBarProps> = ({
           >
             <Bell className="w-4 h-4" />
             {unreadNotificationsCount > 0 && (
-              <span className="absolute -top-1 -right-1 min-w-4 h-4 px-1 rounded-full bg-purple-600 text-white font-bold text-[9px] flex items-center justify-center shadow-[0_0_8px_rgba(168,85,247,0.8)]">
+              <span className="absolute -top-1 -right-1 min-w-4 h-4 px-1 rounded-full bg-purple-600 text-white font-bold text-[9px] flex items-center justify-center shadow-xs">
                 {unreadNotificationsCount > 9 ? '9+' : unreadNotificationsCount}
               </span>
             )}
@@ -170,7 +170,7 @@ export const DesktopTopBar: React.FC<DesktopTopBarProps> = ({
           className="flex items-center gap-2 pl-1.5 pr-2 py-1 rounded-xl bg-slate-100 hover:bg-slate-200/80 border border-slate-200 dark:bg-[#0D111A] dark:hover:bg-[#121724] dark:border-white/[0.07] transition-all ml-1"
           title={`@${username} • Profile & Verification`}
         >
-          <div className="w-7 h-7 rounded-full overflow-hidden bg-gradient-to-tr from-purple-600 to-amber-400 p-[1.5px] shadow-sm flex-shrink-0">
+          <div className="w-7 h-7 rounded-full overflow-hidden bg-purple-600/20 p-[1.5px] border border-purple-500/40 shadow-xs flex-shrink-0">
             <div className="w-full h-full rounded-full bg-white dark:bg-slate-950 flex items-center justify-center overflow-hidden">
               {userAvatar ? (
                 <img src={userAvatar} alt={username} className="w-full h-full object-cover" referrerPolicy="no-referrer" />

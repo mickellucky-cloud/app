@@ -393,7 +393,7 @@ export const CustomerSupportModal: React.FC<CustomerSupportModalProps> = ({
         <header className="px-4 py-3 bg-gradient-to-r from-[#0E1222] via-[#0A0D16] to-[#120D24] border-b border-white/[0.08] flex items-center justify-between">
           <div className="flex items-center gap-3">
             <div className="relative">
-              <div className="w-10 h-10 rounded-2xl bg-gradient-to-tr from-purple-600 via-fuchsia-600 to-amber-400 p-[1.5px] shadow-lg shadow-purple-500/20">
+              <div className="w-10 h-10 rounded-2xl bg-gradient-to-tr from-purple-600 to-purple-400 p-[1.5px] shadow-sm">
                 <div className="w-full h-full rounded-[14px] bg-[#07090E] flex items-center justify-center">
                   {agentMode === 'ai' ? (
                     <Sparkles className="w-5 h-5 text-purple-400 animate-pulse" />
@@ -600,7 +600,7 @@ export const CustomerSupportModal: React.FC<CustomerSupportModalProps> = ({
                       <div
                         className={`p-3.5 rounded-2xl text-xs leading-relaxed ${
                           isUser
-                            ? 'bg-gradient-to-r from-purple-600 to-indigo-600 text-white rounded-br-none shadow-md shadow-purple-900/20'
+                            ? 'bg-purple-600 text-white rounded-br-none shadow-xs'
                             : 'bg-[#101424] border border-white/[0.08] text-slate-200 rounded-bl-none shadow-sm'
                         }`}
                       >

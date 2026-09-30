@@ -81,7 +81,7 @@ export const MobileTopBar: React.FC<MobileTopBarProps> = ({
     return (
       <header
         id="mobile-home-topbar"
-        className="flex md:hidden items-center justify-between gap-1.5 px-2.5 sm:px-3 h-14 bg-white/95 dark:bg-[#0A0E13]/95 backdrop-blur-md border-b border-slate-200/80 dark:border-white/[0.08] sticky top-0 z-30 flex-shrink-0 transition-colors"
+        className="flex md:hidden items-center justify-between gap-1.5 px-2.5 sm:px-3 h-14 bg-white/75 dark:bg-[#0A0E13]/75 backdrop-blur-xl border-b border-slate-200/60 dark:border-white/[0.08] sticky top-0 z-30 flex-shrink-0 transition-colors glass-header shadow-[0_4px_20px_-4px_rgba(0,0,0,0.06)] dark:shadow-[0_4px_24px_-4px_rgba(0,0,0,0.4)]"
       >
         {/* Profile Icon */}
         <button
@@ -577,7 +577,7 @@ export const MobileTopBar: React.FC<MobileTopBarProps> = ({
   return (
     <header
       id="mobile-other-topbar"
-      className="flex md:hidden items-center justify-between gap-2 px-2.5 sm:px-3 h-14 bg-white/95 dark:bg-[#0A0E13]/95 backdrop-blur-md border-b border-slate-200/80 dark:border-white/[0.08] sticky top-0 z-30 flex-shrink-0 transition-colors"
+      className="flex md:hidden items-center justify-between gap-2 px-2.5 sm:px-3 h-14 bg-white/75 dark:bg-[#0A0E13]/75 backdrop-blur-xl border-b border-slate-200/60 dark:border-white/[0.08] sticky top-0 z-30 flex-shrink-0 transition-colors glass-header shadow-[0_4px_20px_-4px_rgba(0,0,0,0.06)] dark:shadow-[0_4px_24px_-4px_rgba(0,0,0,0.4)]"
     >
       {/* 1. Back Icon */}
       <div className="flex items-center justify-start shrink-0">

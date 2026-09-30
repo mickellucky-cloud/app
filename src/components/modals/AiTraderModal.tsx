@@ -34,11 +34,11 @@ export const AiTraderModal: React.FC<AiTraderModalProps> = ({
         <div className="flex items-center justify-between pb-3 border-b border-slate-200 dark:border-white/[0.06] mb-4">
           <div className="flex items-center gap-2">
             <div className="w-8 h-8 rounded-xl bg-purple-100 dark:bg-purple-600/30 border border-purple-200 dark:border-purple-500/40 flex items-center justify-center text-purple-700 dark:text-purple-300">
-              <Cpu className="w-4 h-4 text-purple-600 dark:text-fuchsia-400" />
+              <Cpu className="w-4 h-4 text-purple-600 dark:text-purple-400" />
             </div>
             <div>
               <h3 className="font-bold text-base text-slate-900 dark:text-white">AI Auto Trader 2.0</h3>
-              <span className="text-[10px] text-purple-600 dark:text-fuchsia-400 font-semibold">
+              <span className="text-[10px] text-purple-600 dark:text-purple-400 font-semibold">
                 Autonomous Quantum Trading Mesh
               </span>
             </div>
@@ -67,7 +67,7 @@ export const AiTraderModal: React.FC<AiTraderModalProps> = ({
                 <div className="text-[10px] text-slate-500 dark:text-slate-400">Win Rate</div>
               </div>
               <div>
-                <div className="font-mono-num text-sm font-bold text-purple-700 dark:text-fuchsia-300">+48.2%</div>
+                <div className="font-mono-num text-sm font-bold text-purple-700 dark:text-purple-300">+48.2%</div>
                 <div className="text-[10px] text-slate-500 dark:text-slate-400">30D Avg ROI</div>
               </div>
               <div>
@@ -148,7 +148,7 @@ export const AiTraderModal: React.FC<AiTraderModalProps> = ({
 
             <button
               onClick={handleStartBot}
-              className="w-full py-3 rounded-xl bg-gradient-to-r from-purple-600 to-fuchsia-600 text-white font-display font-bold text-sm shadow-[0_4px_20px_rgba(168,85,247,0.35)] active:scale-98 transition-all flex items-center justify-center gap-2"
+              className="w-full py-3 rounded-xl bg-purple-600 hover:bg-purple-700 active:scale-98 text-white font-semibold text-sm shadow-xs border border-purple-500/30 transition-colors flex items-center justify-center gap-2 cursor-pointer"
             >
               <Play className="w-4 h-4 fill-white" />
               Activate AI Trading Bot

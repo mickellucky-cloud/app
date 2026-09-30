@@ -168,7 +168,7 @@ export const MarketsScreen: React.FC<MarketsScreenProps> = ({
           >
             {tab}
             {activeCategory === tab && (
-              <span className="absolute bottom-[-9px] left-0 right-0 h-[2.5px] bg-gradient-to-r from-purple-500 to-fuchsia-400 rounded-full" />
+              <span className="absolute bottom-[-9px] left-0 right-0 h-[2px] bg-purple-600 rounded-full" />
             )}
           </button>
         ))}

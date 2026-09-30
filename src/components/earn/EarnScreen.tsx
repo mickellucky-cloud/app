@@ -301,7 +301,7 @@ export const EarnScreen: React.FC<EarnScreenProps> = ({
 
                 <button
                   type="submit"
-                  className="w-full py-3 rounded-xl bg-gradient-to-r from-purple-600 to-fuchsia-600 text-white font-display font-bold text-sm shadow-[0_4px_20px_rgba(168,85,247,0.35)] active:scale-98 transition-all"
+                  className="w-full py-3 rounded-xl bg-purple-600 hover:bg-purple-700 active:scale-98 text-white font-semibold text-sm shadow-xs border border-purple-500/30 transition-colors cursor-pointer"
                 >
                   Confirm Subscription
                 </button>

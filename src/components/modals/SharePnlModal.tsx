@@ -177,7 +177,7 @@ export const SharePnlModal: React.FC<SharePnlModalProps> = ({
 
             <button
               onClick={handleDownload}
-              className="flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 active:scale-95 text-xs font-bold text-white transition-all shadow-[0_4px_16px_rgba(139,92,246,0.35)]"
+              className="flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl bg-purple-600 hover:bg-purple-700 active:scale-95 text-xs font-semibold text-white transition-colors shadow-xs"
             >
               {downloaded ? (
                 <>

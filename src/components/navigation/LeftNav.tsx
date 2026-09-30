@@ -318,7 +318,7 @@ export const LeftNav: React.FC<LeftNavProps> = ({
 
                   {/* Active bar indicator on the left */}
                   {isActive && (
-                    <div className="absolute left-0 top-2 bottom-2 w-1 rounded-r-full bg-purple-600 dark:bg-purple-400 shadow-[0_0_8px_rgba(168,85,247,0.5)]" />
+                    <div className="absolute left-0 top-2 bottom-2 w-1 rounded-r-full bg-purple-600 dark:bg-purple-500 shadow-xs" />
                   )}
                 </button>
               );
@@ -333,7 +333,7 @@ export const LeftNav: React.FC<LeftNavProps> = ({
         {!isCollapsed ? (
           <button
             onClick={onOpenDeposit}
-            className="w-full py-2 px-3 rounded-xl bg-gradient-to-r from-purple-600 to-fuchsia-600 hover:brightness-110 active:scale-98 text-white text-xs font-bold shadow-[0_4px_16px_rgba(168,85,247,0.3)] transition-all flex items-center justify-center gap-2"
+            className="w-full py-2 px-3 rounded-xl bg-purple-600 hover:bg-purple-700 active:scale-98 text-white text-xs font-semibold shadow-xs border border-purple-500/40 transition-colors flex items-center justify-center gap-2 cursor-pointer"
           >
             <PlusSquare className="w-3.5 h-3.5" />
             <span>Deposit Crypto</span>
@@ -342,7 +342,7 @@ export const LeftNav: React.FC<LeftNavProps> = ({
           <button
             onClick={onOpenDeposit}
             title="Deposit Crypto"
-            className="w-full py-2 rounded-xl bg-purple-600 hover:bg-purple-500 text-white flex items-center justify-center"
+            className="w-full py-2 rounded-xl bg-purple-600 hover:bg-purple-700 text-white flex items-center justify-center cursor-pointer shadow-xs"
           >
             <PlusSquare className="w-4 h-4" />
           </button>
@@ -354,7 +354,7 @@ export const LeftNav: React.FC<LeftNavProps> = ({
             <button
               id="left-nav-scan-pay-btn"
               onClick={onOpenScanToPay}
-              className="w-full py-2 px-3 rounded-xl bg-purple-500/10 hover:bg-purple-500/20 active:scale-98 text-purple-700 dark:text-purple-300 text-xs font-bold border border-purple-500/30 transition-all flex items-center justify-center gap-2"
+              className="w-full py-2 px-3 rounded-xl bg-purple-500/10 hover:bg-purple-500/15 active:scale-98 text-purple-700 dark:text-purple-300 text-xs font-semibold border border-purple-500/25 transition-all flex items-center justify-center gap-2 cursor-pointer"
             >
               <ScanLine className="w-3.5 h-3.5 text-purple-600 dark:text-purple-400" />
               <span>Scan to Pay</span>
@@ -408,7 +408,7 @@ export const LeftNav: React.FC<LeftNavProps> = ({
           }`}
           title={isCollapsed ? `@${username} • Settings` : undefined}
         >
-          <div className="w-8 h-8 rounded-full overflow-hidden bg-gradient-to-tr from-purple-600 to-amber-400 p-[1.5px] shadow-sm flex-shrink-0">
+          <div className="w-8 h-8 rounded-full overflow-hidden bg-purple-600/20 p-[1.5px] border border-purple-500/40 shadow-xs flex-shrink-0">
             <div className="w-full h-full rounded-full bg-white dark:bg-slate-950 flex items-center justify-center overflow-hidden">
               {userAvatar ? (
                 <img src={userAvatar} alt={username} className="w-full h-full object-cover" referrerPolicy="no-referrer" />

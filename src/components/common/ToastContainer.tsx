@@ -129,7 +129,7 @@ const ToastCard: React.FC<ToastCardProps> = ({
                   onTradePair(toast.symbol!);
                   onDismiss(toast.id);
                 }}
-                className="flex items-center gap-1 px-2.5 py-1 rounded-lg bg-gradient-to-r from-purple-600 to-fuchsia-600 hover:from-purple-500 hover:to-fuchsia-500 text-white text-[10px] font-bold shadow-sm active:scale-95 transition-all"
+                className="flex items-center gap-1 px-2.5 py-1 rounded-lg bg-purple-600 hover:bg-purple-700 text-white text-[10px] font-semibold shadow-2xs border border-purple-500/30 active:scale-95 transition-colors cursor-pointer"
               >
                 <span>Trade {toast.symbol}</span>
                 <ArrowUpRight className="w-3 h-3" />
@@ -165,7 +165,7 @@ const ToastCard: React.FC<ToastCardProps> = ({
       {/* Progress countdown bar */}
       <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-white/[0.06]">
         <div
-          className="h-full bg-gradient-to-r from-purple-500 to-fuchsia-500 transition-all ease-linear"
+          className="h-full bg-purple-600 transition-all ease-linear"
           style={{ width: `${progress}%` }}
         />
       </div>

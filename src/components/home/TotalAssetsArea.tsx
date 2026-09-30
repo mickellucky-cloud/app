@@ -151,17 +151,15 @@ export const TotalAssetsArea: React.FC<TotalAssetsAreaProps> = ({
 
   return (
     <div id="total-assets-container" className={`relative select-none ${className}`}>
-      {/* Outer Border Glow Wrapper */}
-      <div className="relative rounded-3xl p-[1px] bg-gradient-to-br from-purple-500/30 via-indigo-500/15 to-emerald-500/20 dark:from-purple-500/30 dark:via-white/[0.08] dark:to-emerald-500/20 shadow-[0_8px_30px_rgba(139,92,246,0.08)] dark:shadow-[0_12px_40px_rgba(0,0,0,0.6)] transition-all">
+      {/* Outer Border Wrapper - Clean FinTech Precision */}
+      <div className="relative rounded-3xl p-[1px] bg-slate-200/90 dark:bg-white/[0.08] shadow-[0_4px_24px_rgba(15,23,42,0.06)] dark:shadow-[0_12px_36px_rgba(0,0,0,0.55)] transition-all">
         {/* Main Card Canvas */}
         <div
           id="total-assets-card"
-          className="relative overflow-hidden rounded-[23px] bg-gradient-to-br from-white via-[#F9FAFC] to-[#F1F5F9] dark:from-[#10141E] dark:via-[#0B0E17] dark:to-[#07090F] p-4 sm:p-5.5 text-slate-900 dark:text-white transition-colors"
+          className="relative overflow-hidden rounded-[23px] bg-gradient-to-b from-white to-slate-50/70 dark:from-[#0E141B] dark:to-[#0A0E14] p-4 sm:p-5.5 text-slate-900 dark:text-white transition-colors"
         >
-          {/* Animated Atmospheric Gradient Orbs */}
-          <div className="absolute -top-16 -right-16 w-52 h-52 rounded-full bg-purple-500/15 dark:bg-purple-600/20 blur-3xl pointer-events-none animate-pulse" style={{ animationDuration: '6s' }} />
-          <div className="absolute -bottom-16 -left-16 w-48 h-48 rounded-full bg-emerald-500/10 dark:bg-cyan-500/15 blur-3xl pointer-events-none" />
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(139,92,246,0.06),transparent_50%)] pointer-events-none" />
+          {/* Subtle Ambient Brand Top-Right Specular Sheen */}
+          <div className="absolute top-0 right-0 w-64 h-32 bg-purple-500/[0.04] dark:bg-purple-500/[0.08] blur-2xl pointer-events-none" />
 
           {/* Top Bar: Title, Live Status, Currency Switcher, and Privacy Eye */}
           <div className="relative z-10 flex flex-wrap items-center justify-between gap-2.5 mb-3.5">
@@ -395,29 +393,28 @@ export const TotalAssetsArea: React.FC<TotalAssetsAreaProps> = ({
             <motion.button
               id="action-deposit-btn"
               onClick={onOpenDeposit}
-              whileHover={{ y: -2, scale: 1.02 }}
-              whileTap={{ scale: 0.96 }}
-              className="relative overflow-hidden flex flex-col items-center justify-center py-2.5 px-1 rounded-2xl bg-gradient-to-b from-purple-600 via-purple-600 to-indigo-700 text-white shadow-[0_4px_16px_rgba(139,92,246,0.35)] hover:shadow-[0_6px_22px_rgba(139,92,246,0.45)] border border-purple-400/30 transition-all group"
+              whileHover={{ y: -1.5, scale: 1.01 }}
+              whileTap={{ scale: 0.97 }}
+              className="relative overflow-hidden flex flex-col items-center justify-center py-2.5 px-1 rounded-2xl bg-purple-600 hover:bg-purple-700 active:bg-purple-800 text-white shadow-xs border border-purple-500/40 transition-colors group cursor-pointer"
             >
-              <div className="absolute inset-0 bg-white/15 opacity-0 group-hover:opacity-100 transition-opacity" />
-              <div className="w-8 h-8 rounded-xl bg-white/20 flex items-center justify-center mb-1 group-hover:scale-110 transition-transform">
+              <div className="w-8 h-8 rounded-xl bg-white/15 flex items-center justify-center mb-1 group-hover:scale-105 transition-transform">
                 <PlusSquare className="w-4 h-4 text-white" />
               </div>
-              <span className="text-[11px] sm:text-xs font-bold tracking-wide">Deposit</span>
+              <span className="text-[11px] sm:text-xs font-semibold tracking-wide">Deposit</span>
             </motion.button>
 
             {/* Action 2: Withdraw */}
             <motion.button
               id="action-withdraw-btn"
               onClick={onOpenWithdraw}
-              whileHover={{ y: -2, scale: 1.02 }}
-              whileTap={{ scale: 0.96 }}
-              className="flex flex-col items-center justify-center py-2.5 px-1 rounded-2xl bg-white hover:bg-slate-50 dark:bg-[#141A26] dark:hover:bg-[#1A2232] border border-slate-200 dark:border-white/[0.08] hover:border-purple-300 dark:hover:border-purple-500/30 transition-all group shadow-xs"
+              whileHover={{ y: -1.5, scale: 1.01 }}
+              whileTap={{ scale: 0.97 }}
+              className="flex flex-col items-center justify-center py-2.5 px-1 rounded-2xl bg-slate-100/80 hover:bg-slate-200/80 dark:bg-white/[0.04] dark:hover:bg-white/[0.08] border border-slate-200/80 dark:border-white/[0.08] hover:border-purple-500/30 dark:hover:border-purple-500/30 transition-all group shadow-2xs cursor-pointer"
             >
-              <div className="w-8 h-8 rounded-xl bg-purple-500/10 dark:bg-purple-500/15 text-purple-600 dark:text-purple-400 flex items-center justify-center mb-1 group-hover:scale-110 transition-transform">
+              <div className="w-8 h-8 rounded-xl bg-purple-500/10 dark:bg-purple-500/15 text-purple-600 dark:text-purple-400 flex items-center justify-center mb-1 group-hover:scale-105 transition-transform">
                 <ArrowUpRight className="w-4 h-4" />
               </div>
-              <span className="text-[11px] sm:text-xs font-bold text-slate-800 dark:text-slate-200">
+              <span className="text-[11px] sm:text-xs font-semibold text-slate-800 dark:text-slate-200">
                 Withdraw
               </span>
             </motion.button>
@@ -426,14 +423,14 @@ export const TotalAssetsArea: React.FC<TotalAssetsAreaProps> = ({
             <motion.button
               id="action-send-btn"
               onClick={onOpenSend}
-              whileHover={{ y: -2, scale: 1.02 }}
-              whileTap={{ scale: 0.96 }}
-              className="flex flex-col items-center justify-center py-2.5 px-1 rounded-2xl bg-white hover:bg-slate-50 dark:bg-[#141A26] dark:hover:bg-[#1A2232] border border-slate-200 dark:border-white/[0.08] hover:border-purple-300 dark:hover:border-purple-500/30 transition-all group shadow-xs"
+              whileHover={{ y: -1.5, scale: 1.01 }}
+              whileTap={{ scale: 0.97 }}
+              className="flex flex-col items-center justify-center py-2.5 px-1 rounded-2xl bg-slate-100/80 hover:bg-slate-200/80 dark:bg-white/[0.04] dark:hover:bg-white/[0.08] border border-slate-200/80 dark:border-white/[0.08] hover:border-purple-500/30 dark:hover:border-purple-500/30 transition-all group shadow-2xs cursor-pointer"
             >
-              <div className="w-8 h-8 rounded-xl bg-purple-500/10 dark:bg-purple-500/15 text-purple-600 dark:text-purple-400 flex items-center justify-center mb-1 group-hover:scale-110 transition-transform">
+              <div className="w-8 h-8 rounded-xl bg-purple-500/10 dark:bg-purple-500/15 text-purple-600 dark:text-purple-400 flex items-center justify-center mb-1 group-hover:scale-105 transition-transform">
                 <Send className="w-4 h-4" />
               </div>
-              <span className="text-[11px] sm:text-xs font-bold text-slate-800 dark:text-slate-200">
+              <span className="text-[11px] sm:text-xs font-semibold text-slate-800 dark:text-slate-200">
                 Send
               </span>
             </motion.button>
@@ -442,14 +439,14 @@ export const TotalAssetsArea: React.FC<TotalAssetsAreaProps> = ({
             <motion.button
               id="action-convert-btn"
               onClick={onOpenConvert}
-              whileHover={{ y: -2, scale: 1.02 }}
-              whileTap={{ scale: 0.96 }}
-              className="flex flex-col items-center justify-center py-2.5 px-1 rounded-2xl bg-white hover:bg-slate-50 dark:bg-[#141A26] dark:hover:bg-[#1A2232] border border-slate-200 dark:border-white/[0.08] hover:border-purple-300 dark:hover:border-purple-500/30 transition-all group shadow-xs"
+              whileHover={{ y: -1.5, scale: 1.01 }}
+              whileTap={{ scale: 0.97 }}
+              className="flex flex-col items-center justify-center py-2.5 px-1 rounded-2xl bg-slate-100/80 hover:bg-slate-200/80 dark:bg-white/[0.04] dark:hover:bg-white/[0.08] border border-slate-200/80 dark:border-white/[0.08] hover:border-purple-500/30 dark:hover:border-purple-500/30 transition-all group shadow-2xs cursor-pointer"
             >
               <div className="w-8 h-8 rounded-xl bg-purple-500/10 dark:bg-purple-500/15 text-purple-600 dark:text-purple-400 flex items-center justify-center mb-1 group-hover:rotate-180 transition-transform duration-300">
                 <Repeat className="w-4 h-4" />
               </div>
-              <span className="text-[11px] sm:text-xs font-bold text-slate-800 dark:text-slate-200">
+              <span className="text-[11px] sm:text-xs font-semibold text-slate-800 dark:text-slate-200">
                 Convert
               </span>
             </motion.button>

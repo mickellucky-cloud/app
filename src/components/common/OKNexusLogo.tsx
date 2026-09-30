@@ -55,7 +55,7 @@ export const OKNexusBadge3D: React.FC<{ size?: number; className?: string }> = (
 }) => {
   return (
     <div
-      className={`oknexus-3d-badge relative flex items-center justify-center rounded-2xl bg-gradient-to-br from-purple-100 via-fuchsia-50 to-indigo-100 dark:from-[#24133A]/90 dark:via-[#161427]/95 dark:to-[#0C0F17] border border-purple-300/80 dark:border-purple-500/35 shadow-[0_4px_16px_rgba(168,85,247,0.18)] dark:shadow-[0_8px_24px_rgba(168,85,247,0.25)] ${className}`}
+      className={`oknexus-3d-badge relative flex items-center justify-center rounded-2xl bg-gradient-to-br from-purple-100 via-purple-50 to-indigo-100 dark:from-[#211335]/90 dark:via-[#161427]/95 dark:to-[#0C0F17] border border-purple-300/80 dark:border-purple-500/35 shadow-[0_4px_16px_rgba(124,58,237,0.18)] dark:shadow-[0_8px_24px_rgba(124,58,237,0.25)] ${className}`}
       style={{ width: size, height: size }}
     >
       <div className="absolute inset-0 rounded-2xl bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-purple-500/15 dark:from-purple-500/20 via-transparent to-transparent pointer-events-none" />

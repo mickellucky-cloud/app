@@ -148,7 +148,7 @@ export const CryptoNewsSection: React.FC<CryptoNewsSectionProps> = ({
       {/* Section Header */}
       <div className="flex items-center justify-between mb-2.5">
         <div className="flex items-center gap-2">
-          <div className="w-6 h-6 rounded-lg bg-gradient-to-tr from-purple-600 to-fuchsia-500 flex items-center justify-center text-white shadow-[0_0_10px_rgba(168,85,247,0.3)]">
+          <div className="w-6 h-6 rounded-lg bg-purple-600 flex items-center justify-center text-white shadow-xs">
             <Newspaper className="w-3.5 h-3.5" />
           </div>
           <div>
@@ -178,7 +178,7 @@ export const CryptoNewsSection: React.FC<CryptoNewsSectionProps> = ({
       </div>
 
       {/* Sub-header Banner: Favorite Assets Context & Real-time Indicator */}
-      <div className="p-3 mb-3 rounded-2xl bg-gradient-to-r from-purple-50 via-indigo-50/50 to-fuchsia-50 dark:from-[#121028] dark:via-[#0D1527] dark:to-[#120F24] border border-purple-200/80 dark:border-purple-500/20 shadow-xs">
+      <div className="p-3 mb-3 rounded-2xl bg-slate-50 dark:bg-[#0E141B] border border-slate-200/90 dark:border-white/[0.08] shadow-xs">
         <div className="flex items-center justify-between text-xs mb-2">
           <div className="flex items-center gap-1.5 text-slate-700 dark:text-slate-300">
             <Star className="w-3.5 h-3.5 text-amber-500 fill-amber-500" />
@@ -195,13 +195,13 @@ export const CryptoNewsSection: React.FC<CryptoNewsSectionProps> = ({
         <div className="flex items-center gap-1.5 overflow-x-auto scrollbar-none pb-1 pt-0.5">
           <button
             onClick={() => handleFilterClick('ALL')}
-            className={`px-2.5 py-1 rounded-full text-xs font-semibold whitespace-nowrap transition-all flex items-center gap-1 ${
+            className={`px-2.5 py-1 rounded-full text-xs font-semibold whitespace-nowrap transition-all flex items-center gap-1 cursor-pointer ${
               selectedFilterSymbol === 'ALL'
-                ? 'bg-purple-600 text-white shadow-[0_0_10px_rgba(168,85,247,0.3)]'
+                ? 'bg-purple-600 text-white shadow-xs'
                 : 'bg-white text-slate-700 hover:bg-slate-100 hover:text-slate-900 border border-slate-200 shadow-2xs dark:bg-slate-800/70 dark:text-slate-300 dark:hover:bg-slate-700/70 dark:hover:text-white dark:border-white/5'
             }`}
           >
-            <Sparkles className="w-3 h-3 text-fuchsia-400 dark:text-fuchsia-300" />
+            <Sparkles className="w-3 h-3 text-purple-300" />
             All ({favoriteSymbols.length})
           </button>
 
@@ -209,9 +209,9 @@ export const CryptoNewsSection: React.FC<CryptoNewsSectionProps> = ({
             <button
               key={symbol}
               onClick={() => handleFilterClick(symbol)}
-              className={`px-2.5 py-1 rounded-full text-xs font-semibold whitespace-nowrap transition-all flex items-center gap-1.5 ${
+              className={`px-2.5 py-1 rounded-full text-xs font-semibold whitespace-nowrap transition-all flex items-center gap-1.5 cursor-pointer ${
                 selectedFilterSymbol === symbol
-                  ? 'bg-purple-600 text-white shadow-[0_0_10px_rgba(168,85,247,0.3)]'
+                  ? 'bg-purple-600 text-white shadow-xs'
                   : 'bg-white text-slate-700 hover:bg-slate-100 hover:text-slate-900 border border-slate-200 shadow-2xs dark:bg-slate-800/70 dark:text-slate-300 dark:hover:bg-slate-700/70 dark:hover:text-white dark:border-white/5'
               }`}
             >
@@ -366,7 +366,7 @@ export const CryptoNewsSection: React.FC<CryptoNewsSectionProps> = ({
                         {/* Trade Asset Quick Action */}
                         <button
                           onClick={(e) => handleTradeCoin(item.coinSymbol, e)}
-                          className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-gradient-to-r from-purple-600 to-fuchsia-600 hover:from-purple-500 hover:to-fuchsia-500 text-white text-xs font-bold active:scale-95 transition-all shadow-[0_0_12px_rgba(168,85,247,0.3)]"
+                          className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-purple-600 hover:bg-purple-700 active:scale-95 text-white text-xs font-semibold shadow-xs border border-purple-500/30 transition-colors cursor-pointer"
                         >
                           <span>Trade {item.coinSymbol}</span>
                           <ArrowUpRight className="w-3.5 h-3.5" />

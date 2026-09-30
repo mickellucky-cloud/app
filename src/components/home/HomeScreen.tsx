@@ -201,112 +201,112 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
             />
           </section>
 
-          {/* Clean Modern Quick Actions Grid (4-col Mobile / 8-col Desktop) */}
+          {/* Clean Institutional Service Suite (8 Key Financial Services) */}
           <section id="home-quick-actions" className="mb-3">
             <div className="grid grid-cols-4 sm:grid-cols-8 gap-2.5 sm:gap-3 py-1">
-              {/* Action 1: Deposit */}
-              <button
-                id="quick-action-deposit"
-                onClick={onOpenDeposit}
-                className="flex flex-col items-center justify-center p-2 rounded-2xl hover:bg-slate-50 dark:hover:bg-white/[0.04] active:scale-95 transition-all text-center group"
-              >
-                <div className="w-12 h-12 rounded-2xl bg-purple-100 dark:bg-purple-950/60 border border-purple-200/80 dark:border-purple-500/30 text-purple-600 dark:text-purple-300 flex items-center justify-center group-hover:scale-105 group-hover:bg-purple-200 dark:group-hover:bg-purple-900/60 transition-transform shadow-xs">
-                  <PlusSquare className="w-5 h-5" />
-                </div>
-                <span className="text-xs font-semibold text-slate-800 dark:text-slate-200 mt-1.5">Deposit</span>
-              </button>
-
-              {/* Action 2: Trade */}
+              {/* Service 1: Spot */}
               <button
                 id="quick-action-trade"
                 onClick={onNavigateTrade}
-                className="flex flex-col items-center justify-center p-2 rounded-2xl hover:bg-slate-50 dark:hover:bg-white/[0.04] active:scale-95 transition-all text-center group"
+                className="flex flex-col items-center justify-center p-2 rounded-2xl hover:bg-slate-100/60 dark:hover:bg-white/[0.04] active:scale-95 transition-all text-center group cursor-pointer"
               >
-                <div className="w-12 h-12 rounded-2xl bg-blue-100 dark:bg-blue-950/60 border border-blue-200/80 dark:border-blue-500/30 text-blue-600 dark:text-blue-300 flex items-center justify-center group-hover:scale-105 group-hover:bg-blue-200 dark:group-hover:bg-blue-900/60 transition-transform shadow-xs">
+                <div className="w-12 h-12 rounded-2xl bg-slate-100 dark:bg-white/[0.04] border border-slate-200/80 dark:border-white/[0.08] text-purple-600 dark:text-purple-400 flex items-center justify-center group-hover:scale-105 group-hover:border-purple-500/30 transition-all shadow-2xs">
                   <CandlestickChart className="w-5 h-5" />
                 </div>
                 <span className="text-xs font-semibold text-slate-800 dark:text-slate-200 mt-1.5">Spot</span>
               </button>
 
-              {/* Action 3: P2P */}
+              {/* Service 2: Markets */}
+              <button
+                id="quick-action-markets"
+                onClick={onNavigateMarkets}
+                className="flex flex-col items-center justify-center p-2 rounded-2xl hover:bg-slate-100/60 dark:hover:bg-white/[0.04] active:scale-95 transition-all text-center group cursor-pointer"
+              >
+                <div className="w-12 h-12 rounded-2xl bg-slate-100 dark:bg-white/[0.04] border border-slate-200/80 dark:border-white/[0.08] text-blue-600 dark:text-blue-400 flex items-center justify-center group-hover:scale-105 group-hover:border-blue-500/30 transition-all shadow-2xs">
+                  <BarChart2 className="w-5 h-5" />
+                </div>
+                <span className="text-xs font-semibold text-slate-800 dark:text-slate-200 mt-1.5">Markets</span>
+              </button>
+
+              {/* Service 3: P2P */}
               <button
                 id="quick-action-p2p"
                 onClick={onNavigateP2P}
-                className="relative flex flex-col items-center justify-center p-2 rounded-2xl hover:bg-slate-50 dark:hover:bg-white/[0.04] active:scale-95 transition-all text-center group"
+                className="relative flex flex-col items-center justify-center p-2 rounded-2xl hover:bg-slate-100/60 dark:hover:bg-white/[0.04] active:scale-95 transition-all text-center group cursor-pointer"
               >
-                <span className="absolute top-1 right-2 px-1 py-0.2 rounded bg-emerald-500 text-white text-[9px] font-extrabold uppercase shadow-2xs">
+                <span className="absolute top-1 right-2 px-1.5 py-0.2 rounded-full bg-emerald-500/15 border border-emerald-500/30 text-emerald-600 dark:text-emerald-400 text-[9px] font-bold uppercase">
                   0%
                 </span>
-                <div className="w-12 h-12 rounded-2xl bg-emerald-100 dark:bg-emerald-950/60 border border-emerald-200/80 dark:border-emerald-500/30 text-emerald-600 dark:text-emerald-300 flex items-center justify-center group-hover:scale-105 group-hover:bg-emerald-200 dark:group-hover:bg-emerald-900/60 transition-transform shadow-xs">
-                  <AnimatedP2PIcon size={22} className="text-emerald-600 dark:text-emerald-300" />
+                <div className="w-12 h-12 rounded-2xl bg-slate-100 dark:bg-white/[0.04] border border-slate-200/80 dark:border-white/[0.08] text-emerald-600 dark:text-emerald-400 flex items-center justify-center group-hover:scale-105 group-hover:border-emerald-500/30 transition-all shadow-2xs">
+                  <AnimatedP2PIcon size={22} className="text-emerald-600 dark:text-emerald-400" />
                 </div>
                 <span className="text-xs font-semibold text-slate-800 dark:text-slate-200 mt-1.5">P2P</span>
               </button>
 
-              {/* Action 4: Earn */}
+              {/* Service 4: Earn */}
               <button
                 id="quick-action-earn"
                 onClick={onNavigateEarn}
-                className="relative flex flex-col items-center justify-center p-2 rounded-2xl hover:bg-slate-50 dark:hover:bg-white/[0.04] active:scale-95 transition-all text-center group"
+                className="relative flex flex-col items-center justify-center p-2 rounded-2xl hover:bg-slate-100/60 dark:hover:bg-white/[0.04] active:scale-95 transition-all text-center group cursor-pointer"
               >
-                <span className="absolute top-1 right-1 px-1 py-0.2 rounded bg-amber-500 text-white text-[9px] font-extrabold shadow-2xs">
+                <span className="absolute top-1 right-1 px-1.5 py-0.2 rounded-full bg-amber-500/15 border border-amber-500/30 text-amber-600 dark:text-amber-400 text-[9px] font-bold">
                   18%
                 </span>
-                <div className="w-12 h-12 rounded-2xl bg-amber-100 dark:bg-amber-950/60 border border-amber-200/80 dark:border-amber-500/30 text-amber-600 dark:text-amber-300 flex items-center justify-center group-hover:scale-105 group-hover:bg-amber-200 dark:group-hover:bg-amber-900/60 transition-transform shadow-xs">
+                <div className="w-12 h-12 rounded-2xl bg-slate-100 dark:bg-white/[0.04] border border-slate-200/80 dark:border-white/[0.08] text-amber-600 dark:text-amber-400 flex items-center justify-center group-hover:scale-105 group-hover:border-amber-500/30 transition-all shadow-2xs">
                   <Coins className="w-5 h-5" />
                 </div>
                 <span className="text-xs font-semibold text-slate-800 dark:text-slate-200 mt-1.5">Earn</span>
               </button>
 
-              {/* Action 5: Convert */}
-              <button
-                id="quick-action-convert"
-                onClick={onOpenConvert}
-                className="flex flex-col items-center justify-center p-2 rounded-2xl hover:bg-slate-50 dark:hover:bg-white/[0.04] active:scale-95 transition-all text-center group"
-              >
-                <div className="w-12 h-12 rounded-2xl bg-indigo-100 dark:bg-indigo-950/60 border border-indigo-200/80 dark:border-indigo-500/30 text-indigo-600 dark:text-indigo-300 flex items-center justify-center group-hover:scale-105 group-hover:bg-indigo-200 dark:group-hover:bg-indigo-900/60 transition-transform shadow-xs">
-                  <Repeat className="w-5 h-5" />
-                </div>
-                <span className="text-xs font-semibold text-slate-800 dark:text-slate-200 mt-1.5">Convert</span>
-              </button>
-
-              {/* Action 6: AI Bot */}
+              {/* Service 5: AI Bot */}
               <button
                 id="quick-action-ai-bot"
                 onClick={onOpenAiTrader}
-                className="relative flex flex-col items-center justify-center p-2 rounded-2xl hover:bg-slate-50 dark:hover:bg-white/[0.04] active:scale-95 transition-all text-center group"
+                className="relative flex flex-col items-center justify-center p-2 rounded-2xl hover:bg-slate-100/60 dark:hover:bg-white/[0.04] active:scale-95 transition-all text-center group cursor-pointer"
               >
-                <span className="absolute top-1 right-2 px-1 py-0.2 rounded bg-purple-600 text-white text-[9px] font-extrabold uppercase shadow-2xs">
+                <span className="absolute top-1 right-2 px-1.5 py-0.2 rounded-full bg-purple-500/15 border border-purple-500/30 text-purple-600 dark:text-purple-400 text-[9px] font-bold uppercase">
                   PRO
                 </span>
-                <div className="w-12 h-12 rounded-2xl bg-purple-100 dark:bg-purple-950/60 border border-purple-200/80 dark:border-purple-500/30 text-purple-600 dark:text-purple-300 flex items-center justify-center group-hover:scale-105 group-hover:bg-purple-200 dark:group-hover:bg-purple-900/60 transition-transform shadow-xs">
+                <div className="w-12 h-12 rounded-2xl bg-slate-100 dark:bg-white/[0.04] border border-slate-200/80 dark:border-white/[0.08] text-purple-600 dark:text-purple-400 flex items-center justify-center group-hover:scale-105 group-hover:border-purple-500/30 transition-all shadow-2xs">
                   <Cpu className="w-5 h-5" />
                 </div>
                 <span className="text-xs font-semibold text-slate-800 dark:text-slate-200 mt-1.5">AI Bot</span>
               </button>
 
-              {/* Action 7: Predictions */}
+              {/* Service 6: Predict */}
               <button
                 id="quick-action-predictions"
                 onClick={onOpenPolymarket}
-                className="relative flex flex-col items-center justify-center p-2 rounded-2xl hover:bg-slate-50 dark:hover:bg-white/[0.04] active:scale-95 transition-all text-center group"
+                className="relative flex flex-col items-center justify-center p-2 rounded-2xl hover:bg-slate-100/60 dark:hover:bg-white/[0.04] active:scale-95 transition-all text-center group cursor-pointer"
               >
-                <span className="absolute top-1 right-1 px-1 py-0.2 rounded bg-cyan-600 text-white text-[9px] font-extrabold uppercase shadow-2xs">
+                <span className="absolute top-1 right-1 px-1.5 py-0.2 rounded-full bg-cyan-500/15 border border-cyan-500/30 text-cyan-600 dark:text-cyan-400 text-[9px] font-bold uppercase">
                   HOT
                 </span>
-                <div className="w-12 h-12 rounded-2xl bg-cyan-100 dark:bg-cyan-950/60 border border-cyan-200/80 dark:border-cyan-500/30 text-cyan-600 dark:text-cyan-300 flex items-center justify-center group-hover:scale-105 group-hover:bg-cyan-200 dark:group-hover:bg-cyan-900/60 transition-transform shadow-xs">
+                <div className="w-12 h-12 rounded-2xl bg-slate-100 dark:bg-white/[0.04] border border-slate-200/80 dark:border-white/[0.08] text-cyan-600 dark:text-cyan-400 flex items-center justify-center group-hover:scale-105 group-hover:border-cyan-500/30 transition-all shadow-2xs">
                   <Sparkles className="w-5 h-5" />
                 </div>
                 <span className="text-xs font-semibold text-slate-800 dark:text-slate-200 mt-1.5">Predict</span>
               </button>
 
-              {/* Action 8: More */}
+              {/* Service 7: Price Alerts */}
+              <button
+                id="quick-action-alerts"
+                onClick={onOpenPriceAlerts}
+                className="flex flex-col items-center justify-center p-2 rounded-2xl hover:bg-slate-100/60 dark:hover:bg-white/[0.04] active:scale-95 transition-all text-center group cursor-pointer"
+              >
+                <div className="w-12 h-12 rounded-2xl bg-slate-100 dark:bg-white/[0.04] border border-slate-200/80 dark:border-white/[0.08] text-rose-600 dark:text-rose-400 flex items-center justify-center group-hover:scale-105 group-hover:border-rose-500/30 transition-all shadow-2xs">
+                  <BellRing className="w-5 h-5" />
+                </div>
+                <span className="text-xs font-semibold text-slate-800 dark:text-slate-200 mt-1.5">Alerts</span>
+              </button>
+
+              {/* Service 8: More */}
               <button
                 id="quick-action-more"
                 onClick={onOpenMore}
-                className="flex flex-col items-center justify-center p-2 rounded-2xl hover:bg-slate-50 dark:hover:bg-white/[0.04] active:scale-95 transition-all text-center group"
+                className="flex flex-col items-center justify-center p-2 rounded-2xl hover:bg-slate-100/60 dark:hover:bg-white/[0.04] active:scale-95 transition-all text-center group cursor-pointer"
               >
-                <div className="w-12 h-12 rounded-2xl bg-slate-100 dark:bg-slate-800/80 border border-slate-200 dark:border-white/10 text-slate-600 dark:text-slate-300 flex items-center justify-center group-hover:scale-105 group-hover:bg-slate-200 dark:group-hover:bg-slate-700 transition-transform shadow-xs">
+                <div className="w-12 h-12 rounded-2xl bg-slate-100 dark:bg-white/[0.04] border border-slate-200/80 dark:border-white/[0.08] text-slate-600 dark:text-slate-300 flex items-center justify-center group-hover:scale-105 group-hover:border-purple-500/30 transition-all shadow-2xs">
                   <LayoutGrid className="w-5 h-5" />
                 </div>
                 <span className="text-xs font-semibold text-slate-800 dark:text-slate-200 mt-1.5">More</span>
@@ -440,7 +440,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
         >
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-xl bg-purple-100 border border-purple-200 text-purple-700 dark:bg-purple-900/40 dark:border-purple-500/40 dark:text-purple-300 flex items-center justify-center flex-shrink-0 shadow-xs">
-              <Cpu className="w-5 h-5 text-purple-600 dark:text-fuchsia-400" />
+              <Cpu className="w-5 h-5 text-purple-600 dark:text-purple-400" />
             </div>
             <div>
               <div className="flex items-center gap-1.5">
@@ -541,25 +541,25 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
           <button
             id="feature-ai-support"
             onClick={onOpenSupport}
-            className="w-full flex items-center justify-between p-3.5 rounded-2xl bg-white dark:bg-gradient-to-r dark:from-[#14122E] dark:via-[#0E1528] dark:to-[#120F24] border border-slate-200 dark:border-fuchsia-500/25 hover:border-fuchsia-300 dark:hover:border-fuchsia-500/50 active:scale-[0.99] transition-all group text-left shadow-2xs"
+            className="w-full flex items-center justify-between p-3.5 rounded-2xl bg-white dark:bg-[#0E141B] border border-slate-200/90 dark:border-white/[0.08] hover:border-purple-500/40 dark:hover:border-purple-500/40 active:scale-[0.99] transition-all group text-left shadow-2xs cursor-pointer"
           >
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-xl bg-fuchsia-100 border border-fuchsia-200 text-fuchsia-700 dark:bg-fuchsia-950/60 dark:border-fuchsia-500/40 dark:text-fuchsia-300 flex items-center justify-center flex-shrink-0 shadow-xs">
-                <Sparkles className="w-5 h-5 text-fuchsia-600 dark:text-fuchsia-400 animate-pulse" />
+              <div className="w-10 h-10 rounded-xl bg-purple-500/10 border border-purple-500/20 text-purple-600 dark:bg-purple-500/15 dark:border-purple-500/30 dark:text-purple-400 flex items-center justify-center flex-shrink-0 shadow-xs">
+                <Sparkles className="w-5 h-5 text-purple-600 dark:text-purple-400" />
               </div>
               <div>
                 <div className="flex items-center gap-1.5">
-                  <h3 className="font-semibold text-sm text-slate-900 dark:text-white group-hover:text-fuchsia-700 dark:group-hover:text-fuchsia-300 transition-colors">
+                  <h3 className="font-semibold text-sm text-slate-900 dark:text-white group-hover:text-purple-600 dark:group-hover:text-purple-300 transition-colors">
                     24/7 AI VIP Concierge
                   </h3>
-                  <span className="px-1.5 py-0.2 rounded text-[9px] font-bold bg-fuchsia-100 text-fuchsia-700 dark:bg-fuchsia-500/30 dark:text-fuchsia-300">
+                  <span className="px-1.5 py-0.2 rounded text-[9px] font-bold bg-purple-500/10 text-purple-600 dark:bg-purple-500/20 dark:text-purple-300 border border-purple-500/20">
                     GEMINI AI
                   </span>
                 </div>
                 <p className="text-xs text-slate-500 dark:text-slate-400">Instant answers, VIP trading fees & blockchain diagnostics</p>
               </div>
             </div>
-            <ChevronRight className="w-4 h-4 text-slate-400 group-hover:text-fuchsia-700 dark:group-hover:text-white transition-colors" />
+            <ChevronRight className="w-4 h-4 text-slate-400 group-hover:text-purple-600 dark:group-hover:text-white transition-colors" />
           </button>
         )}
       </section>

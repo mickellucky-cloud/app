@@ -99,7 +99,7 @@ export const AssetsScreen: React.FC<AssetsScreenProps> = ({
         <div className="hidden sm:flex items-center gap-2">
           <button
             onClick={onOpenDeposit}
-            className="px-3.5 py-1.5 rounded-xl text-xs font-semibold bg-gradient-to-r from-purple-600 to-fuchsia-600 text-white hover:brightness-110 transition-all shadow-xs"
+            className="px-3.5 py-1.5 rounded-xl text-xs font-semibold bg-purple-600 hover:bg-purple-700 active:scale-95 text-white transition-colors shadow-xs border border-purple-500/30 cursor-pointer"
           >
             Deposit Funds
           </button>

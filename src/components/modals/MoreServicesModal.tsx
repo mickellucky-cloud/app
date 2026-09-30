@@ -254,10 +254,10 @@ export const MoreServicesModal: React.FC<MoreServicesModalProps> = ({
   });
 
   return (
-    <div className="fixed inset-0 z-50 bg-black/70 dark:bg-black/80 backdrop-blur-sm flex items-end sm:items-center justify-center p-0 sm:p-4 animate-fadeIn">
-      <div className="w-full max-w-lg bg-white dark:bg-[#0E141B] border-t sm:border border-[#D7E0EB] dark:border-[#242E3B] rounded-t-3xl sm:rounded-3xl p-5 safe-area-bottom text-[#0F172A] dark:text-[#EDF1F5] max-h-[88vh] overflow-y-auto shadow-2xl flex flex-col">
+    <div className="fixed inset-0 z-50 bg-black/50 dark:bg-black/70 backdrop-blur-md flex items-end sm:items-center justify-center p-0 sm:p-4 animate-fadeIn">
+      <div className="w-full max-w-lg bg-white/90 dark:bg-[#0E141B]/90 backdrop-blur-2xl border-t sm:border border-white/60 dark:border-white/10 rounded-t-3xl sm:rounded-3xl p-5 safe-area-bottom text-[#0F172A] dark:text-[#EDF1F5] max-h-[88vh] overflow-y-auto shadow-[0_-16px_48px_rgba(0,0,0,0.25)] dark:shadow-[0_-20px_50px_rgba(0,0,0,0.85)] flex flex-col">
         {/* Header */}
-        <div className="flex items-center justify-between pb-3 border-b border-[#D7E0EB] dark:border-[#242E3B] mb-3">
+        <div className="flex items-center justify-between pb-3 border-b border-[#D7E0EB]/70 dark:border-[#242E3B]/70 mb-3">
           <div className="flex items-center gap-2.5">
             <OKNexusLogo size={28} />
             <div>

@@ -696,7 +696,7 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({
                       }}
                       className={`w-full flex items-center justify-between p-3 rounded-2xl text-left transition-all group ${
                         isActive
-                          ? 'bg-gradient-to-r from-purple-600 to-indigo-600 text-white shadow-md font-bold'
+                          ? 'bg-purple-600 text-white shadow-xs font-semibold'
                           : 'text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-[#141B24]'
                       }`}
                     >

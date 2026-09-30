@@ -264,7 +264,7 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({
             }}
             className={`flex-1 py-2 rounded-xl text-xs font-semibold flex items-center justify-center gap-1.5 transition-all ${
               authMethod === 'email'
-                ? 'bg-gradient-to-r from-purple-600 to-fuchsia-600 text-white shadow-[0_2px_12px_rgba(168,85,247,0.3)]'
+                ? 'bg-purple-600 text-white shadow-xs'
                 : 'text-slate-600 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white'
             }`}
           >
@@ -279,7 +279,7 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({
             }}
             className={`flex-1 py-2 rounded-xl text-xs font-semibold flex items-center justify-center gap-1.5 transition-all ${
               authMethod === 'phone'
-                ? 'bg-gradient-to-r from-purple-600 to-fuchsia-600 text-white shadow-[0_2px_12px_rgba(168,85,247,0.3)]'
+                ? 'bg-purple-600 text-white shadow-xs'
                 : 'text-slate-600 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white'
             }`}
           >
@@ -388,7 +388,7 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({
             id="login-continue-btn"
             type="submit"
             disabled={isSubmitting}
-            className="w-full py-3.5 rounded-2xl bg-gradient-to-r from-purple-600 via-fuchsia-600 to-amber-500 hover:opacity-95 active:scale-[0.99] font-bold text-white text-sm shadow-[0_4px_24px_rgba(168,85,247,0.4)] transition-all flex items-center justify-center gap-2"
+            className="w-full py-3.5 rounded-2xl bg-purple-600 hover:bg-purple-700 active:scale-[0.99] font-semibold text-white text-sm shadow-xs transition-colors flex items-center justify-center gap-2"
           >
             {isSubmitting ? (
               <>

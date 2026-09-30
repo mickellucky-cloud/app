@@ -1720,8 +1720,8 @@ export const P2PScreen: React.FC<P2PScreenProps> = ({
                         <div
                           className={`h-full rounded-full transition-all duration-500 ${
                             progressPercent >= 100
-                              ? 'bg-gradient-to-r from-emerald-500 via-teal-400 to-amber-400 shadow-[0_0_12px_rgba(16,185,129,0.5)]'
-                              : 'bg-gradient-to-r from-purple-600 via-indigo-500 to-amber-400 shadow-[0_0_12px_rgba(168,85,247,0.4)]'
+                              ? 'bg-emerald-500 shadow-xs'
+                              : 'bg-purple-600 shadow-xs'
                           }`}
                           style={{ width: `${progressPercent}%` }}
                         />
