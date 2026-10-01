@@ -19,6 +19,8 @@ import {
   EyeOff,
   ChevronLeft,
   ChevronRight,
+  PanelLeftClose,
+  PanelLeftOpen,
   Settings,
   ShieldCheck,
   Zap,
@@ -198,7 +200,7 @@ export const LeftNav: React.FC<LeftNavProps> = ({
           title={isCollapsed ? 'Expand sidebar' : 'Collapse sidebar'}
           aria-label={isCollapsed ? 'Expand sidebar' : 'Collapse sidebar'}
         >
-          <ChevronLeft className="w-4 h-4" />
+          <PanelLeftClose className="w-4 h-4" />
         </button>
       </div>
 
@@ -211,7 +213,7 @@ export const LeftNav: React.FC<LeftNavProps> = ({
             title="Expand sidebar"
             aria-label="Expand sidebar"
           >
-            <ChevronRight className="w-4 h-4" />
+            <PanelLeftOpen className="w-4 h-4" />
           </button>
         </div>
       )}

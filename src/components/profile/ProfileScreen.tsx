@@ -49,7 +49,6 @@ import {
 import { ThemeMode } from '../../types';
 import { POPULAR_NFT_AVATARS, OKN_OFFICIAL_AVATARS, AvatarPreset } from '../../data/avatarCollections';
 import { ProfileSkeleton } from '../skeletons/ProfileSkeleton';
-import { ThemeToggle } from '../common/ThemeToggle';
 
 interface ProfileScreenProps {
   userEmail?: string;
@@ -276,57 +275,35 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({
       id="standalone-profile-page"
       className="min-h-screen bg-slate-50 dark:bg-[#07090E] text-[#0F172A] dark:text-[#EDF1F5] pb-28 transition-colors"
     >
-      {/* Desktop Top Header (Hidden on Mobile where MobileTopBar handles it) */}
-      <header className="hidden md:block sticky top-0 z-30 bg-white/95 dark:bg-[#0A0E13]/95 backdrop-blur-md border-b border-[#D7E0EB] dark:border-[#1E2633] px-4 py-3 sm:px-6">
-        <div className="max-w-6xl mx-auto flex items-center justify-between">
+      {/* Main Container */}
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 pt-5">
+        {/* Desktop Page Title Section (Hidden on mobile where MobileTopBar handles it) */}
+        <div className="hidden md:flex items-center justify-between mb-5">
           <div className="flex items-center gap-3">
-            <button
-              type="button"
-              onClick={onBack}
-              className="p-2 -ml-2 rounded-xl text-slate-600 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-[#141B24] active:scale-95 transition-all"
-              aria-label="Go back"
-            >
-              <ArrowLeft className="w-5 h-5" />
-            </button>
+            {onBack && (
+              <button
+                type="button"
+                onClick={onBack}
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200/80 dark:bg-white/[0.06] dark:hover:bg-white/[0.1] text-xs font-bold text-slate-700 dark:text-slate-300 transition-colors shadow-2xs"
+                title="Return to previous screen"
+              >
+                <ArrowLeft className="w-3.5 h-3.5" />
+                <span>Back</span>
+              </button>
+            )}
             <div>
-              <h1 className="text-base sm:text-lg font-black text-[#0F172A] dark:text-white flex items-center gap-2">
+              <h1 className="text-xl sm:text-2xl font-black text-slate-900 dark:text-white tracking-tight flex items-center gap-2.5">
                 <span>Account & Profile Center</span>
                 <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-purple-500/10 text-purple-600 dark:text-purple-400 border border-purple-500/20">
                   VIP TIER 2
                 </span>
               </h1>
-              <p className="text-[11px] text-[#64748B] dark:text-[#8E98A6] hidden sm:block">
+              <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
                 Identity verification, security hardening, device authorizations & trading preferences
               </p>
             </div>
           </div>
-
-          <div className="flex items-center gap-2">
-            {onOpenSettings && (
-              <button
-                type="button"
-                id="profile-to-settings-btn"
-                onClick={() => onOpenSettings()}
-                className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white dark:bg-[#141B24] border border-[#D7E0EB] dark:border-[#242E3B] text-xs font-bold text-slate-700 dark:text-slate-200 hover:text-[#8B5CF6] dark:hover:text-[#8B5CF6] transition-colors shadow-2xs"
-                title="Open Settings & Security Center"
-              >
-                <Settings className="w-3.5 h-3.5 text-[#8B5CF6]" />
-                <span className="hidden sm:inline">Settings</span>
-              </button>
-            )}
-            {onToggleTheme && (
-              <ThemeToggle
-                theme={theme}
-                onToggle={onToggleTheme}
-                size="sm"
-              />
-            )}
-          </div>
         </div>
-      </header>
-
-      {/* Main Container */}
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 pt-5">
         {/* Toast Feedback */}
         {statusMessage && (
           <div className="mb-4 px-4 py-3 rounded-2xl bg-purple-500/10 border border-purple-500/30 text-purple-600 dark:text-purple-300 text-xs font-bold flex items-center gap-2 animate-in fade-in">

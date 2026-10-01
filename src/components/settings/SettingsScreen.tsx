@@ -480,14 +480,6 @@ export const SettingsScreen: React.FC<SettingsScreenProps> = ({
                 <span>View Full Profile</span>
               </button>
             )}
-
-            {onToggleTheme && (
-              <ThemeToggle
-                theme={theme}
-                onToggle={onToggleTheme}
-                size="sm"
-              />
-            )}
           </div>
         </div>
       </header>
