@@ -166,63 +166,48 @@ export const BottomNav: React.FC<BottomNavProps> = ({
                       }}
                       transition={{
                         type: 'spring',
-                        stiffness: 420,
-                        damping: 28,
-                        mass: 0.75,
+                        stiffness: 380,
+                        damping: 26,
+                        mass: 0.72,
                       }}
                     >
-                      {/* Fluid glass surface with multi-layer refraction */}
-                      <div className="absolute inset-0 rounded-full bg-gradient-to-b from-purple-500/12 via-white/[0.08] to-purple-600/[0.14] dark:from-white/[0.16] dark:via-white/[0.06] dark:to-purple-500/[0.14] border border-purple-500/30 dark:border-white/[0.22] shadow-[0_4px_16px_-2px_rgba(124,58,237,0.22),inset_0_1.5px_1.5px_rgba(255,255,255,0.75)] dark:shadow-[0_8px_24px_-4px_rgba(0,0,0,0.7),0_0_16px_rgba(124,58,237,0.25),inset_0_1.5px_1.5px_rgba(255,255,255,0.35),inset_0_-1px_1px_rgba(0,0,0,0.4)]" />
+                      {/* Fluid translucent glass surface with light refraction */}
+                      <div className="absolute inset-0 rounded-full bg-purple-600/[0.08] dark:bg-white/[0.09] border border-purple-500/20 dark:border-white/[0.18] shadow-[0_2px_12px_rgba(124,58,237,0.12),inset_0_1px_1px_rgba(255,255,255,0.8)] dark:shadow-[0_4px_16px_rgba(0,0,0,0.4),inset_0_1.5px_1px_rgba(255,255,255,0.25)]" />
 
                       {/* Top specular crescent highlight */}
-                      <div className="absolute top-1 inset-x-2.5 h-[1.5px] bg-gradient-to-r from-transparent via-white/90 dark:via-white/70 to-transparent rounded-full pointer-events-none" />
+                      <div className="absolute top-1 inset-x-3 h-[1px] bg-gradient-to-r from-transparent via-white/80 dark:via-white/50 to-transparent rounded-full pointer-events-none" />
 
-                      {/* Bottom liquid meniscus reflection */}
-                      <div className="absolute bottom-1 inset-x-3 h-[1px] bg-gradient-to-r from-transparent via-purple-400/50 to-transparent rounded-full pointer-events-none" />
+                      {/* Bottom subtle ambient refraction */}
+                      <div className="absolute bottom-1 inset-x-4 h-[1px] bg-gradient-to-r from-transparent via-purple-500/20 to-transparent rounded-full pointer-events-none" />
                     </motion.div>
                   )}
 
-                  {/* Tab Content: Optical Alignment with Liquid Squircle Badge Morph */}
+                  {/* Tab Content: Perfectly Centered Optical Alignment */}
                   <div className="relative flex flex-col items-center justify-center gap-1 z-10">
-                    {/* Icon container with sliding squircle badge */}
-                    <div className="relative flex items-center justify-center w-7 h-7">
-                      {isActive && (
-                        <motion.div
-                          layoutId="liquid-nav-icon-badge"
-                          className="absolute inset-0 rounded-[10px] bg-purple-600 text-white shadow-[0_2px_10px_rgba(124,58,237,0.45)] border border-white/25 -z-10"
-                          transition={{
-                            type: 'spring',
-                            stiffness: 440,
-                            damping: 28,
-                            mass: 0.72,
-                          }}
-                        />
-                      )}
-                      <motion.div
-                        animate={isActive ? { scale: [0.92, 1.08, 1] } : { scale: 1 }}
-                        transition={{ duration: 0.28, ease: 'easeOut' }}
-                        className={`flex items-center justify-center w-full h-full transition-colors duration-200 ${
-                          isActive
-                            ? 'text-white'
-                            : 'text-slate-600 group-hover:text-slate-900 dark:text-white/70 dark:group-hover:text-white'
-                        }`}
-                      >
-                        <Icon
-                          className="w-[18px] h-[18px]"
-                          fill={isActive && item.fillOnActive ? 'currentColor' : 'none'}
-                          strokeWidth={isActive ? 2.4 : 2}
-                        />
-                      </motion.div>
-                    </div>
+                    <motion.div
+                      animate={isActive ? { scale: [0.88, 1.15, 1.0], y: -1 } : { scale: 1, y: 0 }}
+                      transition={{ type: 'spring', stiffness: 420, damping: 22 }}
+                      className={`flex items-center justify-center w-6 h-6 transition-colors duration-200 ${
+                        isActive
+                          ? 'text-purple-600 dark:text-purple-400'
+                          : 'text-slate-600 group-hover:text-slate-900 dark:text-white/60 dark:group-hover:text-white'
+                      }`}
+                    >
+                      <Icon
+                        className="w-[22px] h-[22px]"
+                        fill={isActive && item.fillOnActive ? 'currentColor' : 'none'}
+                        strokeWidth={isActive ? 2.4 : 1.8}
+                      />
+                    </motion.div>
 
                     {/* Label */}
                     <motion.span
                       animate={isActive ? { scale: 1.05 } : { scale: 1 }}
                       transition={{ duration: 0.2 }}
-                      className={`text-[11px] leading-none tracking-tight text-center truncate max-w-full px-1 transition-colors duration-200 ${
+                      className={`text-[11.5px] leading-none tracking-tight text-center truncate max-w-full px-1 transition-colors duration-200 ${
                         isActive
-                          ? 'text-purple-600 dark:text-white font-bold'
-                          : 'text-slate-600 group-hover:text-slate-900 dark:text-white/70 dark:group-hover:text-white font-medium'
+                          ? 'text-purple-600 dark:text-purple-300 font-bold'
+                          : 'text-slate-600 group-hover:text-slate-900 dark:text-white/60 dark:group-hover:text-white font-medium'
                       }`}
                     >
                       {item.label}
