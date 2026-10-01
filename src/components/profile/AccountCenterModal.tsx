@@ -25,6 +25,7 @@ import {
   ArrowRight,
 } from 'lucide-react';
 import { ThemeMode } from '../../types';
+import { ThemeToggle } from '../common/ThemeToggle';
 
 interface AccountCenterModalProps {
   isOpen: boolean;
@@ -205,12 +206,17 @@ export const AccountCenterModal: React.FC<AccountCenterModalProps> = ({
             </div>
           </div>
 
-          <button
-            onClick={onClose}
-            className="p-2 rounded-xl text-slate-400 hover:text-white hover:bg-white/[0.06] transition-colors"
-          >
-            <X className="w-5 h-5" />
-          </button>
+          <div className="flex items-center gap-2">
+            {onToggleTheme && (
+              <ThemeToggle theme={theme} onToggle={onToggleTheme} size="sm" />
+            )}
+            <button
+              onClick={onClose}
+              className="p-2 rounded-xl text-slate-400 hover:text-white hover:bg-white/[0.06] transition-colors"
+            >
+              <X className="w-5 h-5" />
+            </button>
+          </div>
         </div>
 
         {/* Tab Navigation - Clean Non-Sliding Grid Layout */}
@@ -601,6 +607,17 @@ export const AccountCenterModal: React.FC<AccountCenterModalProps> = ({
           {/* TAB 3: PREFERENCES */}
           {activeTab === 'preferences' && (
             <div className="space-y-4">
+              {/* Appearance & Theme */}
+              {onToggleTheme && (
+                <div className="p-4 rounded-2xl bg-[#0F1322] border border-white/[0.07] flex items-center justify-between">
+                  <div>
+                    <h4 className="font-bold text-sm text-white">Appearance & Theme</h4>
+                    <p className="text-xs text-slate-400 mt-0.5">Toggle between Obsidian Dark and Clean Light modes</p>
+                  </div>
+                  <ThemeToggle theme={theme} onToggle={onToggleTheme} size="md" />
+                </div>
+              )}
+
               {/* Currency & Language */}
               <div className="p-4 rounded-2xl bg-[#0F1322] border border-white/[0.07] space-y-3">
                 <h4 className="font-bold text-sm text-white">Language & Regional Currency</h4>

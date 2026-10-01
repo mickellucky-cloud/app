@@ -13,6 +13,7 @@ import {
   Star,
 } from 'lucide-react';
 import { NotificationsDropdown } from './NotificationsDropdown';
+import { ThemeToggle } from '../common/ThemeToggle';
 
 interface MobileTopBarProps {
   activeTab: MainTab | 'p2p';
@@ -397,16 +398,12 @@ export const MobileTopBar: React.FC<MobileTopBarProps> = ({
         return (
           <>
             {onToggleTheme && (
-              <button
-                id="mobile-analytics-theme-btn"
-                type="button"
-                onClick={onToggleTheme}
-                className="w-9 h-9 rounded-xl flex items-center justify-center text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-white/[0.06] active:scale-95 transition-all"
-                aria-label="Toggle Theme"
-                title="Toggle Theme"
-              >
-                {theme === 'dark' ? <Sun className="w-4 h-4 text-amber-400" /> : <Moon className="w-4 h-4 text-purple-600" />}
-              </button>
+              <ThemeToggle
+                theme={theme}
+                onToggle={onToggleTheme}
+                size="sm"
+                className="mx-0.5"
+              />
             )}
             <button
               id="mobile-analytics-support-btn"
@@ -455,16 +452,12 @@ export const MobileTopBar: React.FC<MobileTopBarProps> = ({
         return (
           <>
             {onToggleTheme && (
-              <button
-                id="mobile-profile-theme-btn"
-                type="button"
-                onClick={onToggleTheme}
-                className="w-9 h-9 rounded-xl flex items-center justify-center text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-white/[0.06] active:scale-95 transition-all"
-                aria-label="Toggle Theme"
-                title="Toggle Theme"
-              >
-                {theme === 'dark' ? <Sun className="w-4 h-4 text-amber-400" /> : <Moon className="w-4 h-4 text-purple-600" />}
-              </button>
+              <ThemeToggle
+                theme={theme}
+                onToggle={onToggleTheme}
+                size="sm"
+                className="mx-0.5"
+              />
             )}
             <button
               id="mobile-profile-support-btn"
@@ -485,16 +478,12 @@ export const MobileTopBar: React.FC<MobileTopBarProps> = ({
         return (
           <>
             {onToggleTheme && (
-              <button
-                id="mobile-settings-theme-btn"
-                type="button"
-                onClick={onToggleTheme}
-                className="w-9 h-9 rounded-xl flex items-center justify-center text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-white/[0.06] active:scale-95 transition-all"
-                aria-label="Toggle Theme"
-                title="Toggle Theme"
-              >
-                {theme === 'dark' ? <Sun className="w-4 h-4 text-amber-400" /> : <Moon className="w-4 h-4 text-purple-600" />}
-              </button>
+              <ThemeToggle
+                theme={theme}
+                onToggle={onToggleTheme}
+                size="sm"
+                className="mx-0.5"
+              />
             )}
             <button
               id="mobile-settings-support-btn"
@@ -525,16 +514,12 @@ export const MobileTopBar: React.FC<MobileTopBarProps> = ({
               <Search className="w-4 h-4" />
             </button>
             {onToggleTheme && (
-              <button
-                id="mobile-support-theme-btn"
-                type="button"
-                onClick={onToggleTheme}
-                className="w-9 h-9 rounded-xl flex items-center justify-center text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-white/[0.06] active:scale-95 transition-all"
-                aria-label="Toggle Theme"
-                title="Toggle Theme"
-              >
-                {theme === 'dark' ? <Sun className="w-4 h-4 text-amber-400" /> : <Moon className="w-4 h-4 text-purple-600" />}
-              </button>
+              <ThemeToggle
+                theme={theme}
+                onToggle={onToggleTheme}
+                size="sm"
+                className="mx-0.5"
+              />
             )}
           </>
         );
@@ -544,16 +529,12 @@ export const MobileTopBar: React.FC<MobileTopBarProps> = ({
         return (
           <>
             {onToggleTheme && (
-              <button
-                id="mobile-p2p-theme-btn"
-                type="button"
-                onClick={onToggleTheme}
-                className="w-9 h-9 rounded-xl flex items-center justify-center text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-white/[0.06] active:scale-95 transition-all"
-                aria-label="Toggle Theme"
-                title="Toggle Theme"
-              >
-                {theme === 'dark' ? <Sun className="w-4 h-4 text-amber-400" /> : <Moon className="w-4 h-4 text-purple-600" />}
-              </button>
+              <ThemeToggle
+                theme={theme}
+                onToggle={onToggleTheme}
+                size="sm"
+                className="mx-0.5"
+              />
             )}
             <button
               id="mobile-p2p-support-btn"

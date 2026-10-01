@@ -9,6 +9,7 @@ import {
   Settings,
 } from 'lucide-react';
 import { NotificationsDropdown } from './NotificationsDropdown';
+import { ThemeToggle } from '../common/ThemeToggle';
 
 interface DesktopTopBarProps {
   onOpenSearch: () => void;
@@ -162,6 +163,16 @@ export const DesktopTopBar: React.FC<DesktopTopBarProps> = ({
         >
           <Settings className="w-4 h-4 text-slate-600 dark:text-slate-300" />
         </button>
+
+        {/* Theme Switcher Toggle */}
+        {onToggleTheme && (
+          <ThemeToggle
+            theme={theme}
+            onToggle={onToggleTheme}
+            size="sm"
+            className="mx-0.5"
+          />
+        )}
 
         {/* User Avatar & Identity */}
         <button

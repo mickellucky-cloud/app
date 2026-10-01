@@ -49,6 +49,7 @@ import {
 import { ThemeMode } from '../../types';
 import { POPULAR_NFT_AVATARS, OKN_OFFICIAL_AVATARS, AvatarPreset } from '../../data/avatarCollections';
 import { ProfileSkeleton } from '../skeletons/ProfileSkeleton';
+import { ThemeToggle } from '../common/ThemeToggle';
 
 interface ProfileScreenProps {
   userEmail?: string;
@@ -314,14 +315,11 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({
               </button>
             )}
             {onToggleTheme && (
-              <button
-                type="button"
-                onClick={onToggleTheme}
-                className="p-2 rounded-xl bg-white dark:bg-[#141B24] border border-[#D7E0EB] dark:border-[#242E3B] text-[#64748B] dark:text-[#8E98A6] hover:text-[#8B5CF6] transition-colors"
-                title="Toggle Theme"
-              >
-                {theme === 'dark' ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
-              </button>
+              <ThemeToggle
+                theme={theme}
+                onToggle={onToggleTheme}
+                size="sm"
+              />
             )}
           </div>
         </div>

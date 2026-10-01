@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { MainTab, ThemeMode } from '../../types';
 import { OKNexusLogo } from '../common/OKNexusLogo';
+import { ThemeToggle } from '../common/ThemeToggle';
 import {
   Home,
   BarChart2,
@@ -398,6 +399,22 @@ export const LeftNav: React.FC<LeftNavProps> = ({
                 : '••••••••'}
             </div>
           </div>
+        )}
+
+        {/* Appearance Mode Switcher */}
+        {onToggleTheme && (
+          !isCollapsed ? (
+            <div className="flex items-center justify-between px-2.5 py-1.5 rounded-xl bg-white dark:bg-slate-900/60 border border-slate-200 dark:border-white/[0.05] shadow-2xs">
+              <span className="text-[11px] font-medium text-slate-600 dark:text-slate-400">
+                Appearance
+              </span>
+              <ThemeToggle theme={theme} onToggle={onToggleTheme} size="sm" />
+            </div>
+          ) : (
+            <div className="flex justify-center py-0.5">
+              <ThemeToggle theme={theme} onToggle={onToggleTheme} isCollapsed={true} size="sm" />
+            </div>
+          )
         )}
 
         {/* User Profile & Settings Trigger */}

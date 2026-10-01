@@ -1,200 +1,154 @@
 import React from 'react';
+import { motion } from 'motion/react';
 import { ThemeMode } from '../../types';
+import { Sun, Moon } from 'lucide-react';
 
 interface ThemeToggleProps {
-  theme: ThemeMode;
-  onToggle: () => void;
-  size?: 'xs' | 'sm' | 'md' | 'lg';
+  theme?: ThemeMode;
+  onToggle?: () => void;
+  size?: 'sm' | 'md' | 'lg';
   isCollapsed?: boolean;
   className?: string;
+  showLabels?: boolean;
 }
 
 export const ThemeToggle: React.FC<ThemeToggleProps> = ({
-  theme,
+  theme = 'dark',
   onToggle,
-  size = 'md',
+  size = 'sm',
   isCollapsed = false,
   className = '',
+  showLabels = false,
 }) => {
-  const isLight = theme === 'light';
+  const isDark = theme === 'dark';
 
-  // Scaled, compact size configurations to fit comfortably in mobile bars and headers
-  const config = {
-    xs: {
-      width: 'w-[48px]',
-      height: 'h-[22px]',
-      knobSize: 'w-[16px] h-[16px]',
-      knobTranslate: 'translate-x-[26px]',
-      textSize: 'text-[5.5px]',
-      iconSize: 'w-2.5 h-2.5',
-      padding: 'p-[3px]',
-      labelWidth: 'calc(100% - 18px)',
-    },
+  // Sizing tokens for tactical header integration & settings cards
+  const dims = {
     sm: {
-      width: 'w-[56px]',
-      height: 'h-[24px]',
-      knobSize: 'w-[18px] h-[18px]',
-      knobTranslate: 'translate-x-[32px]',
-      textSize: 'text-[6px]',
-      iconSize: 'w-3 h-3',
-      padding: 'p-[3px]',
-      labelWidth: 'calc(100% - 20px)',
+      track: 'w-[52px] h-[26px]',
+      knob: 'w-[20px] h-[20px]',
+      xDark: 27,
+      xLight: 2,
+      icon: 'w-3 h-3',
+      trackIcon: 'w-2.5 h-2.5',
     },
     md: {
-      width: 'w-[66px]',
-      height: 'h-[26px]',
-      knobSize: 'w-[20px] h-[20px]',
-      knobTranslate: 'translate-x-[40px]',
-      textSize: 'text-[6.5px]',
-      iconSize: 'w-3.5 h-3.5',
-      padding: 'p-[3px]',
-      labelWidth: 'calc(100% - 22px)',
+      track: 'w-[64px] h-[32px]',
+      knob: 'w-[24px] h-[24px]',
+      xDark: 34,
+      xLight: 3,
+      icon: 'w-3.5 h-3.5',
+      trackIcon: 'w-3 h-3',
     },
     lg: {
-      width: 'w-[76px]',
-      height: 'h-[28px]',
-      knobSize: 'w-[22px] h-[22px]',
-      knobTranslate: 'translate-x-[48px]',
-      textSize: 'text-[7px]',
-      iconSize: 'w-3.5 h-3.5',
-      padding: 'p-[3px]',
-      labelWidth: 'calc(100% - 24px)',
+      track: 'w-[74px] h-[36px]',
+      knob: 'w-[28px] h-[28px]',
+      xDark: 40,
+      xLight: 3,
+      icon: 'w-4 h-4',
+      trackIcon: 'w-3.5 h-3.5',
     },
   }[size];
 
-  // If in a collapsed sidebar navigation, display a circular compact version
+  // Collapsed circular icon button variant for tight rails
   if (isCollapsed) {
     return (
       <button
         type="button"
         onClick={onToggle}
-        aria-label={isLight ? 'Switch to Night Mode' : 'Switch to Day Mode'}
-        title={isLight ? 'Switch to Night Mode' : 'Switch to Day Mode'}
-        className={`w-8 h-8 rounded-full relative flex items-center justify-center transition-all duration-300 shadow-sm ${
-          isLight
-            ? 'bg-gradient-to-r from-[#F59E0B] via-[#F97316] to-[#EC4899] text-white'
-            : 'bg-gradient-to-r from-[#D946EF] via-[#8B5CF6] to-[#1E1B4B] text-white'
-        } ${className}`}
+        aria-label={isDark ? 'Switch to light mode' : 'Switch to dark mode'}
+        title={isDark ? 'Switch to light mode' : 'Switch to dark mode'}
+        className={`w-9 h-9 rounded-xl relative flex items-center justify-center transition-all duration-200 outline-none cursor-pointer bg-slate-100 dark:bg-white/[0.06] border border-slate-200 dark:border-white/[0.08] hover:border-purple-500/40 text-slate-700 dark:text-slate-200 shadow-xs active:scale-95 ${className}`}
       >
-        <div className="w-6 h-6 rounded-full bg-white flex items-center justify-center shadow-inner">
-          {isLight ? (
-            <SunWithRays className="w-3.5 h-3.5 text-[#F97316]" />
+        <motion.div
+          key={isDark ? 'moon' : 'sun'}
+          initial={{ rotate: -45, scale: 0.8, opacity: 0 }}
+          animate={{ rotate: 0, scale: 1, opacity: 1 }}
+          exit={{ rotate: 45, scale: 0.8, opacity: 0 }}
+          transition={{ duration: 0.25, ease: 'easeOut' }}
+        >
+          {isDark ? (
+            <Moon className="w-4 h-4 text-purple-400 fill-purple-400/20" />
           ) : (
-            <MoonWithStars className="w-3.5 h-3.5 text-[#4338CA]" />
+            <Sun className="w-4 h-4 text-amber-500 fill-amber-500/20" />
           )}
-        </div>
+        </motion.div>
       </button>
     );
   }
 
   return (
-    <button
-      id="global-theme-toggle-btn"
-      type="button"
-      role="switch"
-      aria-checked={isLight}
-      aria-label={isLight ? 'Switch to Night Mode' : 'Switch to Day Mode'}
-      title={isLight ? 'Switch to Night Mode' : 'Switch to Day Mode'}
-      onClick={onToggle}
-      className={`relative inline-flex items-center rounded-full select-none cursor-pointer transition-all duration-300 ease-out shadow-sm active:scale-[0.98] outline-none focus-visible:ring-2 focus-visible:ring-purple-400 shrink-0 ${config.width} ${config.height} ${config.padding} ${
-        isLight
-          ? 'bg-gradient-to-r from-[#F59E0B] via-[#F97316] to-[#EC4899] shadow-[0_2px_10px_rgba(249,115,22,0.25)]'
-          : 'bg-gradient-to-r from-[#C026D3] via-[#8B5CF6] to-[#1E1B4B] shadow-[0_2px_10px_rgba(139,92,246,0.25)]'
-      } ${className}`}
-    >
-      {/* Label on Left (Day Mode text when light) */}
-      <div
-        className={`absolute left-0 top-0 bottom-0 flex flex-col justify-center items-center pl-2 transition-opacity duration-300 pointer-events-none ${
-          isLight ? 'opacity-100' : 'opacity-0'
-        }`}
-        style={{ width: config.labelWidth }}
-      >
-        <span className={`font-black uppercase tracking-wider text-white ${config.textSize} leading-none text-left w-full pl-0.5`}>
-          DAY
+    <div className={`inline-flex items-center gap-2 select-none ${className}`}>
+      {showLabels && (
+        <span className="text-xs font-medium text-slate-500 dark:text-slate-400">
+          {isDark ? 'Dark Mode' : 'Light Mode'}
         </span>
-        <span className={`font-black uppercase tracking-wider text-white/90 ${config.textSize} leading-none text-left w-full pl-0.5 mt-0.5`}>
-          MODE
-        </span>
-      </div>
+      )}
 
-      {/* Label on Right (Night Mode text when dark) */}
-      <div
-        className={`absolute right-0 top-0 bottom-0 flex flex-col justify-center items-center pr-2 transition-opacity duration-300 pointer-events-none ${
-          !isLight ? 'opacity-100' : 'opacity-0'
+      <button
+        type="button"
+        role="switch"
+        aria-checked={isDark}
+        aria-label={isDark ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
+        title={isDark ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
+        onClick={onToggle}
+        className={`relative inline-flex items-center rounded-full p-[2px] transition-colors duration-300 outline-none cursor-pointer group focus-visible:ring-2 focus-visible:ring-purple-500 ${dims.track} ${
+          isDark
+            ? 'bg-[#0B0D14] border border-white/[0.14] shadow-[inset_0_1.5px_3px_rgba(0,0,0,0.6),0_1px_2px_rgba(255,255,255,0.05)]'
+            : 'bg-slate-200/90 border border-slate-300 shadow-[inset_0_1.5px_3px_rgba(0,0,0,0.12),0_1px_2px_rgba(0,0,0,0.04)]'
         }`}
-        style={{ width: config.labelWidth }}
       >
-        <span className={`font-black uppercase tracking-wider text-white ${config.textSize} leading-none text-right w-full pr-0.5`}>
-          NIGHT
-        </span>
-        <span className={`font-black uppercase tracking-wider text-white/90 ${config.textSize} leading-none text-right w-full pr-0.5 mt-0.5`}>
-          MODE
-        </span>
-      </div>
+        {/* Track Dual Optical Indicator Symbols */}
+        <div className="absolute inset-0 flex items-center justify-between px-2 pointer-events-none">
+          {/* Sun icon placeholder on left */}
+          <Sun
+            className={`${dims.trackIcon} transition-opacity duration-300 ${
+              isDark ? 'opacity-30 text-slate-400' : 'opacity-0 text-amber-600'
+            }`}
+          />
+          {/* Moon icon placeholder on right */}
+          <Moon
+            className={`${dims.trackIcon} transition-opacity duration-300 ${
+              isDark ? 'opacity-0 text-purple-400' : 'opacity-30 text-slate-500'
+            }`}
+          />
+        </div>
 
-      {/* Sliding Circular White Knob */}
-      <div
-        className={`rounded-full bg-white flex items-center justify-center shadow-[0_2px_6px_rgba(0,0,0,0.22)] transform transition-transform duration-300 ease-out z-10 shrink-0 ${config.knobSize} ${
-          isLight ? config.knobTranslate : 'translate-x-0'
-        }`}
-      >
-        {isLight ? (
-          <SunWithRays className={`${config.iconSize} text-[#F97316] transition-transform duration-300 rotate-0`} />
-        ) : (
-          <MoonWithStars className={`${config.iconSize} text-[#312E81] transition-transform duration-300 rotate-0`} />
-        )}
-      </div>
-    </button>
+        {/* Sliding Tactile Glass Knob with Spring Physics */}
+        <motion.div
+          animate={{
+            x: isDark ? dims.xDark : dims.xLight,
+          }}
+          transition={{
+            type: 'spring',
+            stiffness: 460,
+            damping: 28,
+            mass: 0.75,
+          }}
+          className={`relative rounded-full flex items-center justify-center transition-colors duration-200 z-10 ${dims.knob} ${
+            isDark
+              ? 'bg-gradient-to-b from-[#24173D] to-[#161226] border border-purple-400/40 text-purple-300 shadow-[0_2px_8px_rgba(124,58,237,0.45),inset_0_1px_1px_rgba(255,255,255,0.3)]'
+              : 'bg-white border border-amber-300/60 text-amber-500 shadow-[0_2px_6px_rgba(0,0,0,0.18),inset_0_1px_1px_rgba(255,255,255,0.9)]'
+          }`}
+        >
+          {/* Knob Specular Reflection Sheen */}
+          <div className="absolute top-0.5 inset-x-1 h-[1px] bg-gradient-to-r from-transparent via-white/70 dark:via-white/40 to-transparent rounded-full pointer-events-none" />
+
+          {/* Active Icon in Knob */}
+          <motion.div
+            key={isDark ? 'active-moon' : 'active-sun'}
+            initial={{ scale: 0.7, rotate: isDark ? -30 : 30 }}
+            animate={{ scale: 1, rotate: 0 }}
+            transition={{ duration: 0.2 }}
+          >
+            {isDark ? (
+              <Moon className={`${dims.icon} fill-purple-300/30 text-purple-300`} />
+            ) : (
+              <Sun className={`${dims.icon} fill-amber-500/30 text-amber-500`} />
+            )}
+          </motion.div>
+        </motion.div>
+      </button>
+    </div>
   );
 };
-
-// Custom Sun icon matching the reference image (central circle with radial burst rays)
-const SunWithRays: React.FC<{ className?: string }> = ({ className = 'w-4 h-4 text-[#F97316]' }) => (
-  <svg
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth="2.2"
-    strokeLinecap="round"
-    strokeLinejoin="round"
-    className={className}
-    aria-hidden="true"
-  >
-    <circle cx="12" cy="12" r="4.5" />
-    <line x1="12" y1="2" x2="12" y2="4.5" />
-    <line x1="12" y1="19.5" x2="12" y2="22" />
-    <line x1="4.93" y1="4.93" x2="6.7" y2="6.7" />
-    <line x1="17.3" y1="17.3" x2="19.07" y2="19.07" />
-    <line x1="2" y1="12" x2="4.5" y2="12" />
-    <line x1="19.5" y1="12" x2="22" y2="12" />
-    <line x1="4.93" y1="19.07" x2="6.7" y2="17.3" />
-    <line x1="17.3" y1="6.7" x2="19.07" y2="4.93" />
-  </svg>
-);
-
-// Custom Moon + Stars icon matching the reference image (crescent moon with 2 sparkles)
-const MoonWithStars: React.FC<{ className?: string }> = ({ className = 'w-4 h-4 text-[#312E81]' }) => (
-  <svg
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth="2.1"
-    strokeLinecap="round"
-    strokeLinejoin="round"
-    className={className}
-    aria-hidden="true"
-  >
-    {/* Crescent Moon */}
-    <path d="M14.5 18A7.5 7.5 0 0 1 8 5.5a8.2 8.2 0 1 0 9.8 11.8 7.5 7.5 0 0 1-3.3.7z" />
-    {/* Top Star sparkle */}
-    <path
-      d="M17 3v3m-1.5-1.5h3"
-      strokeWidth="1.8"
-    />
-    {/* Secondary Star sparkle */}
-    <path
-      d="M20 9v2m-1-1h2"
-      strokeWidth="1.8"
-    />
-  </svg>
-);

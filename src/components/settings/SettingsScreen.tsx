@@ -42,6 +42,7 @@ import {
 } from 'lucide-react';
 import { ThemeMode } from '../../types';
 import { SettingsSkeleton } from '../skeletons/SettingsSkeleton';
+import { ThemeToggle } from '../common/ThemeToggle';
 
 export type SettingsCategory =
   | 'account'
@@ -481,15 +482,11 @@ export const SettingsScreen: React.FC<SettingsScreenProps> = ({
             )}
 
             {onToggleTheme && (
-              <button
-                type="button"
-                onClick={onToggleTheme}
-                className="p-2 rounded-xl bg-white dark:bg-[#141B24] border border-[#D7E0EB] dark:border-[#242E3B] text-[#64748B] dark:text-[#8E98A6] hover:text-[#8B5CF6] transition-colors shadow-2xs"
-                title="Toggle Light/Dark Theme"
-                aria-label="Toggle Theme"
-              >
-                {theme === 'dark' ? <Sun className="w-4 h-4 text-amber-400" /> : <Moon className="w-4 h-4 text-[#8B5CF6]" />}
-              </button>
+              <ThemeToggle
+                theme={theme}
+                onToggle={onToggleTheme}
+                size="sm"
+              />
             )}
           </div>
         </div>
@@ -1471,9 +1468,14 @@ export const SettingsScreen: React.FC<SettingsScreenProps> = ({
                       <Sun className="w-5 h-5 text-amber-500" />
                       <h2 className="text-base font-bold text-[#0F172A] dark:text-white">Theme & Display Colors</h2>
                     </div>
-                    <span className="text-xs font-mono font-bold px-2 py-0.5 rounded-lg bg-purple-500/10 text-[#8B5CF6] capitalize">
-                      {theme} mode
-                    </span>
+                    <div className="flex items-center gap-3">
+                      <span className="text-xs font-mono font-bold px-2 py-0.5 rounded-lg bg-purple-500/10 text-[#8B5CF6] capitalize">
+                        {theme} mode
+                      </span>
+                      {onToggleTheme && (
+                        <ThemeToggle theme={theme} onToggle={onToggleTheme} size="md" />
+                      )}
+                    </div>
                   </div>
 
                   <div className="grid grid-cols-2 gap-3">
